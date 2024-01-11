@@ -1,0 +1,108 @@
+import React, { useState, useRef,useEffect} from "react";
+import {
+  ScrollView,
+  Pressable,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Alert,
+  Dimensions,
+  TextInput,
+  StatusBar,
+  Animated,
+  Modal,
+  Vibration,
+  FlatList,
+} from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useNavigation } from "@react-navigation/native";
+import * as Animatable from "react-native-animatable";
+import VectorIcon from "./VectorIcon";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+import colors from "./colors";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+import {
+  MaterialCommunityIcons,
+  AntDesign,
+  Zocial,
+  SimpleLineIcons,
+  Octicons,
+  Fontisto,
+  Ionicons,
+  MaterialIcons,
+  Entypo,
+  Feather,
+} from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+
+const { height, width } = Dimensions.get("window");
+const ResponceFontSize={
+f8:scale(8),
+f9:scale(9),
+f9:scale(10),
+f11:scale(11),
+f12:scale(12),
+f13:scale(13),
+f14:scale(14),
+f15:scale(15),
+f16:scale(16),
+f17:scale(17),
+f18:scale(18),
+f19:scale(19),
+f20:scale(20),
+}
+export {
+  React,
+  useState,
+  useRef,
+  Image,
+  ImageBackground,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Alert,
+  Dimensions,
+  TextInput,
+  StatusBar,
+  Animated,
+  Modal,
+  Pressable,
+  ScrollView,
+  DateTimePickerModal,
+  Animatable,
+  VectorIcon,
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+  colors,
+  scale,
+  verticalScale,
+  moderateScale,
+  MaterialCommunityIcons,
+  AntDesign,
+  Zocial,
+  SimpleLineIcons,
+  Octicons,
+  Fontisto,
+  Ionicons,
+  MaterialIcons,
+  Entypo,
+  Feather,
+  height,
+  width,
+  LinearGradient,
+  useNavigation,
+  useEffect,
+  ResponceFontSize,
+};
