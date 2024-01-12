@@ -62,7 +62,7 @@ export const CustomDropDown=({dropData,setSelect,title})=>{
           style={styles.icon}
           color={isFocus ? colors.dropFocusedIconColor:colors.dropIconColor}
           name="Safety"
-          size={scale(20)}
+          size={20}
         />
       )}
     />
@@ -114,7 +114,7 @@ export const AttachFile=(props)=>{
       }}
       onPress={()=>pickDocument()}
       >
-        <Text style={{color:colors.documentTitleTextColor,fontWeight:"500",fontSize:scale(12)}}>Attach</Text>
+        <Text style={{color:colors.documentTitleTextColor,fontWeight:"500",fontSize:12}}>Attach</Text>
       </TouchableOpacity>
       <IntructModal show={show} setShow={setShow} info={"You Haven't Selected Any Thing.."} btnTitle={"OK"}/>
     </View>
@@ -134,12 +134,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   dropdown: {
-    height: 50,
+    minHeight: 50,
     borderColor: colors.dropBorderColor,
     borderWidth: 1.5,
     borderRadius: 8,
     paddingHorizontal: 8,
     backgroundColor:colors.dropBackColor,
+    paddingVertical:5,
   },
   icon: {
     marginRight: 5,
