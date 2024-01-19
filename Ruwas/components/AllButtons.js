@@ -24,6 +24,15 @@ export const SubmitButton = ({ title, onPress, Icon }) => {
     </TouchableOpacity>
   )
 }
+export const SubmitButton2 = ({title,onPress,buttonStyle}) => {
+  return (
+    <Pressable 
+    onPress={onPress}
+    style={[{minHeight:45,justifyContent:"center",alignItems:"center",backgroundColor:colors.submitBackColor,marginTop: 25,borderRadius:10},buttonStyle && buttonStyle]}>
+        <Text style={[{color:colors.submitTitleColor,fontWeight:"500"}]}>{title || "Submit"}</Text>
+    </Pressable>
+  )
+}
 
 
 
