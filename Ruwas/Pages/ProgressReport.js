@@ -10,6 +10,7 @@ import {
   Text,
   height,
   VectorIcon,
+  Image
 } from "../components/AllPackages";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
@@ -22,6 +23,8 @@ import ProgressModal from "./ProgressModal";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 import styles from "./style";
 import SearchAnimation from "../components/SearchAnimation";
+import ButtonSheet from "../components/ButtonSheet";
+import { ReactNativeModal1 } from "../components/ReactNativeModal";
 
 const ProgressReport1 = () => {
   const { ProgresReportHead, ProgressReportTable } = LocalData;
@@ -33,9 +36,10 @@ const ProgressReport1 = () => {
   const [file, setFiles] = useState("");
   const [title, setTitle] = useState("");
   const [TblStatus, setTblStatus] = useState(null);
-
+  const [showTotal, setShowTotal] = useState(false);
   const [TbleData, setTbleData] = useState(ProgressReportTable);
-
+const [moadalVisiable,setModalVisiable]=useState(false)
+const [items,setItems]=useState("")
   const handleSubmit = () => {
     if (year && rwsrc && localGovt && quarter) {
     }
@@ -86,7 +90,7 @@ const ProgressReport1 = () => {
           style={styles.DisableTxtInput}
         />
 
-        <View style={styles.Table}>
+        {/* <View style={styles.Table}>
           <View style={styles.TblCntr}>
             {ProgresReportHead.map((Head, index) => {
               return (
@@ -143,11 +147,10 @@ const ProgressReport1 = () => {
               </View>
             );
           })}
-        </View>
-{/* -----------------------------------------------table */}
+        </View> */}
+        {/* -----------------------------------------------table */}
         <View
           style={{
-            // height: height * 0.4,
             backgroundColor: colors.tableRowsBackColors,
             justifyContent: "space-between",
             marginTop: 10,
@@ -199,23 +202,50 @@ const ProgressReport1 = () => {
                 Status
               </Text>
             </View>
+            
             <View>
-            {TbleData.map((item, index) => {
-              const allkeys=Object.keys(item)
-              return(
-                <View key={index} style={{
-                  backgroundColor: index/2!==0?"#fff":"#f1f1f1",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingVertical: 10,
-                  paddingHorizontal: 10,
-                }}>
-                  <Text style={{width:"15%",textAlign:"center"}}>{item[allkeys[0]]}</Text>
-                  <Text style={{width:"70%",textAlign:"center"}}>{item[allkeys[1]]}</Text>
-                  <TouchableOpacity style={{width:"15%",justifyContent:"center",alignItems:'center'}}><VectorIcon type="MaterialCommunityIcons" name="database-plus" size={24} color="black" /></TouchableOpacity>
-                </View>
-              )
-          })}
+           <ScrollView 
+           nestedScrollEnabled={true}
+            style={{ height: 200 }}>
+           {TbleData.map((item, index) => {
+                const allkeys = Object.keys(item);
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      backgroundColor: "#efeef7",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      borderBottomWidth:0.2
+                    }}
+                  >
+                    <Text style={{ width: "15%", textAlign: "center" }}>
+                      {item[allkeys[0]]}
+                    </Text>
+                    <Text style={{ width: "70%", textAlign: "center" }}>
+                      {item[allkeys[1]]}
+                    </Text>
+                    <TouchableOpacity
+                      style={{
+                        width: "15%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="database-plus"
+                        size={30}
+                        color={colors.tableHeaderColor}
+                        onPress={()=>{setItems(item),setModalVisiable(true)}}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+           </ScrollView>
             </View>
           </View>
           {/* ------------------footer of table----------------- */}
@@ -231,18 +261,22 @@ const ProgressReport1 = () => {
           >
             <View
               style={{
-               
                 marginVertical: 10,
                 marginLeft: 10,
                 backgroundColor: "rgba(255,255,255,0.1)",
                 padding: 5,
                 borderRadius: 15,
                 paddingHorizontal: 10,
-               justifyContent:"center",
-               alignItems:"center"
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection:"row"
               }}
             >
-              <Text style={{ color: "#fff",}}>Total Result </Text>
+              <Text onPress={() => {setShowTotal(true)}} style={{ color: "#fff" }}>
+                Total Result
+              </Text>
+                
+              <Image source={require("../assets/gross.png")} style={{height:20,width:20,marginLeft: 5,}}/>
             </View>
 
             <View style={{ width: "55%", marginVertical: 10, marginRight: 10 }}>
@@ -250,18 +284,20 @@ const ProgressReport1 = () => {
             </View>
           </View>
         </View>
-
-        {TblStatus && (
+<ReactNativeModal1 isModalVisible={moadalVisiable} setModalVisible={setModalVisiable} item={items}/>
+        {/* {TblStatus && (
           <ProgressModal
             visible={TblStatus}
             setVisible={setTblStatus}
             data={TbleData}
             setData={setTbleData}
           />
-        )}
+        )} */}
+        <ButtonSheet isVisible={showTotal} onClose={setShowTotal} />
+        <Text style={{marginLeft: 4,marginTop:10}}>Attach<Text style={{color:"red"}}>*</Text></Text>
         <AttachFile title={"File"} setFile={setFiles} />
         {/* <SubmitButton onPress={handleSubmit} Icon={<Entypo name="save" size={20} color="#fff" />} /> */}
-        <SubmitButton2 />
+        <SubmitButton />
       </ScrollView>
     </View>
   );

@@ -400,6 +400,7 @@ export const ModalInput = ({ show, setShow, }) => {
 
 
 
+
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,

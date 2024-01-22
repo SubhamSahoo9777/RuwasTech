@@ -4,11 +4,11 @@ const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     DisableTxtInput: {
-        borderWidth: 1.5,
+        borderWidth: 0.5,
         borderRadius: 10,
         height: 50,
         paddingLeft: 10,
-        backgroundColor: "rgba(0,0,0,0.1)",
+        backgroundColor: "#e6f2ff",
         marginVertical: 10
     },
     Table: {

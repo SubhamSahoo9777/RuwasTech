@@ -10,15 +10,15 @@ export default {
   dropLabelBackColor:"#f2f7f7",
 
   dropBorderColor:"#606066",
-  dropFocusedBorderColor:'green',
+  dropFocusedBorderColor:'#20187f',
 
   dropIconColor:'#20187f',
-  dropFocusedIconColor:'green',
+  dropFocusedIconColor:'#20187f',
 
   dropBodySelectedTextColor:"#20187f",
   dropPlaceHolderTextColor:"#20187f",
   dropLabelTextColor:"#20187f",
-  dropFocusLabelTextColor:"green",
+  dropFocusLabelTextColor:"#20187f",
 
 
   dropArrowColor:"#20187f",

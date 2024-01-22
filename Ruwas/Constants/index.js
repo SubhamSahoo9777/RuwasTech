@@ -43,6 +43,19 @@ export default LocalData = {
             'Cumulative Expenditure(Ugx)': '0',
             'Annual Budget(Ugx)': '40,00,000',
             Comments: ''
-        }
+        },
+        {
+            No: '2.1',
+            Modal_Activity: 'Procurement of computers and printers',
+            Approved_Annual_Workplan_Target: '4',
+            Target_Quarter: '0',
+            Performance_in_Quarter_Achieved: '',
+            Cumulative_to_Date_Achieved: '0',
+            Percentage_Workplan: '0',
+            'Expenditure (Quarter) (Ugx)': '',
+            'Cumulative Expenditure(Ugx)': '0',
+            'Annual Budget(Ugx)': '40,00,000',
+            Comments: ''
+        },
     ]
 }

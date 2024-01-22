@@ -1,7 +1,8 @@
 import  React ,{useState} from "react";
-import { TouchableOpacity, View ,StyleSheet} from "react-native";
-import { TextInput , Text,useTheme } from "react-native-paper";
+import { TouchableOpacity, View ,StyleSheet,TextInput,Text} from "react-native";
+
 import VectorIcon from "./VectorIcon";
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { scale } from "react-native-size-matters";
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -99,7 +100,7 @@ export const AttachFile=(props)=>{
       alignItems:'center',
       paddingLeft:5,
       borderColor:colors.documentBorderColor,
-      marginTop: 15,
+      
        }}>
       <Text style={{width:"70%",color:colors.documentBodyTextColor}}>{selectedDocument.name}</Text>
       <TouchableOpacity
@@ -114,11 +115,109 @@ export const AttachFile=(props)=>{
       }}
       onPress={()=>pickDocument()}
       >
-        <Text style={{color:colors.documentTitleTextColor,fontWeight:"500",fontSize:12}}>Attach</Text>
+        <SimpleLineIcons name="cloud-upload" size={30} color="#fff" />
       </TouchableOpacity>
       <IntructModal show={show} setShow={setShow} info={"You Haven't Selected Any Thing.."} btnTitle={"OK"}/>
     </View>
   );
+}
+export const ModifiedTextInput1=(props)=>{
+  const {title,setInput,header} =props
+const [show,setShow]=useState(false)
+const [text,setText]=useState("")
+  return (
+    <View style={{
+        marginTop:20,
+        borderWidth:1.2,
+        borderRadius:10,
+        paddingLeft:10
+        }}>
+     <TextInput 
+    onFocus={()=>{setShow(true)}}
+    value={`${text}`}
+     placeholder={show?"": title}
+     cursorColor={"#000"}
+     onBlur={()=>setShow(false)}
+     placeholderTextColor={colors.commonTextPlaceHolderColor}
+     onChangeText={(text)=>{
+       setInput(text)
+       setText(text)
+    }}
+     style={{
+        minHeight:50,
+        color:colors.commonTextPlaceHolderColor,
+        fontSize:12,
+        opacity:0.8,
+        }}/>
+   {
+    show || text?
+    <Text
+    style={{position:"absolute",top:-15,backgroundColor:colors.commonTextLabelBackColor,paddingHorizontal:10,borderRadius:20,left:15,fontWeight:"500",color:colors.commonTextLabelTextColor,fontSize:13,}}
+    >
+   {header || "Attachments"}
+    </Text>
+    :null
+   }
+    </View>
+  )
+}
+export const ModifiedTextInput2=(props)=>{
+  const {title,setInput,header,editable,value,CustomStyle} =props
+const [show,setShow]=useState(true)
+const [text,setText]=useState(false)
+  return (
+    <View style={[{
+        marginTop:20,
+        borderWidth:1.5,
+        borderColor:colors.commonTextBorderColor,
+        borderRadius:10,
+        paddingLeft:10
+        },CustomStyle]}>
+     <TextInput 
+     value={value}
+    onFocus={()=>{setShow(true)}}
+     editable={editable || false}
+     placeholder={title + " *"}
+     cursorColor={"#000"}
+     onBlur={()=>setShow(false)}
+     placeholderTextColor={colors.commonTextPlaceHolderColor}
+     style={{
+        minHeight:50,
+        color:colors.commonTextPlaceHolderColor,
+        fontSize:12,
+        }}/>
+   {
+    show?
+    <Text
+    style={{position:"absolute",top:-15,backgroundColor:colors.commonTextLabelBackColor,paddingHorizontal:10,borderRadius:20,left:15,fontWeight:"500",color:colors.commonTextLabelTextColor,fontSize:13}}
+    >
+   {header || "Attachments"}
+    </Text>
+    :null
+   }
+    </View>
+  )
+}
+export const CustomComments=()=>{
+  return(
+    <View style={{marginTop: 10,}}>
+       <Text style={{paddingLeft:5,color:colors.tableHeaderColor}}>Comments</Text>
+            <TextInput
+            placeholder="Write Here..."
+            multiline={true}
+            numberOfLines={3}
+            style={{
+              borderWidth:1.2,
+              
+              borderRadius:10,
+              textAlignVertical: 'top',
+              paddingTop:10,
+              paddingLeft:10,
+              borderColor:colors.commonTextBorderColor
+            }}
+            />
+    </View>
+  )
 }
 
 
