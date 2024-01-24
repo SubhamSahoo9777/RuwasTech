@@ -1,5 +1,5 @@
 import  React ,{useState} from "react";
-import { TouchableOpacity, View ,StyleSheet,TextInput,Text} from "react-native";
+import { TouchableOpacity, View ,StyleSheet,TextInput,Text,Image} from "react-native";
 
 import VectorIcon from "./VectorIcon";
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import colors from "./colors";
 import * as DocumentPicker from 'expo-document-picker';
 import {IntructModal} from "./AllModals"
-export const CustomDropDown=({dropData,setSelect,title})=>{
+export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon})=>{
   const [value, setValue] = React.useState(null);
   const [isFocus, setIsFocus] = React.useState(false);
   const data = dropData || [
@@ -26,7 +26,8 @@ export const CustomDropDown=({dropData,setSelect,title})=>{
     if (value || isFocus) {
       return (
         <Text style={[styles.label, isFocus && { color: colors.dropFocusLabelTextColor }]}>
-         {title || "choose title"}
+         {title || "choose title"}{" "}
+         <Text style={{color:"red"}}>*</Text>
         </Text>
       );
     }
@@ -36,7 +37,14 @@ export const CustomDropDown=({dropData,setSelect,title})=>{
     <View style={styles.container}>
     {renderLabel()}
     <Dropdown
-      style={[styles.dropdown, isFocus && { borderColor: colors.dropFocusedBorderColor }]}
+      style={[{
+        height: 50,
+        borderColor:isWrong?"red": colors.dropBorderColor,
+        borderWidth: 1.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        backgroundColor:colors.dropBackColor,
+      }, isFocus && { borderColor: colors.dropFocusedBorderColor }]}
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
@@ -47,7 +55,7 @@ export const CustomDropDown=({dropData,setSelect,title})=>{
       maxHeight={300}
       labelField="label"
       valueField="value"
-      placeholder={!isFocus ? `Select ${title} *` : '...'}
+      placeholder={!isFocus ? `Select ${title}` : '...'}
       searchPlaceholder="Search..."
       value={value}
       itemContainerStyle={{backgroundColor:colors.dropItemContainerStyle}}
@@ -56,15 +64,24 @@ export const CustomDropDown=({dropData,setSelect,title})=>{
       onChange={item => {
         setValue(item.value);
         setSelect(item.label)
+        setIsWrong({
+          wrongYear:false,
+          wrongRwsrc:false,
+          wrongGovt:false,
+          wrongQuarter:false,
+          wrongTitle:false,
+          wrongFile:false,
+        })
         setIsFocus(false);
       }}
       renderLeftIcon={() => (
-        <AntDesign
-          style={styles.icon}
-          color={isFocus ? colors.dropFocusedIconColor:colors.dropIconColor}
-          name="Safety"
-          size={20}
-        />
+        icon && icon || <AntDesign
+        style={styles.icon}
+        color={isFocus ? colors.dropFocusedIconColor:isWrong && "red" ||colors.dropIconColor}
+        name="Safety"
+        size={scale(20)}
+      />
+        
       )}
     />
   </View>
@@ -84,6 +101,14 @@ export const AttachFile=(props)=>{
       } else {
         setSelectedDocument(result.assets[0]);
         props.setFile(result.assets[0])
+        props.setIsWrong({
+          wrongYear: false,
+          wrongRwsrc: false,
+          wrongGovt: false,
+          wrongQuarter: false,
+          wrongTitle: false,
+          wrongFile: false,
+        })
       }
     } catch (error) {
       console.error('Error picking document:', error);
@@ -92,20 +117,20 @@ export const AttachFile=(props)=>{
 
   return (
     <View style={{
-      borderWidth:2,
+      borderWidth:1.5,
       flexDirection:"row",
       justifyContent:"space-between",
       borderRadius:10,
       height:50,
       alignItems:'center',
       paddingLeft:5,
-      borderColor:colors.documentBorderColor,
+      borderColor:props.isWrong && "red" || colors.documentBorderColor,
       
        }}>
       <Text style={{width:"70%",color:colors.documentBodyTextColor}}>{selectedDocument.name}</Text>
       <TouchableOpacity
       style={{
-        backgroundColor:colors.documentTitleBackColor,
+        backgroundColor:props.isWrong && "red" || colors.documentTitleBackColor,
         height:50,
         width:"30%",
         borderTopRightRadius:10,
@@ -115,7 +140,7 @@ export const AttachFile=(props)=>{
       }}
       onPress={()=>pickDocument()}
       >
-        <SimpleLineIcons name="cloud-upload" size={30} color="#fff" />
+        <Image source={require("../assets/file.png")} style={{height:37,width:37}}/>
       </TouchableOpacity>
       <IntructModal show={show} setShow={setShow} info={"You Haven't Selected Any Thing.."} btnTitle={"OK"}/>
     </View>
@@ -162,7 +187,7 @@ const [text,setText]=useState("")
   )
 }
 export const ModifiedTextInput2=(props)=>{
-  const {title,setInput,header,editable,value,CustomStyle} =props
+  const {title,header,editable,value,CustomStyle} =props
 const [show,setShow]=useState(true)
 const [text,setText]=useState(false)
   return (
@@ -175,6 +200,7 @@ const [text,setText]=useState(false)
         },CustomStyle]}>
      <TextInput 
      value={value}
+     multiline={true}
     onFocus={()=>{setShow(true)}}
      editable={editable || false}
      placeholder={title + " *"}
@@ -185,6 +211,7 @@ const [text,setText]=useState(false)
         minHeight:50,
         color:colors.commonTextPlaceHolderColor,
         fontSize:12,
+
         }}/>
    {
     show?
@@ -208,7 +235,7 @@ export const CustomComments=()=>{
             numberOfLines={3}
             style={{
               borderWidth:1.2,
-              
+              color:colors.commonTextPlaceHolderColor,
               borderRadius:10,
               textAlignVertical: 'top',
               paddingTop:10,

@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
         height: 50,
         paddingLeft: 10,
         backgroundColor: "#e6f2ff",
-        marginVertical: 10
+        marginVertical: 10,
+        fontSize:13
     },
     Table: {
         borderWidth: 1,

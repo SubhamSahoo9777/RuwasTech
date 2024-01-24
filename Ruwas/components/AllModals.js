@@ -111,10 +111,17 @@ export const IntructModal = ({ show, setShow, info, btnTitle }) => {
         Alert.alert('Modal has been closed.');
         setShow(!show)
       }}>
-      <View style={styles.centeredView}>
+      <View style={{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: "10%",
+    flexDirection: "column",
+    backgroundColor: "rgba(0,0,0,0.5)"
+  }}>
         <View style={{
-          width: width * 0.9,
-          height: height * 0.16,
+          width: width * 0.8,
+          height: height * 0.18,
           margin: 20,
           backgroundColor: 'white',
           borderRadius: 20,
@@ -128,7 +135,7 @@ export const IntructModal = ({ show, setShow, info, btnTitle }) => {
           <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
 
             <Pressable
-              style={[{ backgroundColor: "green", marginRight: 10, width: "45%", borderRadius: scale(20), justifyContent: "center", alignItems: "center", padding: 5 }]}
+              style={[{ backgroundColor: "red", marginRight: 10, width: "45%", borderRadius: scale(20), justifyContent: "center", alignItems: "center", padding: 5 }]}
               onPress={() => { setDelay(false), setShow(!show) }}>
               <Text style={styles.textStyle}>{btnTitle || "Cancel"}</Text>
             </Pressable>
@@ -184,92 +191,6 @@ export const DataRenderModal = ({ show, setShow }) => {
             </View>
           }
         </View>
-      </View>
-    </Modal>
-  )
-}
-export const ProgressReportModalTable = ({ show, setShow, setDependentModal, dependentModal }) => {
-  const [delay, setDelay] = useState(false)
-  return (
-    <Modal
-      onShow={() => setTimeout(() => {
-        setDelay(true)
-      }, 500)}
-      animationType="slide"
-      transparent={true}
-      visible={show}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        setShow(!show)
-      }}>
-      <View style={{
-        // flex:1,
-        height: height,
-        width: width,
-        alignItems: 'center',
-        paddingTop: "10%",
-        flexDirection: "column",
-        backgroundColor: "rgba(0,0,0,0.9)"
-      }}>
-        <View style={{
-          width: width * 0.9,
-          height: height * 0.8,
-          margin: 20,
-          // backgroundColor: '#e9f7f6',
-          backgroundColor: colors.progressReportBody,
-          borderRadius: 20,
-          paddingTop: 20,
-          // paddingHorizontal:10,
-          justifyContent: "space-between",
-          shadowColor: '#000',
-          shadowOpacity: 0.25,
-          shadowRadius: 4,
-          elevation: 5,
-
-        }}>
-          <FlatList
-            contentContainerStyle={{ paddingBottom: 20 }}
-            data={masterData.dshcg.table}
-            renderItem={({ item, index }) => <ProgressReportCell item={item} id={index} />}
-          />
-          <View style={{ backgroundColor: colors.tableHeaderColor, elevation: 5, borderTopWidth: 0.1, minHeight: 100, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, flexDirection: "colomn", paddingVertical: 5, justifyContent: 'center', alignItems: "center", paddingHorizontal: 5, borderBottomLeftRadiusRadius: 20, borderBottomRightRadiusRadius: 20 }}>
-            <View style={{ flexDirection: "row", marginTop: 5, borderRadius: 10, paddingLeft: 5, }}>
-              <Text style={{ color: "#fff", fontSize: scale(11), fontWeight: "500", width: "73%", opacity: 0.5 }}>Total Expenditure (Quarter)(Ugx)</Text>
-              <Text style={{ color: "#fff", fontSize: scale(11), fontWeight: "500", width: "27%", opacity: 0.7 }}>: <Text>12312334</Text></Text>
-            </View>
-            <View style={{ flexDirection: "row", marginTop: 5, borderRadius: 10, paddingLeft: 5, }}>
-              <Text style={{ color: "#fff", fontSize: scale(11), fontWeight: "500", width: "73%", opacity: 0.5 }}>Total Cumulative Expenditure(Ugx)</Text>
-              <Text style={{ color: "#fff", fontSize: scale(11), fontWeight: "500", width: "27%", opacity: 0.7 }}>: 12312334</Text>
-            </View>
-            <View style={{ flexDirection: "row", marginTop: 5, borderRadius: 10, paddingLeft: 5, }}>
-              <Text style={{ color: "#fff", fontSize: scale(11), fontWeight: "500", width: "73%", opacity: 0.5 }}>Total Annual Budget(Ugx)</Text>
-              <Text style={{ color: "#fff", fontSize: scale(11), fontWeight: "500", width: "27%", opacity: 0.7 }}>: 12312334</Text>
-            </View>
-
-          </View>
-
-          {delay ?
-            <View style={{ alignSelf: "center", height: width * 0.1, width: '85%', position: "absolute", top: -25, backgroundColor: colors.blacklite2, elevation: 5, borderRadius: 10, flexDirection: "row", alignItems: "center" }}>
-              <View style={{ alignSelf: "center", height: width * 0.1, width: '100%', backgroundColor: colors.tableRowsBackColors, borderRadius: 10, flexDirection: "row", alignItems: "center", paddingLeft: 15 }}>
-                <VectorIcon type="Feather" name="search" size={24} color={colors.deepBlue} />
-                <TextInput
-                  placeholder="Search.."
-                  cursorColor={"blue"}
-                  style={{ width: "80%", alignSelf: "center", paddingLeft: 20 }}
-                />
-              </View>
-            </View>
-            :
-            <View style={{ alignSelf: "center", height: width * 0.1, width: "80%", position: "absolute", top: -25, backgroundColor: colors.blacklite2, elevation: 5, borderRadius: 10, flexDirection: "row" }}>
-
-            </View>
-          }
-        </View>
-        <Pressable
-          onPress={() => setShow(!show)}
-          style={{ position: 'absolute', backgroundColor: colors.tableHeaderColor, height: height * 0.05, bottom: 20, width: width * 0.9, marginBottom: 20, justifyContent: "center", alignItems: "center", borderRadius: 10, }}>
-          <Text style={{ color: "#fff", fontWeight: "500" }}>Cancel</Text>
-        </Pressable>
       </View>
     </Modal>
   )

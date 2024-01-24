@@ -4,7 +4,7 @@ export default LocalData = {
     Finalcial_Year: [...Array(length).keys()].map(v => `${year + v}/${year + v + 1}`),
     year_Of_Construction: [...Array(length).keys()].map(v => `${year + v}`),
     ProgresReportHead: ['No', 'Modal Acitivity','Status'],
-    ProgressReportTable: [
+    tableData: [
         {
             No: '1.1',
             Modal_Activity: 'District Water Supply and Sanitation Coordination Committee meetings',

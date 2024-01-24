@@ -11,11 +11,14 @@ export const ReactNativeModal1 = ({
   isModalVisible,
   setModalVisible,
   item,
+
+  setIconColor
 }) => {
   const [isLoading, setLoading] = useState(true);
   const allkeys = Object.keys(item);
   console.log(allkeys);
   const [text, setText] = useState("");
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -116,6 +119,7 @@ export const ReactNativeModal1 = ({
            <CustomComments/>
           </ScrollView>
           <SubmitButton
+  
             title={"Save"}
             buttonStyle={{
               position: "absolute",
