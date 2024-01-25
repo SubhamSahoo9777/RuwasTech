@@ -1,35 +1,33 @@
 import masterData from "../DataBaseHandle/masterData";
 import {
   React,
-  StyleSheet,
-  colors,
-  View,
   useState,
+  height,
+  VectorIcon,
+} from "../components/AllPackages";
+import colors from "../components/colors"
+import {
+  CustomDropDown,
+  AttachFile,
+} from "../components/AllReusableComponets";
+import CommonTextInput from "../components/CommonTextInput";
+import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
+import {
+  TouchableOpacity,
+  Vibration,
+  StyleSheet,
+  View,
   ScrollView,
   TextInput,
   Text,
-  height,
-  VectorIcon,
   Image,
-} from "../components/AllPackages";
-import { CustomDropDown, AttachFile, ModifiedTextInput1, ModifiedTextInput2 } from "../components/AllReusableComponets";
-import CommonTextInput from "../components/CommonTextInput";
-import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
-import LocalData from "../Constants";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableOpacity, Vibration } from "react-native";
-import ProgressModal from "./ProgressModal";
-import { Entypo, AntDesign } from "@expo/vector-icons";
+} from "react-native";
+
 import styles from "./style";
-import SearchAnimation from "../components/SearchAnimation";
-import ButtonSheet from "../components/ButtonSheet";
-import { ReactNativeModal1 } from "../components/ReactNativeModal";
 import { useEffect, useRef } from "react";
 import ProgressReportTable from "../components/ProgressReportTable";
 
 const ProgressReport1 = () => {
-
-
   const [year, setYear] = useState("");
   const [rwsrc, setRwsrc] = useState("");
   const [localGovt, setLocalGovt] = useState("");
@@ -37,7 +35,10 @@ const ProgressReport1 = () => {
   const [file, setFiles] = useState("");
   const [title, setTitle] = useState("");
   const [showTable, setShowTable] = useState(false);
-
+  const [addedFiles,setAddedFiles]=useState([{
+    title:"",
+    file:""
+  }])
   const [isWrong, setIsWrong] = useState({
     wrongYear: false,
     wrongRwsrc: false,
@@ -54,14 +55,13 @@ const ProgressReport1 = () => {
   const scrollDown = () => {
     scrollViewRef.current?.scrollTo({ x: 0, y: 400, animated: true });
   };
-  useEffect(()=>{
+  useEffect(() => {
     if (year && rwsrc && localGovt && quarter) {
-      setShowTable(true)
+      setShowTable(true);
     }
-  },[year,rwsrc,localGovt,quarter])
+  }, [year, rwsrc, localGovt, quarter]);
   const handleSubmit = () => {
     if (year && rwsrc && localGovt && quarter && title && file) {
-    
     } else {
       if (!year) {
         setIsWrong({ ...isWrong, wrongYear: true });
@@ -148,35 +148,74 @@ const ProgressReport1 = () => {
           editable={false}
           style={styles.DisableTxtInput}
         />
-    {
-      // showTable?
-      <ProgressReportTable/>
-    // :null
-    }
-        <CommonTextInput 
-        setInput={setTitle}
-        isWrong={isWrong.wrongTitle}
-        setIsWrong={setIsWrong}
-        title={"Description of File"}
+        {
+          showTable?
+          <ProgressReportTable />
+          :null
+        }
+
+        <CommonTextInput
+          setInput={setTitle}
+          isWrong={isWrong.wrongTitle}
+          setIsWrong={setIsWrong}
+          title={"Description of Attach"}
+          input={title}
         />
         <Text
           style={{
             marginLeft: 4,
             marginTop: 10,
-            marginBottom:5,
+            marginBottom: 5,
             color: colors.tableHeaderColor,
             fontWeight: "bold",
           }}
         >
           Attach a File <Text style={{ color: "red" }}>*</Text>
         </Text>
-        <AttachFile 
-        title={"File"} 
-        setFile={setFiles} 
-        isWrong={isWrong.wrongFile}
-        setIsWrong={setIsWrong}
+        <AttachFile
+          title={"File"}
+          setFile={setFiles}
+          isWrong={isWrong.wrongFile}
+          setIsWrong={setIsWrong}
+          file={file}
         />
-      
+        <SubmitButton title="Add" buttonStyle={{width:"30%",alignSelf: 'center',}} onPress={()=>{
+        if(file && title){
+          setAddedFiles([...addedFiles,{
+            title:title,
+            file:file.name
+          }])
+        }else{
+          alert("please add description and file")
+        }
+         
+          setTitle("")
+          setFiles("")
+        }}/>
+{/* ///---------------------------add delete document list------------------------------ */}
+{
+  addedFiles.map((item,index)=>{
+    if(index!==0){
+      return(
+        <View key={index} style={{flexDirection:"row",justifyContent:"space-between",marginTop:10,alignItems:"center"}}>
+        <View style={{flexDirection:"row",justifyContent:"space-between",backgroundColor:"#e6e6ff",height:height*0.2/3,width:"85%",alignItems:"center",paddingHorizontal:10}}>
+        <Text style={{width:"10%",color:colors.tableHeaderColor}}>{index}</Text>
+        <Text style={{width:"90%",color:colors.tableHeaderColor,textAlign:"center",fontSize:12}}>{item.file}</Text>
+        </View>
+        <View style={{backgroundColor:"red",height:height*0.2/3,width:50,justifyContent:"center",alignItems:"center"}}>
+        <VectorIcon type="AntDesign" name="delete" size={24} color="#fff" onPress={()=>{
+          
+          const temp=[...addedFiles]
+          const filteredTemp = temp.filter((item, ind) => index !== ind + 1);
+          setAddedFiles([...filteredTemp])
+          
+        }}/>
+        </View>
+      </View>
+      )
+    }
+  })
+}
         <SubmitButton onPress={handleSubmit} />
       </ScrollView>
     </View>

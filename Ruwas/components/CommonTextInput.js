@@ -9,7 +9,7 @@ import {
     colors
   } from "./AllPackages";
 
-const CommonTextInput = ({title,setInput,isWrong,setIsWrong}) => {
+const CommonTextInput = ({title,setInput,isWrong,setIsWrong,input}) => {
 const [show,setShow]=useState(false)
 const [text,setText]=useState(false)
   return (
@@ -21,6 +21,7 @@ const [text,setText]=useState(false)
         paddingLeft:10
         }}>
      <TextInput 
+     value={input || ""}
      onFocus={()=>setShow(true)}
      cursorColor={"#000"}
      onBlur={()=>setShow(false)}

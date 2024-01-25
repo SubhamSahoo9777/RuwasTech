@@ -1,32 +1,51 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useRef } from 'react'
 import colors from './colors';
 import LocalData from "../Constants/index";
 import VectorIcon from './VectorIcon';
-import SearchAnimation from './SearchAnimation';
 import { useState } from 'react';
 import { ReactNativeModal1 } from './ReactNativeModal';
 import ButtonSheet from './ButtonSheet';
 import NormalSearch from './NormalSearch';
+import masterData from '../DataBaseHandle/masterData';
+
+
 
 const ProgressReportTable = () => {
     const [moadalVisiable, setModalVisiable] = useState(false);
-    const [TableData, setTableData] = useState(LocalData.tableData);
+    const [TableData, setTableData] = useState(masterData.dshcg.table);
+    // const [TableData, setTableData] = useState(LocalData.tableData);
     const [items, setItems] = useState("");
     const [showTotal, setShowTotal] = useState(false);
     const [iconColor, setIconColor] = useState(false);
-
+    const scrollViewRef = useRef(null);
+    const [contentPositions, setContentPositions] = useState([]);
+    const handleLayout = (index, event) => {
+      const { y } = event.nativeEvent.layout;
+      setContentPositions((prevPositions) => {
+        const newPositions = [...prevPositions];
+        newPositions[index] = y;
+        return newPositions;
+      });
+    };
+    const scrollToContent = (index) => {
+      const newY = contentPositions[index];
+      scrollViewRef.current?.scrollTo({ x: 0, y: newY, animated: true });
+    };
+  
   return (
-    <View>
+    <View style={{backgroundColor:"#f1f1f1",paddingVertical:10,paddingHorizontal:5}}>
       <NormalSearch/>
   <View
     style={{
       backgroundColor: colors.tableRowsBackColors,
       justifyContent: "space-between",
-      marginTop: 10,
+      marginTop: 5,
       borderWidth: 1,
       borderColor: colors.tableHeaderColor,
       borderRadius: 11,
+      borderTopLeftRadius:0,
+      borderTopRightRadius:0
     }}
   >
 
@@ -37,8 +56,8 @@ const ProgressReportTable = () => {
           flexDirection: "row",
           alignItems: "center",
           paddingVertical: 10,
-          borderTopRightRadius: 9,
-          borderTopLeftRadius: 9,
+          borderTopLeftRadius:0,
+      borderTopRightRadius:0,
           paddingHorizontal: 10,
         }}
       >
@@ -75,11 +94,12 @@ const ProgressReportTable = () => {
       </View>
 
       <View>
-        <ScrollView nestedScrollEnabled={true} style={{ height: 200 }}>
+        <ScrollView nestedScrollEnabled={true} ref={scrollViewRef} style={{ maxHeight: 400 }}>
           {TableData.map((item, index) => {
             const allkeys = Object.keys(item);
             return (
               <View
+              onLayout={(event) => handleLayout(i, event)}
                 key={index}
                 style={{
                   backgroundColor: "#efeef7",

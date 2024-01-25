@@ -75,11 +75,11 @@ export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon})
         setIsFocus(false);
       }}
       renderLeftIcon={() => (
-        icon && icon || <AntDesign
+        icon && icon || <VectorIcon type="AntDesign"
         style={styles.icon}
         color={isFocus ? colors.dropFocusedIconColor:isWrong && "red" ||colors.dropIconColor}
         name="Safety"
-        size={scale(20)}
+        size={18}
       />
         
       )}
@@ -94,7 +94,6 @@ export const AttachFile=(props)=>{
   const pickDocument = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({});
-      console.log(result);
       
       if (result.canceled === true) {
        setShow(true)
@@ -127,7 +126,7 @@ export const AttachFile=(props)=>{
       borderColor:props.isWrong && "red" || colors.documentBorderColor,
       
        }}>
-      <Text style={{width:"70%",color:colors.documentBodyTextColor}}>{selectedDocument.name}</Text>
+      <Text style={{width:"70%",color:colors.documentBodyTextColor}}>{props.file && props.file?.name || ""}</Text>
       <TouchableOpacity
       style={{
         backgroundColor:props.isWrong && "red" || colors.documentTitleBackColor,
