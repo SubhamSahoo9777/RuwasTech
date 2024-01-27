@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import colors from "./colors";
 import LocalData from "../Constants/index";
 import VectorIcon from "./VectorIcon";
@@ -24,25 +24,36 @@ const ProgressReportTable = () => {
   const [showTotal, setShowTotal] = useState(false);
   const [iconColor, setIconColor] = useState(false);
   const scrollViewRef = useRef(null);
-  const [contentPositions, setContentPositions] = useState([]);
-
+  const [contentPositions, setContentPositions] = useState({});
+  const [scrollToIndex,setScrollToIndex]=useState("")
+  // const handleLayout = (index, event) => {
+  //   const { y } = event.nativeEvent.layout;
+  //   const newPositions = {};
+  //   newPositions[index] = y;
+  //   setContentPositions({...contentPositions,...newPositions});
+  // };
   const handleLayout = (index, event) => {
     const { y } = event.nativeEvent.layout;
-
-    console.log(y, "hi", index);
-
-    const newPositions = {};
-    newPositions[index] = y;
-    setContentPositions([...contentPositions, newPositions]);
-    console.log(contentPositions);
+    setContentPositions((prevPositions) => ({
+      ...prevPositions,
+      [index]: y,
+    }));
   };
 
+  // const scrollToContent = (index) => {
+  //   let newY = contentPositions[index];
+  //   console.log(newY);
+  //   scrollViewRef.current?.scrollTo({ x: 0, y:newY, animated: true });
+  // };
   const scrollToContent = (index) => {
+    console.log(index,"hi");
+    console.log(contentPositions[index]);
     const newY = contentPositions[index];
-    // console.log(newY);
-    scrollViewRef.current?.scrollTo({ x: 0, y: 599, animated: true });
+    if (newY !== undefined) {
+      scrollViewRef.current?.scrollTo({ x: 0, y: newY, animated: true });
+    }
   };
-
+const listOfSearchValues=TableData.map((item,index)=>item["No"])
   return (
     <View
       style={{
@@ -51,7 +62,7 @@ const ProgressReportTable = () => {
         paddingHorizontal: 5,
       }}
     >
-      <NormalSearch onPress={scrollToContent} />
+      <NormalSearch onPress={scrollToContent} dataList={listOfSearchValues} scrollToIndex={scrollToIndex} setScrollToIndex={setScrollToIndex} />
       <View
         style={{
           backgroundColor: colors.tableRowsBackColors,
