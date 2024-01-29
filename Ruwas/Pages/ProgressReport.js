@@ -1,15 +1,7 @@
 import masterData from "../DataBaseHandle/masterData";
-import {
-  React,
-  useState,
-  height,
-  VectorIcon,
-} from "../components/AllPackages";
-import colors from "../components/colors"
-import {
-  CustomDropDown,
-  AttachFile,
-} from "../components/AllReusableComponets";
+import { React, useState, height, VectorIcon } from "../components/AllPackages";
+import colors from "../components/colors";
+import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
 import {
@@ -35,10 +27,12 @@ const ProgressReport1 = () => {
   const [file, setFiles] = useState("");
   const [title, setTitle] = useState("");
   const [showTable, setShowTable] = useState(false);
-  const [addedFiles,setAddedFiles]=useState([{
-    title:"",
-    file:""
-  }])
+  const [addedFiles, setAddedFiles] = useState([
+    {
+      title: "",
+      file: "",
+    },
+  ]);
   const [isWrong, setIsWrong] = useState({
     wrongYear: false,
     wrongRwsrc: false,
@@ -79,7 +73,6 @@ const ProgressReport1 = () => {
         setIsWrong({ ...isWrong, wrongQuarter: true });
         Vibration.vibrate(500);
         scrollUp();
-        scrollDown();
       } else if (!title) {
         setIsWrong({ ...isWrong, wrongTitle: true });
         Vibration.vibrate(500);
@@ -87,7 +80,6 @@ const ProgressReport1 = () => {
       } else if (!file) {
         setIsWrong({ ...isWrong, wrongFile: true });
         Vibration.vibrate(500);
-        scrollDown();
       } else {
         alert("Technical Issue...");
       }
@@ -148,11 +140,7 @@ const ProgressReport1 = () => {
           editable={false}
           style={styles.DisableTxtInput}
         />
-        {
-          showTable?
-          <ProgressReportTable />
-          :null
-        }
+        {showTable ? <ProgressReportTable /> : null}
 
         <CommonTextInput
           setInput={setTitle}
@@ -179,43 +167,93 @@ const ProgressReport1 = () => {
           setIsWrong={setIsWrong}
           file={file}
         />
-        <SubmitButton title="Add" buttonStyle={{width:"30%",alignSelf: 'center',}} onPress={()=>{
-        if(file && title){
-          setAddedFiles([...addedFiles,{
-            title:title,
-            file:file.name
-          }])
-        }else{
-          alert("please add description and file")
-        }
-         
-          setTitle("")
-          setFiles("")
-        }}/>
-{/* ///---------------------------add delete document list------------------------------ */}
-{
-  addedFiles.map((item,index)=>{
-    if(index!==0){
-      return(
-        <View key={index} style={{flexDirection:"row",justifyContent:"space-between",marginTop:10,alignItems:"center"}}>
-        <View style={{flexDirection:"row",justifyContent:"space-between",backgroundColor:"#e6e6ff",height:height*0.2/3,width:"85%",alignItems:"center",paddingHorizontal:10}}>
-        <Text style={{width:"10%",color:colors.tableHeaderColor}}>{index}</Text>
-        <Text style={{width:"90%",color:colors.tableHeaderColor,textAlign:"center",fontSize:12}}>{item.file}</Text>
-        </View>
-        <View style={{backgroundColor:"red",height:height*0.2/3,width:50,justifyContent:"center",alignItems:"center"}}>
-        <VectorIcon type="AntDesign" name="delete" size={24} color="#fff" onPress={()=>{
-          
-          const temp=[...addedFiles]
-          const filteredTemp = temp.filter((item, ind) => index !== ind + 1);
-          setAddedFiles([...filteredTemp])
-          
-        }}/>
-        </View>
-      </View>
-      )
-    }
-  })
-}
+        <SubmitButton
+          title="Add"
+          buttonStyle={{ width: "30%", alignSelf: "center" }}
+          onPress={() => {
+            if (file && title) {
+              setAddedFiles([
+                ...addedFiles,
+                {
+                  title: title,
+                  file: file.name,
+                },
+              ]);
+            } else {
+              alert("please add description and file");
+            }
+
+            setTitle("");
+            setFiles("");
+          }}
+        />
+        {/* ///---------------------------add delete document list------------------------------ */}
+        {addedFiles.map((item, index) => {
+          if (index !== 0) {
+            return (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 10,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    backgroundColor: "#e6e6ff",
+                    height: (height * 0.2) / 3,
+                    width: "85%",
+                    alignItems: "center",
+                    paddingHorizontal: 10,
+                  }}
+                >
+                  <Text
+                    style={{ width: "10%", color: colors.tableHeaderColor }}
+                  >
+                    {index}
+                  </Text>
+                  <Text
+                    style={{
+                      width: "90%",
+                      color: colors.tableHeaderColor,
+                      textAlign: "center",
+                      fontSize: 12,
+                    }}
+                  >
+                    {item.file}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: "red",
+                    height: (height * 0.2) / 3,
+                    width: 50,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <VectorIcon
+                    type="AntDesign"
+                    name="delete"
+                    size={24}
+                    color="#fff"
+                    onPress={() => {
+                      const temp = [...addedFiles];
+                      const filteredTemp = temp.filter(
+                        (item, ind) => index !== ind + 1
+                      );
+                      setAddedFiles([...filteredTemp]);
+                    }}
+                  />
+                </View>
+              </View>
+            );
+          }
+        })}
         <SubmitButton onPress={handleSubmit} />
       </ScrollView>
     </View>

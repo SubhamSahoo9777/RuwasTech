@@ -25,13 +25,7 @@ const ProgressReportTable = () => {
   const [iconColor, setIconColor] = useState(false);
   const scrollViewRef = useRef(null);
   const [contentPositions, setContentPositions] = useState({});
-  const [scrollToIndex,setScrollToIndex]=useState("")
-  // const handleLayout = (index, event) => {
-  //   const { y } = event.nativeEvent.layout;
-  //   const newPositions = {};
-  //   newPositions[index] = y;
-  //   setContentPositions({...contentPositions,...newPositions});
-  // };
+  const [scrollToIndex, setScrollToIndex] = useState("");
   const handleLayout = (index, event) => {
     const { y } = event.nativeEvent.layout;
     setContentPositions((prevPositions) => ({
@@ -39,21 +33,13 @@ const ProgressReportTable = () => {
       [index]: y,
     }));
   };
-
-  // const scrollToContent = (index) => {
-  //   let newY = contentPositions[index];
-  //   console.log(newY);
-  //   scrollViewRef.current?.scrollTo({ x: 0, y:newY, animated: true });
-  // };
   const scrollToContent = (index) => {
-    console.log(index,"hi");
-    console.log(contentPositions[index]);
     const newY = contentPositions[index];
     if (newY !== undefined) {
       scrollViewRef.current?.scrollTo({ x: 0, y: newY, animated: true });
     }
   };
-const listOfSearchValues=TableData.map((item,index)=>item["No"])
+  const listOfSearchValues = TableData.map((item, index) => item["No"]);
   return (
     <View
       style={{
@@ -62,7 +48,12 @@ const listOfSearchValues=TableData.map((item,index)=>item["No"])
         paddingHorizontal: 5,
       }}
     >
-      <NormalSearch onPress={scrollToContent} dataList={listOfSearchValues} scrollToIndex={scrollToIndex} setScrollToIndex={setScrollToIndex} />
+      <NormalSearch
+        onPress={scrollToContent}
+        dataList={listOfSearchValues}
+        scrollToIndex={scrollToIndex}
+        setScrollToIndex={setScrollToIndex}
+      />
       <View
         style={{
           backgroundColor: colors.tableRowsBackColors,

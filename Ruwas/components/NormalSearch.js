@@ -3,8 +3,12 @@ import React from "react";
 import colors from "./colors";
 import VectorIcon from "./VectorIcon";
 
-const NormalSearch = ({ onPress,scrollToIndex,setScrollToIndex,dataList }) => {
-
+const NormalSearch = ({
+  onPress,
+  scrollToIndex,
+  setScrollToIndex,
+  dataList,
+}) => {
   return (
     <View
       style={{
@@ -18,7 +22,7 @@ const NormalSearch = ({ onPress,scrollToIndex,setScrollToIndex,dataList }) => {
       <TextInput
         placeholder="Search by No."
         value={scrollToIndex}
-        onChangeText={(text)=>setScrollToIndex(text)}
+        onChangeText={(text) => setScrollToIndex(text)}
         placeholderTextColor={"#fff"}
         style={{
           minHeight: 40,
@@ -36,9 +40,9 @@ const NormalSearch = ({ onPress,scrollToIndex,setScrollToIndex,dataList }) => {
         color="#fff"
         onPress={() => {
           if (dataList.includes(scrollToIndex)) {
-            onPress(scrollToIndex)
+            onPress(dataList.indexOf(scrollToIndex));
           } else {
-            onPress(dataList[dataList.length-1])
+            onPress(dataList.length - 1);
           }
         }}
       />
