@@ -209,7 +209,7 @@ const ProgressReportTable = () => {
           </View>
 
           <View style={{ marginVertical: 10, marginRight: 10 }}>
-            <Text style={{ color: "#fff" }}>2/20</Text>
+            <Text style={{ color: "#fff" }}>0/{TableData.length}</Text>
           </View>
         </View>
         <ReactNativeModal1

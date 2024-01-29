@@ -79,42 +79,46 @@ export const ReactNativeModal1 = ({
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
+            <ModifiedTextInput1
+              setInput={setText}
+              title={allkeys[4]}
+              value={`${item[allkeys[4]]}`}
+              CustomStyle={{ backgroundColor: "#e8f1fc" }}
+            />
             <ModifiedTextInput2
               setInput={setText}
-              header={allkeys[9]}
-              value={`${item[allkeys[9]]}`}
+              header={allkeys[5]}
+              value={`${item[allkeys[5]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-            <ModifiedTextInput1
+            <ModifiedTextInput2
               setInput={setText}
-              title={allkeys[5]}
-              header={allkeys[5]}
-              value="12"
+              header={`${allkeys[6]} (%)`}
+              value={`${item[allkeys[6]]}`}
+              editable={false}
+              CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-            <ModifiedTextInput1
-              setInput={setText}
-              title={allkeys[6]}
-              header={allkeys[6]}
-              value="12"
-            />
+            
             <ModifiedTextInput1
               title={allkeys[7]}
               setInput={setText}
               header={allkeys[7]}
               value="12"
             />
-            <ModifiedTextInput1
-              title={allkeys[8]}
-              setInput={setText}
-              header={allkeys[8]}
-              value="12"
+            <ModifiedTextInput2
+               setInput={setText}
+               header={`${allkeys[8]} (%)`}
+               value={`${item[allkeys[8]]}`}
+               editable={false}
+               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-            <ModifiedTextInput1
-              title={allkeys[9]}
-              setInput={setText}
-              header={allkeys[9]}
-              value="12"
+           <ModifiedTextInput2
+               setInput={setText}
+               header={`${allkeys[9]} (%)`}
+               value={`${item[allkeys[9]]}`}
+               editable={false}
+               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
            <CustomComments/>
           </ScrollView>

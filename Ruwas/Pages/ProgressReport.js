@@ -4,6 +4,7 @@ import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
+import LocalDb from "../DataBaseHandle/LocalDb";
 import {
   TouchableOpacity,
   Vibration,
@@ -33,6 +34,15 @@ const ProgressReport1 = () => {
       file: "",
     },
   ]);
+  useEffect(() => {
+    api()
+  }, []);
+  const api=async()=>{
+    const uri="http://182.18.181.115:8084/api/masterdata/getdistricts"
+   let apiData= await fetch(uri)
+        apiData=await apiData.json()
+        
+  }
   const [isWrong, setIsWrong] = useState({
     wrongYear: false,
     wrongRwsrc: false,
@@ -40,6 +50,7 @@ const ProgressReport1 = () => {
     wrongQuarter: false,
     wrongTitle: false,
     wrongFile: false,
+    wrongAdd: false,
   });
 
   const scrollViewRef = useRef(null);
@@ -54,7 +65,12 @@ const ProgressReport1 = () => {
       setShowTable(true);
     }
   }, [year, rwsrc, localGovt, quarter]);
+  
   const handleSubmit = () => {
+    if(addedFiles.length<=1){
+      setIsWrong({ ...isWrong, wrongTitle: true,wrongFile: true });
+      Vibration.vibrate(500);
+    }
     if (year && rwsrc && localGovt && quarter && title && file) {
     } else {
       if (!year) {
@@ -73,16 +89,13 @@ const ProgressReport1 = () => {
         setIsWrong({ ...isWrong, wrongQuarter: true });
         Vibration.vibrate(500);
         scrollUp();
-      } else if (!title) {
-        setIsWrong({ ...isWrong, wrongTitle: true });
-        Vibration.vibrate(500);
-        scrollDown();
-      } else if (!file) {
-        setIsWrong({ ...isWrong, wrongFile: true });
+      } else if (addedFiles.length<=1) {
+        setIsWrong({ ...isWrong, wrongTitle: true,wrongFile: true });
         Vibration.vibrate(500);
       } else {
-        alert("Technical Issue...");
+        
       }
+     
     }
   };
 
@@ -146,6 +159,7 @@ const ProgressReport1 = () => {
           setInput={setTitle}
           isWrong={isWrong.wrongTitle}
           setIsWrong={setIsWrong}
+          lengthOfList={addedFiles.length}
           title={"Description of Attach"}
           input={title}
         />
@@ -165,10 +179,11 @@ const ProgressReport1 = () => {
           setFile={setFiles}
           isWrong={isWrong.wrongFile}
           setIsWrong={setIsWrong}
+          lengthOfList={addedFiles.length}
           file={file}
         />
         <SubmitButton
-          title="Add"
+          title="Add File"
           buttonStyle={{ width: "30%", alignSelf: "center" }}
           onPress={() => {
             if (file && title) {
@@ -196,7 +211,7 @@ const ProgressReport1 = () => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginTop: 10,
+                  marginTop: 15,
                   alignItems: "center",
                 }}
               >

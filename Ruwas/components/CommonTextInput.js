@@ -9,9 +9,10 @@ import {
     colors
   } from "./AllPackages";
 
-const CommonTextInput = ({title,setInput,isWrong,setIsWrong,input}) => {
+const CommonTextInput = ({title,setInput,isWrong,setIsWrong,input,lengthOfList}) => {
 const [show,setShow]=useState(false)
 const [text,setText]=useState(false)
+console.log(lengthOfList);
   return (
     <View style={{
         marginTop:20,

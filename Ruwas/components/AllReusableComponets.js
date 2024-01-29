@@ -14,13 +14,6 @@ export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon})
   const [isFocus, setIsFocus] = React.useState(false);
   const data = dropData || [
     { label: 'Item 1', value: '1' },
-    { label: 'Item 2', value: '2' },
-    { label: 'Item 3', value: '3' },
-    { label: 'Item 4', value: '4' },
-    { label: 'Item 5', value: '5' },
-    { label: 'Item 6', value: '6' },
-    { label: 'Item 7', value: '7' },
-    { label: 'Item 8', value: '8' },
   ];
   const renderLabel = () => {
     if (value || isFocus) {
@@ -100,7 +93,7 @@ export const AttachFile=(props)=>{
       } else {
         setSelectedDocument(result.assets[0]);
         props.setFile(result.assets[0])
-        props.setIsWrong({
+         props.setIsWrong({
           wrongYear: false,
           wrongRwsrc: false,
           wrongGovt: false,
@@ -123,13 +116,14 @@ export const AttachFile=(props)=>{
       height:50,
       alignItems:'center',
       paddingLeft:5,
-      borderColor:props.isWrong && "red" || colors.documentBorderColor,
+      borderColor:props.isWrong ? "red" : colors.commonTextBorderColor,
       
        }}>
       <Text style={{width:"70%",color:colors.documentBodyTextColor}}>{props.file && props.file?.name || ""}</Text>
       <TouchableOpacity
       style={{
-        backgroundColor:props.isWrong && "red" || colors.documentTitleBackColor,
+        // backgroundColor:props.isWrong && "red" || colors.documentTitleBackColor,
+        backgroundColor:props.isWrong ? "#ff6666" : colors.tableHeaderColor,
         height:50,
         width:"30%",
         borderTopRightRadius:10,
@@ -227,7 +221,7 @@ const [text,setText]=useState(false)
 export const CustomComments=()=>{
   return(
     <View style={{marginTop: 10,}}>
-       <Text style={{paddingLeft:5,color:colors.tableHeaderColor}}>Comments</Text>
+       <Text style={{paddingLeft:5,color:colors.tableHeaderColor,fontWeight:"500"}}>Comments</Text>
             <TextInput
             placeholder="Write Here..."
             multiline={true}

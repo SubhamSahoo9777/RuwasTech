@@ -14,8 +14,7 @@ import {
   FlatList,
   useState,
   Modal, Pressable, Image, Alert, scale, ScrollView, useEffect, VectorIcon, TextInput
-} from "./AllPackages";
-import ProgressReportCell from "./ProgressReportCell";
+} from "./AllPackages"
 
 export const SuccessModal = ({ show, setShow }) => {
   const [delay, setDelay] = useState(false)

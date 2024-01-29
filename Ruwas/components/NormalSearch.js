@@ -15,28 +15,34 @@ const NormalSearch = ({
         flexDirection: "row",
         alignItems: "center",
         borderRadius: 5,
-        backgroundColor: colors.tableHeaderColor,
-        borderWidth: 0.5,
+        justifyContent:"space-between",
       }}
     >
+
       <TextInput
         placeholder="Search by No."
         value={scrollToIndex}
         onChangeText={(text) => setScrollToIndex(text)}
-        placeholderTextColor={"#fff"}
+        placeholderTextColor={"#b3b3ff"}
         style={{
           minHeight: 40,
           fontSize: 13,
           paddingLeft: 10,
           color: "#fff",
-          width: "90%",
+          width: "84%",
           paddingVertical: 5,
+          backgroundColor: colors.tableHeaderColor,
+          borderBottomLeftRadius:5,
+          borderTopLeftRadius:5,
+          borderWidth:2,
+          borderColor:colors.tableHeaderColor,
         }}
       />
+    <View style={{backgroundColor:colors.tableHeaderColor,minHeight:43,width:"15%",justifyContent:"center",alignItems:"center",borderWidth:3,borderColor:colors.tableHeaderColor,borderRadius:5,}}>
       <VectorIcon
         type="AntDesign"
         name="search1"
-        size={24}
+        size={25}
         color="#fff"
         onPress={() => {
           if (dataList.includes(scrollToIndex)) {
@@ -46,6 +52,8 @@ const NormalSearch = ({
           }
         }}
       />
+      </View>
+     
     </View>
   );
 };
