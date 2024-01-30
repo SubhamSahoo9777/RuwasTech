@@ -4,10 +4,8 @@ import colors from "./colors";
 import VectorIcon from "./VectorIcon";
 
 const NormalSearch = ({
-  onPress,
-  scrollToIndex,
-  setScrollToIndex,
-  dataList,
+  searchValue,
+  setSearchValue
 }) => {
   return (
     <View
@@ -16,41 +14,35 @@ const NormalSearch = ({
         alignItems: "center",
         borderRadius: 5,
         justifyContent:"space-between",
+        // backgroundColor:colors.tableHeaderColor,
+        backgroundColor:"#bebbdd",
+        borderRadius:18,
+        paddingVertical:5,
       }}
     >
 
       <TextInput
-        placeholder="Search by No."
-        value={scrollToIndex}
-        onChangeText={(text) => setScrollToIndex(text)}
-        placeholderTextColor={"#b3b3ff"}
+        placeholder="Search..."
+        value={searchValue}
+        onChangeText={(text) => setSearchValue(text)}
+        placeholderTextColor={"#7c76bc"}
+        // placeholderTextColor={"#b3b3ff"}
         style={{
           minHeight: 40,
-          fontSize: 13,
+          fontSize: 14,
           paddingLeft: 10,
           color: "#fff",
-          width: "84%",
+          width: "85%",
           paddingVertical: 5,
-          backgroundColor: colors.tableHeaderColor,
-          borderBottomLeftRadius:5,
-          borderTopLeftRadius:5,
-          borderWidth:2,
-          borderColor:colors.tableHeaderColor,
+         
         }}
       />
-    <View style={{backgroundColor:colors.tableHeaderColor,minHeight:43,width:"15%",justifyContent:"center",alignItems:"center",borderWidth:3,borderColor:colors.tableHeaderColor,borderRadius:5,}}>
+    <View style={{minHeight:43,width:"15%",justifyContent:"center",alignItems:"center"}}>
       <VectorIcon
         type="AntDesign"
         name="search1"
         size={25}
-        color="#fff"
-        onPress={() => {
-          if (dataList.includes(scrollToIndex)) {
-            onPress(dataList.indexOf(scrollToIndex));
-          } else {
-            onPress(dataList.length - 1);
-          }
-        }}
+        color="#7c76bc"
       />
       </View>
      

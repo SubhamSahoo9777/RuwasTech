@@ -5,6 +5,7 @@ import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
 import LocalDb from "../DataBaseHandle/LocalDb";
+
 import {
   TouchableOpacity,
   Vibration,
@@ -14,6 +15,7 @@ import {
   TextInput,
   Text,
   Image,
+  ActivityIndicator,
 } from "react-native";
 
 import styles from "./style";
@@ -21,6 +23,7 @@ import { useEffect, useRef } from "react";
 import ProgressReportTable from "../components/ProgressReportTable";
 
 const ProgressReport1 = () => {
+  const [loading, setLoading] = useState(true);
   const [year, setYear] = useState("");
   const [rwsrc, setRwsrc] = useState("");
   const [localGovt, setLocalGovt] = useState("");
@@ -34,15 +37,7 @@ const ProgressReport1 = () => {
       file: "",
     },
   ]);
-  useEffect(() => {
-    api()
-  }, []);
-  const api=async()=>{
-    const uri="http://182.18.181.115:8084/api/masterdata/getdistricts"
-   let apiData= await fetch(uri)
-        apiData=await apiData.json()
-        
-  }
+  const [apiData,setApiData]=useState([])
   const [isWrong, setIsWrong] = useState({
     wrongYear: false,
     wrongRwsrc: false,
@@ -52,13 +47,26 @@ const ProgressReport1 = () => {
     wrongFile: false,
     wrongAdd: false,
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      const uri = "http://182.18.181.115:8084/api/masterdata/getdistricts";
+      try {
+        let response = await fetch(uri);
+        let data = await response.json();
+        let parseData=JSON.parse(data)
+        setApiData(parseData);
+      } catch (error) {
+        alert("Can't Fetch Data")
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchData();
+  }, []);
   const scrollViewRef = useRef(null);
   const scrollUp = () => {
     scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
-  };
-  const scrollDown = () => {
-    scrollViewRef.current?.scrollTo({ x: 0, y: 400, animated: true });
   };
   useEffect(() => {
     if (year && rwsrc && localGovt && quarter) {
@@ -67,11 +75,11 @@ const ProgressReport1 = () => {
   }, [year, rwsrc, localGovt, quarter]);
   
   const handleSubmit = () => {
-    if(addedFiles.length<=1){
-      setIsWrong({ ...isWrong, wrongTitle: true,wrongFile: true });
-      Vibration.vibrate(500);
-    }
-    if (year && rwsrc && localGovt && quarter && title && file) {
+    if (year && rwsrc && localGovt && quarter && (addedFiles.length>1 || title) && (addedFiles.length>1 || file)) {
+      if (addedFiles.length<=1) {
+        alert("Please Press On Save Button")
+        Vibration.vibrate(500);
+      }
     } else {
       if (!year) {
         setIsWrong({ ...isWrong, wrongYear: true });
@@ -89,8 +97,11 @@ const ProgressReport1 = () => {
         setIsWrong({ ...isWrong, wrongQuarter: true });
         Vibration.vibrate(500);
         scrollUp();
-      } else if (addedFiles.length<=1) {
-        setIsWrong({ ...isWrong, wrongTitle: true,wrongFile: true });
+      } else if (!title) {
+        setIsWrong({ ...isWrong, wrongTitle: true });
+        Vibration.vibrate(500);
+      } else if (!file) {
+        setIsWrong({ ...isWrong,wrongFile: true });
         Vibration.vibrate(500);
       } else {
         
@@ -107,17 +118,24 @@ const ProgressReport1 = () => {
         margin: 16,
       }}
     >
-      <ScrollView
+      {loading ? (
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <ActivityIndicator size="large" color={colors.activityIndicatorColor} />
+          </View>
+        ):
+        <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
         <CustomDropDown
           dropData={masterData.dshcg.finantialYear}
+          
           setSelect={setYear}
           title="Financial Year"
           isWrong={isWrong.wrongYear}
           setIsWrong={setIsWrong}
+          
         />
         <CustomDropDown
           dropData={masterData.dshcg.rwsrc}
@@ -128,11 +146,12 @@ const ProgressReport1 = () => {
         />
 
         <CustomDropDown
-          dropData={masterData.dshcg.localgovt}
           setSelect={setLocalGovt}
           title="Local Government"
           isWrong={isWrong.wrongGovt}
           setIsWrong={setIsWrong}
+          dropData={apiData}
+          fieldName={"districtname"}
         />
         <CustomDropDown
           dropData={masterData.dshcg.quarter}
@@ -155,12 +174,16 @@ const ProgressReport1 = () => {
         />
         {showTable ? <ProgressReportTable /> : null}
 
-        <CommonTextInput
+       
+        {
+          addedFiles.length<3 ?
+          <>
+           <CommonTextInput
           setInput={setTitle}
           isWrong={isWrong.wrongTitle}
           setIsWrong={setIsWrong}
           lengthOfList={addedFiles.length}
-          title={"Description of Attach"}
+          title={"Description of Attachment"}
           input={title}
         />
         <Text
@@ -182,8 +205,9 @@ const ProgressReport1 = () => {
           lengthOfList={addedFiles.length}
           file={file}
         />
-        <SubmitButton
-          title="Add File"
+          
+          <SubmitButton
+          title="Save "
           buttonStyle={{ width: "30%", alignSelf: "center" }}
           onPress={() => {
             if (file && title) {
@@ -202,6 +226,10 @@ const ProgressReport1 = () => {
             setFiles("");
           }}
         />
+          </>
+          :null
+        }
+       
         {/* ///---------------------------add delete document list------------------------------ */}
         {addedFiles.map((item, index) => {
           if (index !== 0) {
@@ -271,6 +299,9 @@ const ProgressReport1 = () => {
         })}
         <SubmitButton onPress={handleSubmit} />
       </ScrollView>
+        
+        }
+     
     </View>
   );
 };

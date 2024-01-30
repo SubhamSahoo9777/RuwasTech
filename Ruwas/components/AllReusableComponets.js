@@ -2,18 +2,15 @@ import  React ,{useState} from "react";
 import { TouchableOpacity, View ,StyleSheet,TextInput,Text,Image} from "react-native";
 
 import VectorIcon from "./VectorIcon";
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { scale } from "react-native-size-matters";
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import colors from "./colors";
 import * as DocumentPicker from 'expo-document-picker';
 import {IntructModal} from "./AllModals"
-export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon})=>{
+export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon,fieldName})=>{
   const [value, setValue] = React.useState(null);
   const [isFocus, setIsFocus] = React.useState(false);
-  const data = dropData || [
-    { label: 'Item 1', value: '1' },
+  const data1 =[
+    { label: '--select--', value: '1' },
   ];
   const renderLabel = () => {
     if (value || isFocus) {
@@ -43,11 +40,11 @@ export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon})
       inputSearchStyle={styles.inputSearchStyle}
       iconStyle={styles.iconStyle}
       iconColor={colors.dropArrowColor}
-      data={data}
+      data={ !!dropData?dropData :data1}
       search
       maxHeight={300}
-      labelField="label"
-      valueField="value"
+      labelField={fieldName || "label"}
+      valueField={fieldName || "label"}
       placeholder={!isFocus ? `Select ${title}` : '...'}
       searchPlaceholder="Search..."
       value={value}
@@ -55,8 +52,8 @@ export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon})
       onFocus={() => setIsFocus(true)}
       onBlur={() => setIsFocus(false)}
       onChange={item => {
-        setValue(item.value);
-        setSelect(item.label)
+        setValue(item[fieldName] ||item.label);
+        setSelect(item[fieldName] ||item.label)
         setIsWrong({
           wrongYear:false,
           wrongRwsrc:false,

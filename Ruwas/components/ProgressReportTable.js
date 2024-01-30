@@ -22,24 +22,18 @@ const ProgressReportTable = () => {
   // const [TableData, setTableData] = useState(LocalData.tableData);
   const [items, setItems] = useState("");
   const [showTotal, setShowTotal] = useState(false);
-  const [iconColor, setIconColor] = useState(false);
-  const scrollViewRef = useRef(null);
-  const [contentPositions, setContentPositions] = useState({});
-  const [scrollToIndex, setScrollToIndex] = useState("");
-  const handleLayout = (index, event) => {
-    const { y } = event.nativeEvent.layout;
-    setContentPositions((prevPositions) => ({
-      ...prevPositions,
-      [index]: y,
-    }));
-  };
-  const scrollToContent = (index) => {
-    const newY = contentPositions[index];
-    if (newY !== undefined) {
-      scrollViewRef.current?.scrollTo({ x: 0, y: newY, animated: true });
-    }
-  };
-  const listOfSearchValues = TableData.map((item, index) => item["No"]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  useEffect(() => {
+    // Perform filtering based on the search term
+    const filteredResults = TableData.filter(item => {
+      const noValue = item.No.toLowerCase();
+      const modalActivityValue = item['Modal Activity'].toLowerCase();
+      return noValue.includes(searchTerm.toLowerCase()) || modalActivityValue.includes(searchTerm.toLowerCase());
+    });
+
+    setFilteredData(filteredResults);
+  }, [searchTerm, TableData]);
   return (
     <View
       style={{
@@ -49,10 +43,8 @@ const ProgressReportTable = () => {
       }}
     >
       <NormalSearch
-        onPress={scrollToContent}
-        dataList={listOfSearchValues}
-        scrollToIndex={scrollToIndex}
-        setScrollToIndex={setScrollToIndex}
+        searchValue={searchTerm}
+        setSearchValue={setSearchTerm}
       />
       <View
         style={{
@@ -62,8 +54,8 @@ const ProgressReportTable = () => {
           borderWidth: 1,
           borderColor: colors.tableHeaderColor,
           borderRadius: 11,
-          borderTopLeftRadius: 0,
-          borderTopRightRadius: 0,
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
         }}
       >
         <View style={{}}>
@@ -73,8 +65,8 @@ const ProgressReportTable = () => {
               flexDirection: "row",
               alignItems: "center",
               paddingVertical: 10,
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
+              borderTopLeftRadius: 11,
+              borderTopRightRadius: 11,
               paddingHorizontal: 10,
             }}
           >
@@ -113,14 +105,12 @@ const ProgressReportTable = () => {
           <View>
             <ScrollView
               nestedScrollEnabled={true}
-              ref={scrollViewRef}
-              style={{ maxHeight: 400 }}
+              style={{ height: 400 }}
             >
-              {TableData.map((item, index) => {
+              {filteredData.map((item, index) => {
                 const allkeys = Object.keys(item);
                 return (
                   <View
-                    onLayout={(event) => handleLayout(index, event)}
                     key={index}
                     style={{
                       backgroundColor: "#efeef7",
@@ -144,15 +134,7 @@ const ProgressReportTable = () => {
                         alignItems: "center",
                       }}
                     >
-                      {iconColor ? (
-                        <Text
-                          onPress={() => {
-                            setItems(item), setModalVisiable(true);
-                          }}
-                        >
-                          Edit
-                        </Text>
-                      ) : (
+                
                         <VectorIcon
                           type="MaterialCommunityIcons"
                           name="database-plus"
@@ -162,7 +144,7 @@ const ProgressReportTable = () => {
                             setItems(item), setModalVisiable(true);
                           }}
                         />
-                      )}
+          
                     </TouchableOpacity>
                   </View>
                 );
@@ -216,7 +198,6 @@ const ProgressReportTable = () => {
           isModalVisible={moadalVisiable}
           setModalVisible={setModalVisiable}
           item={items}
-          setIconColor={setIconColor}
         />
         <ButtonSheet isVisible={showTotal} onClose={setShowTotal} />
       </View>
