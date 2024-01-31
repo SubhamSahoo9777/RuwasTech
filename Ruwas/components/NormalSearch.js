@@ -14,10 +14,9 @@ const NormalSearch = ({
         alignItems: "center",
         borderRadius: 5,
         justifyContent:"space-between",
-        // backgroundColor:colors.tableHeaderColor,
-        backgroundColor:"#bebbdd",
-        borderRadius:18,
-        paddingVertical:5,
+        backgroundColor:colors.tableHeaderColor,
+        borderRadius:15,
+        paddingVertical:2,
       }}
     >
 
@@ -25,7 +24,7 @@ const NormalSearch = ({
         placeholder="Search..."
         value={searchValue}
         onChangeText={(text) => setSearchValue(text)}
-        placeholderTextColor={"#7c76bc"}
+        placeholderTextColor={"#fff"}
         // placeholderTextColor={"#b3b3ff"}
         style={{
           minHeight: 40,
@@ -42,7 +41,7 @@ const NormalSearch = ({
         type="AntDesign"
         name="search1"
         size={25}
-        color="#7c76bc"
+        color="#fff"
       />
       </View>
      

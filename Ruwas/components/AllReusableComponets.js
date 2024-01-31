@@ -137,7 +137,7 @@ export const AttachFile=(props)=>{
   );
 }
 export const ModifiedTextInput1=(props)=>{
-  const {title,setInput,header} =props
+  const {title,setInput,header,value,keyboardType} =props
 const [show,setShow]=useState(false)
 const [text,setText]=useState("")
   return (
@@ -149,11 +149,12 @@ const [text,setText]=useState("")
         }}>
      <TextInput 
     onFocus={()=>{setShow(true)}}
-    value={`${text}`}
+    value={`${value || text}`}
      placeholder={show?"": title}
      cursorColor={"#000"}
      onBlur={()=>setShow(false)}
      placeholderTextColor={colors.commonTextPlaceHolderColor}
+     keyboardType={keyboardType || "default"}
      onChangeText={(text)=>{
        setInput(text)
        setText(text)

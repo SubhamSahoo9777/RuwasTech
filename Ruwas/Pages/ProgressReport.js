@@ -21,6 +21,7 @@ import {
 import styles from "./style";
 import { useEffect, useRef } from "react";
 import ProgressReportTable from "../components/ProgressReportTable";
+import LottieFileLoader from "../components/LottieFileLoader";
 
 const ProgressReport1 = () => {
   const [loading, setLoading] = useState(true);
@@ -58,7 +59,7 @@ const ProgressReport1 = () => {
       } catch (error) {
         alert("Can't Fetch Data")
       } finally {
-        setLoading(false);
+        setTimeout(()=>{setLoading(false)},3000)
       }
     };
 
@@ -111,6 +112,7 @@ const ProgressReport1 = () => {
   };
 
   return (
+  <>
     <View
       style={{
         flex: 1,
@@ -118,11 +120,7 @@ const ProgressReport1 = () => {
         margin: 16,
       }}
     >
-      {loading ? (
-          <View style={{ alignItems: 'center', marginTop: 20 }}>
-            <ActivityIndicator size="large" color={colors.activityIndicatorColor} />
-          </View>
-        ):
+
         <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
@@ -300,9 +298,11 @@ const ProgressReport1 = () => {
         <SubmitButton onPress={handleSubmit} />
       </ScrollView>
         
-        }
+
      
     </View>
+   { loading && <LottieFileLoader/>}
+  </>
   );
 };
 

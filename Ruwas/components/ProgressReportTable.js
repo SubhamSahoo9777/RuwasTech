@@ -122,6 +122,7 @@ const ProgressReportTable = () => {
                     }}
                   >
                     <Text style={{ width: "15%", textAlign: "center" }}>
+                      {/* no */}
                       {item[allkeys[0]]}
                     </Text>
                     <Text style={{ width: "70%", textAlign: "center" }}>

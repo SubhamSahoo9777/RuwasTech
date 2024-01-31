@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, TextInput, View } from "react-native";
 import Modal from "react-native-modal";
 import VectorIcon from "./VectorIcon";
@@ -22,7 +22,13 @@ export const ReactNativeModal1 = ({
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
+//field variables
+//cda=pqa+cda
+// workplan=cda/qt*100
+const [cda,setCda]=useState(item[""])
+const[qt,setQt]=useState("0")
+const [workplan,setWorkplan]=useState("0")
+setWorkplan()
   return (
     <Modal
       animationIn={"slideInRight"}
@@ -53,12 +59,14 @@ export const ReactNativeModal1 = ({
               }}
             >
               <ModifiedTextInput2
+              //no
                 header={allkeys[0]}
                 value={`${item[allkeys[0]]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
               <ModifiedTextInput2
+              //Quarter Target
                 header={allkeys[3]}
                 value={`${item[allkeys[3]]}`}
                 editable={false}
@@ -66,47 +74,53 @@ export const ReactNativeModal1 = ({
               />
             </View>
             <ModifiedTextInput2
-              setInput={setText}
+            //Modal Activity
               header={allkeys[1]}
               value={`${item[allkeys[1]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
-              setInput={setText}
+            //Approved Annual Workplan Target
               header={allkeys[2]}
               value={`${item[allkeys[2]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput1
-              setInput={setText}
+            //Performance in Quarter Achieved
+              setInput={setPqa}
               title={allkeys[4]}
-              value={`${item[allkeys[4]]}`}
-              CustomStyle={{ backgroundColor: "#e8f1fc" }}
+              header={allkeys[4]}
+              value={`${pqa}`}
+              keyboardType="numeric"
             />
             <ModifiedTextInput2
-              setInput={setText}
+            //"Cumulative to Date Achieved
               header={allkeys[5]}
-              value={`${item[allkeys[5]]}`}
+              value={`${cda}`}
+              // value={`${item[allkeys[5]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
-              setInput={setText}
+            //Percentage Workplan
               header={`${allkeys[6]} (%)`}
-              value={`${item[allkeys[6]]}`}
+              // value={`${item[allkeys[6]]}`}
+              value={`${workplan}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             
             <ModifiedTextInput1
+            //Expenditure (Quarter) (Ugx)
               title={allkeys[7]}
               setInput={setText}
               header={allkeys[7]}
               value="12"
             />
             <ModifiedTextInput2
+            //Cumulative Expenditure(Ugx)
                setInput={setText}
                header={`${allkeys[8]} (%)`}
                value={`${item[allkeys[8]]}`}
@@ -114,12 +128,14 @@ export const ReactNativeModal1 = ({
                CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
            <ModifiedTextInput2
+           //Annual Budget(Ugx)
                setInput={setText}
                header={`${allkeys[9]} (%)`}
                value={`${item[allkeys[9]]}`}
                editable={false}
                CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
+          {/* //cmt */}
            <CustomComments/>
           </ScrollView>
           <SubmitButton
