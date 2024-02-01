@@ -116,21 +116,22 @@ export const AttachFile=(props)=>{
       borderColor:props.isWrong ? "red" : colors.commonTextBorderColor,
       
        }}>
-      <Text style={{width:"70%",color:colors.documentBodyTextColor}}>{props.file && props.file?.name || ""}</Text>
+      <Text style={{width:"80%",color:colors.documentBodyTextColor}}>{props.file && props.file?.name || ""}</Text>
       <TouchableOpacity
       style={{
-        // backgroundColor:props.isWrong && "red" || colors.documentTitleBackColor,
         backgroundColor:props.isWrong ? "#ff6666" : colors.tableHeaderColor,
         height:50,
-        width:"30%",
+        width:"20%",
         borderTopRightRadius:10,
         borderBottomRightRadius:10,
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
+      
       }}
       onPress={()=>pickDocument()}
       >
-        <Image source={require("../assets/file.png")} style={{height:37,width:37}}/>
+        <Image source={require("../assets/file.png")} style={{height:37,width:37,marginRight: -7,}}/>
+        {/* <Image source={require("../assets/folder.png")} style={{height:37,width:37}}/> */}
       </TouchableOpacity>
       <IntructModal show={show} setShow={setShow} info={"You Haven't Selected Any Thing.."} btnTitle={"OK"}/>
     </View>
@@ -166,7 +167,7 @@ const [text,setText]=useState("")
         opacity:0.8,
         }}/>
    {
-    show || text?
+    value ||show || text?
     <Text
     style={{position:"absolute",top:-15,backgroundColor:colors.commonTextLabelBackColor,paddingHorizontal:10,borderRadius:20,left:15,fontWeight:"500",color:colors.commonTextLabelTextColor,fontSize:13,}}
     >

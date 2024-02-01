@@ -11,24 +11,24 @@ export const ReactNativeModal1 = ({
   isModalVisible,
   setModalVisible,
   item,
-
   setIconColor
 }) => {
   const [isLoading, setLoading] = useState(true);
-  const allkeys = Object.keys(item);
-  console.log(allkeys);
+ 
   const [text, setText] = useState("");
-
+  const allkeys=Object.keys(item)
+  const [cda,setCda]=useState("5")
+  const[qt,setQt]=useState("10")
+  const [workplan,setWorkplan]=useState(0)
+  console.log("state variable");
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-//field variables
-//cda=pqa+cda
-// workplan=cda/qt*100
-const [cda,setCda]=useState(item[""])
-const[qt,setQt]=useState("0")
-const [workplan,setWorkplan]=useState("0")
-setWorkplan()
+useEffect(()=>{
+  console.log(typeof cda,"cda",typeof qt,"qt");
+  setWorkplan(`${(parseInt(cda) / parseInt(qt))*100} %`)
+
+},[cda,qt,item])
   return (
     <Modal
       animationIn={"slideInRight"}
@@ -39,6 +39,7 @@ setWorkplan()
       onBackdropPress={() => setModalVisible(false)}
     >
       <View style={{ flex:1, justifyContent: "center", alignItems: "center" ,}}>
+        {console.log("ui")}
         <View
           style={{
             backgroundColor: colors.commonTextLabelBackColor,
@@ -89,10 +90,10 @@ setWorkplan()
             />
             <ModifiedTextInput1
             //Performance in Quarter Achieved
-              setInput={setPqa}
+              setInput={setText}
               title={allkeys[4]}
               header={allkeys[4]}
-              value={`${pqa}`}
+              value={`${item[allkeys[4]]}`}
               keyboardType="numeric"
             />
             <ModifiedTextInput2
@@ -104,7 +105,7 @@ setWorkplan()
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
-            //Percentage Workplan
+            // Workplan
               header={`${allkeys[6]} (%)`}
               // value={`${item[allkeys[6]]}`}
               value={`${workplan}`}
