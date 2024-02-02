@@ -1,22 +1,29 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { useColorScheme } from "react-native";
 import AppNavigator from "./AppNavigator";
-import {
-  MD3LightTheme as DefaultTheme,
-  PaperProvider,
-} from "react-native-paper";
+import { MD3LightTheme, PaperProvider, MD3DarkTheme } from "react-native-paper";
+import { LightScheme as CustomLightScheme } from "./allProjectComponents/lightScheme";
+import { DarkScheme as CustomDarkScheme } from "./allProjectComponents/darkScheme";
+import { Provider } from "react-redux";
+import Store from "./redux/Store";
+
+const LightTheme = {
+  ...MD3LightTheme,
+  colors: CustomLightScheme,
+};
+const DarkTheme = {
+  ...MD3DarkTheme,
+  colors: CustomDarkScheme,
+};
+
 export default function App() {
-  const theme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: "tomato",
-      secondary: "yellow",
-    },
-  };
+  const colorScheme = useColorScheme();
+  console.log(colorScheme);
+  const theme = colorScheme == "dark" ? DarkTheme : LightTheme;
   return (
-    <PaperProvider theme={theme}>
-      <AppNavigator />
-    </PaperProvider>
+    <Provider store={Store}>
+      <PaperProvider theme={theme}>
+        <AppNavigator />
+      </PaperProvider>
+    </Provider>
   );
 }

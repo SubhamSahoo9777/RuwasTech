@@ -1,20 +1,28 @@
-import React, { useState } from "react";
+import { useTheme } from "react-native-paper";
 import {
+  React,
+  useState,
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from "react-native";
+} from "../../allProjectComponents/allPackages";
+import { SafeAreaView } from "react-native";
 
 const LogIn = ({ navigation }) => {
+  const theme = useTheme();
+  console.log(theme.colors.primary);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = () => {
-    navigation.navigate("SignUp")
+    navigation.navigate("SignUp");
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView
+      style={[styles.container]}
+      // style={[styles.container, { backgroundColor: theme.colors.sbc }]}
+    >
       <Text style={styles.title}>Welcome!</Text>
       <TextInput
         style={styles.input}
@@ -32,7 +40,7 @@ const LogIn = ({ navigation }) => {
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

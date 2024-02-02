@@ -1,13 +1,22 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-
-const SignUp = () => {
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  React,
+} from "../../allProjectComponents/allPackages";
+import ImageView from "../../components/imageView";
+const SignUp = ({ navigation }) => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Pressable onPress={() => navigation.navigate("LogIn")}>
-        <Text>login</Text>
-      </Pressable>
-    </View>
+    <ImageView
+      backgroundImageSource={require("../../assets/signupimage.jpg")}
+      contentText="Dynamic Content 1"
+    ></ImageView>
+    // <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    //   <Pressable onPress={() => navigation.navigate("NavigateDecider")}>
+    //     <Text>login</Text>
+    //   </Pressable>
+    // </View>
   );
 };
 
