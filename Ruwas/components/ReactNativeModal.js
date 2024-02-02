@@ -20,12 +20,12 @@ export const ReactNativeModal1 = ({
   const [cda,setCda]=useState("5")
   const[qt,setQt]=useState("10")
   const [workplan,setWorkplan]=useState(0)
-  console.log("state variable");
+  
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 useEffect(()=>{
-  console.log(typeof cda,"cda",typeof qt,"qt");
+
   setWorkplan(`${(parseInt(cda) / parseInt(qt))*100} %`)
 
 },[cda,qt,item])
@@ -39,7 +39,7 @@ useEffect(()=>{
       onBackdropPress={() => setModalVisible(false)}
     >
       <View style={{ flex:1, justifyContent: "center", alignItems: "center" ,}}>
-        {console.log("ui")}
+      
         <View
           style={{
             backgroundColor: colors.commonTextLabelBackColor,

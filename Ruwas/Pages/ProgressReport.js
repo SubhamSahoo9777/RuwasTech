@@ -4,7 +4,6 @@ import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
-import LocalDb from "../DataBaseHandle/LocalDb";
 
 import {
   TouchableOpacity,
@@ -22,8 +21,9 @@ import styles from "./style";
 import { useEffect, useRef } from "react";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
+import { createTable, insertDataArray } from "../components/AllLocalDatabaseFunction";
 
-const ProgressReport1 = () => {
+const ProgressReport = () => {
   const [loading, setLoading] = useState(true);
   const [year, setYear] = useState("");
   const [rwsrc, setRwsrc] = useState("");
@@ -32,6 +32,7 @@ const ProgressReport1 = () => {
   const [file, setFiles] = useState("");
   const [title, setTitle] = useState("");
   const [showTable, setShowTable] = useState(false);
+
   const [apiYear, setApiYear] = useState([]);
   const [apiRwsrc, setApiRwsrc] = useState([]);
   const [apiDistricts, setApiDistricts] = useState([]);
@@ -55,9 +56,10 @@ const ProgressReport1 = () => {
   useEffect(() => {
     const fetchData = async () => {
       const uri = "http://182.18.181.115:8084/api/masterdata/getdistricts";
-      const yearUri1 = "http://192.168.10.239:3000/finantialYearName";
-      const districtUri = "http://192.168.10.239:3000/localgovt";
-      const rwsrcUri = "http://192.168.10.239:3000/rwsrc";
+
+      const yearUri1 ="http://182.18.181.115:8084/api/masterdata/getfinancialyeardtls";
+      const rwsrcUri = "http://182.18.181.115:8084/api/masterdata/getRWSRCdtls";
+      const districtUri = "http://182.18.181.115:8084/api/masterdata/getRWSRCdistrictdtls";
       const quaterUri = "http://192.168.10.239:3000/quarter";
       try {
         let response = await fetch(uri);
@@ -67,22 +69,34 @@ const ProgressReport1 = () => {
 
         let masterYear = await fetch(yearUri1);
         let allmasterYear = await masterYear.json();
-        allmasterYear=allmasterYear.reverse()
-        setApiYear(allmasterYear)
+        allmasterYear = JSON.parse(allmasterYear);
+        setApiYear(allmasterYear);
+        let temp1={
+        
+                tableName:"rwsrc",
+                TEXT:Object.keys(allmasterYear[0]),
+        }
+        await createTable(temp1)
+        let temp2={...temp1,table:allmasterYear}
+        insertDataArray(temp2)
+       
 
         let masterRwsrc = await fetch(rwsrcUri);
         let allmasterRwsrc = await masterRwsrc.json();
-        setApiRwsrc(allmasterRwsrc)
-
+        allmasterRwsrc = JSON.parse(allmasterRwsrc);
+        setApiRwsrc(allmasterRwsrc);
 
         let masterDistricts = await fetch(districtUri);
         let allmasterDistricts = await masterDistricts.json();
-        setApiDistricts(allmasterDistricts)
+        allmasterDistricts = JSON.parse(allmasterDistricts);
+        let selectedDistricts = allmasterDistricts.filter((item) => {
+          return item.rwsrcId == rwsrc;
+        });
+        setApiDistricts(selectedDistricts);
 
         let masterQuater = await fetch(quaterUri);
         let allmasterQuater = await masterQuater.json();
-        setApiQuater(allmasterQuater)
-
+        setApiQuater(allmasterQuater);
       } catch (error) {
         alert("Can't Fetch Data");
       } finally {
@@ -93,7 +107,7 @@ const ProgressReport1 = () => {
     };
 
     fetchData();
-  }, []);
+  }, [rwsrc]);
   const scrollViewRef = useRef(null);
   const scrollUp = () => {
     scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
@@ -103,6 +117,7 @@ const ProgressReport1 = () => {
       setShowTable(true);
     }
   }, [year, rwsrc, localGovt, quarter]);
+ 
 
   const handleSubmit = () => {
     if (
@@ -167,15 +182,17 @@ const ProgressReport1 = () => {
             isWrong={isWrong.wrongYear}
             setIsWrong={setIsWrong}
             fieldName={"financialYearName"}
+            valueFieldName={"financialYearId"}
           />
           <CustomDropDown
             // dropData={masterData.dshcg.rwsrc}
             dropData={apiRwsrc}
-            fieldName={"label"}
+            fieldName={"RWSRCName"}
             setSelect={setRwsrc}
             title="RWSRC"
             isWrong={isWrong.wrongRwsrc}
             setIsWrong={setIsWrong}
+            valueFieldName={"RWSRCId"}
           />
 
           <CustomDropDown
@@ -185,7 +202,8 @@ const ProgressReport1 = () => {
             setIsWrong={setIsWrong}
             // dropData={apiData}
             dropData={apiDistricts}
-            fieldName={"districtName"}
+            fieldName={"LCName"}
+            valueFieldName={"rwsrcId"}
           />
           <CustomDropDown
             dropData={apiQuater}
@@ -337,4 +355,4 @@ const ProgressReport1 = () => {
   );
 };
 
-export default ProgressReport1;
+export default ProgressReport;

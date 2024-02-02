@@ -6,11 +6,11 @@ import { Dropdown } from 'react-native-element-dropdown';
 import colors from "./colors";
 import * as DocumentPicker from 'expo-document-picker';
 import {IntructModal} from "./AllModals"
-export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon,fieldName})=>{
+export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon,fieldName,valueFieldName})=>{
   const [value, setValue] = React.useState(null);
   const [isFocus, setIsFocus] = React.useState(false);
   const data1 =[
-    { label: '--select--', value: '1' },
+    { label: '--No Result--', value: '1' },
   ];
   const renderLabel = () => {
     if (value || isFocus) {
@@ -40,7 +40,7 @@ export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon,f
       inputSearchStyle={styles.inputSearchStyle}
       iconStyle={styles.iconStyle}
       iconColor={colors.dropArrowColor}
-      data={ !!dropData?dropData :data1}
+      data={dropData ?dropData :data1}
       search
       maxHeight={300}
       labelField={fieldName || "label"}
@@ -53,7 +53,7 @@ export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon,f
       onBlur={() => setIsFocus(false)}
       onChange={item => {
         setValue(item[fieldName] ||item.label);
-        setSelect(item[fieldName] ||item.label)
+        setSelect(item[valueFieldName] ||item[fieldName] ||item.label)
         setIsWrong({
           wrongYear:false,
           wrongRwsrc:false,

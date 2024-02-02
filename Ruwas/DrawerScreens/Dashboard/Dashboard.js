@@ -5,7 +5,7 @@ import styles from './style';
 const Dashboard = ({navigation}) => {
     return (
         <View style={styles.container}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>navigation.navigate("Progress Report")}>
             <Text>Dashboard</Text>
             </TouchableOpacity>
         </View>
