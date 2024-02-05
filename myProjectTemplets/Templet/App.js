@@ -1,8 +1,8 @@
 import { useColorScheme } from "react-native";
 import AppNavigator from "./AppNavigator";
 import { MD3LightTheme, PaperProvider, MD3DarkTheme } from "react-native-paper";
-import { LightScheme as CustomLightScheme } from "./allProjectComponents/lightScheme";
-import { DarkScheme as CustomDarkScheme } from "./allProjectComponents/darkScheme";
+import { LightScheme as CustomLightScheme } from "./colors/lightScheme";
+import { DarkScheme as CustomDarkScheme } from "./colors/darkScheme";
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
 

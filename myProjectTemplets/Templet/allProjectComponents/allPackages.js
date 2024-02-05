@@ -1,6 +1,7 @@
 //npm i react-native-modal-datetime-picker expo-linear-gradient
 import React, { useState, useRef, useEffect } from "react";
 import {
+  SafeAreaView,
   ScrollView,
   Pressable,
   Image,
@@ -32,6 +33,7 @@ export {
   useState,
   useRef,
   Vibration,
+  SafeAreaView,
   Image,
   ImageBackground,
   FlatList,

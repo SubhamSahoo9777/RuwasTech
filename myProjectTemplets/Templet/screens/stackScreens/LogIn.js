@@ -7,40 +7,43 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from "../../allProjectComponents/allPackages";
-import { SafeAreaView } from "react-native";
+import ImageView from "../../components/imageView";
 
 const LogIn = ({ navigation }) => {
   const theme = useTheme();
-  console.log(theme.colors.primary);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = () => {
     navigation.navigate("SignUp");
   };
   return (
-    <SafeAreaView
-      style={[styles.container]}
-      // style={[styles.container, { backgroundColor: theme.colors.sbc }]}
-    >
-      <Text style={styles.title}>Welcome!</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={(text) => setUsername(text)}
-        value={username}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-      />
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <ImageView imageSource={require("../../assets/signupimage.jpg")}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: "rgba(0,0,0,0.5)" }]}
+      >
+        <Text style={styles.title}>Login !</Text>
+        <TextInput
+          placeholderTextColor="#ebe1c5"
+          style={styles.input}
+          placeholder="Username"
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+        />
+        <TextInput
+          placeholderTextColor="#ebe1c5"
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+        />
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>Login</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </ImageView>
   );
 };
 
@@ -56,17 +59,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+    color: "#fff",
+    marginBottom: 16,
   },
   input: {
     height: 40,
-    width: "100%",
-    borderColor: "gray",
+    borderColor: "#fff",
     borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingLeft: 10,
+    color: "#fff",
+    marginBottom: 16,
+    padding: 8,
+    width: "100%",
+    borderRadius: 10,
   },
   loginButton: {
     backgroundColor: "#3498db",
