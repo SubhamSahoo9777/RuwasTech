@@ -4,7 +4,6 @@ import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
-
 import {
   TouchableOpacity,
   Vibration,
@@ -21,7 +20,7 @@ import styles from "./style";
 import { useEffect, useRef } from "react";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
-import { createTable, insertDataArray } from "../components/AllLocalDatabaseFunction";
+import { retrieveData } from "../components/AllLocalDatabaseFunction";
 
 const ProgressReport = () => {
   const [loading, setLoading] = useState(true);
@@ -43,7 +42,6 @@ const ProgressReport = () => {
       file: "",
     },
   ]);
-  const [apiData, setApiData] = useState([]);
   const [isWrong, setIsWrong] = useState({
     wrongYear: false,
     wrongRwsrc: false,
@@ -55,48 +53,20 @@ const ProgressReport = () => {
   });
   useEffect(() => {
     const fetchData = async () => {
-      const uri = "http://182.18.181.115:8084/api/masterdata/getdistricts";
 
-      const yearUri1 ="http://182.18.181.115:8084/api/masterdata/getfinancialyeardtls";
-      const rwsrcUri = "http://182.18.181.115:8084/api/masterdata/getRWSRCdtls";
-      const districtUri = "http://182.18.181.115:8084/api/masterdata/getRWSRCdistrictdtls";
-      const quaterUri = "http://192.168.10.239:3000/quarter";
+      const quaterUri = masterData.dshcg.quarter
       try {
-        let response = await fetch(uri);
-        let data = await response.json();
-        let parseData = JSON.parse(data);
-        setApiData(parseData);
-
-        let masterYear = await fetch(yearUri1);
-        let allmasterYear = await masterYear.json();
-        allmasterYear = JSON.parse(allmasterYear);
+        allmasterYear = await retrieveData("finantialYear");
         setApiYear(allmasterYear);
-        let temp1={
-        
-                tableName:"rwsrc",
-                TEXT:Object.keys(allmasterYear[0]),
-        }
-        await createTable(temp1)
-        let temp2={...temp1,table:allmasterYear}
-        insertDataArray(temp2)
-       
-
-        let masterRwsrc = await fetch(rwsrcUri);
-        let allmasterRwsrc = await masterRwsrc.json();
-        allmasterRwsrc = JSON.parse(allmasterRwsrc);
+        allmasterRwsrc = await retrieveData("rwsrc")
         setApiRwsrc(allmasterRwsrc);
-
-        let masterDistricts = await fetch(districtUri);
-        let allmasterDistricts = await masterDistricts.json();
-        allmasterDistricts = JSON.parse(allmasterDistricts);
+        allmasterDistricts =await retrieveData("districts")
         let selectedDistricts = allmasterDistricts.filter((item) => {
           return item.rwsrcId == rwsrc;
         });
         setApiDistricts(selectedDistricts);
-
-        let masterQuater = await fetch(quaterUri);
-        let allmasterQuater = await masterQuater.json();
-        setApiQuater(allmasterQuater);
+        setApiQuater(quaterUri);
+    
       } catch (error) {
         alert("Can't Fetch Data");
       } finally {
@@ -184,8 +154,7 @@ const ProgressReport = () => {
             fieldName={"financialYearName"}
             valueFieldName={"financialYearId"}
           />
-          <CustomDropDown
-            // dropData={masterData.dshcg.rwsrc}
+           <CustomDropDown
             dropData={apiRwsrc}
             fieldName={"RWSRCName"}
             setSelect={setRwsrc}
@@ -200,7 +169,6 @@ const ProgressReport = () => {
             title="Local Government"
             isWrong={isWrong.wrongGovt}
             setIsWrong={setIsWrong}
-            // dropData={apiData}
             dropData={apiDistricts}
             fieldName={"LCName"}
             valueFieldName={"rwsrcId"}

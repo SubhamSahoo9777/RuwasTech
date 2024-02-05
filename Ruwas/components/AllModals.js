@@ -1,19 +1,19 @@
-
-import masterData from "../DataBaseHandle/masterData";
+import React, { useState,} from "react";
 import {
-  React,
+  ScrollView,
+  Pressable,
+  Image,
   StyleSheet,
-  Text,
-  colors,
   View,
-  Dimensions,
-  LinearGradient,
+  Text,
+  Alert,
+  TextInput,
+  Modal,
+} from "react-native";
+import {
+  colors,
   height,
-  width,
-  TouchableOpacity,
-  FlatList,
-  useState,
-  Modal, Pressable, Image, Alert, scale, ScrollView, useEffect, VectorIcon, TextInput
+  width, scale,
 } from "./AllPackages"
 
 export const SuccessModal = ({ show, setShow }) => {

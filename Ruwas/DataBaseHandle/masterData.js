@@ -20,10 +20,10 @@ export default {
               ],
               quarter:[
                
-                {label:"Q One",value:"1"},
-                { label: 'Q Two', value: '2' },
-                { label: 'Q Three', value: '3' },
-                { label: 'Q Four', value: '4' },
+                {label:"Q One (July-Sept)",value:"1"},
+                { label: 'Q Two (Oct-Dec)', value: '2' },
+                { label: 'Q Three (Jan-March)', value: '3' },
+                { label: 'Q Four (Apr-Jun)' , value: '4' },
               ],
               localgovt:[
                 {label:"Abim",value:"1"},

@@ -78,7 +78,7 @@ const MainStackScreen = () => {
                 barStyle="light-content"
             />
             <MainStack.Navigator>
-                {/* <MainStack.Screen
+                <MainStack.Screen
                     name="Login"
                     component={Login}
                     options={{ headerShown: false }}
@@ -92,7 +92,7 @@ const MainStackScreen = () => {
                     name="PinAccess"
                     component={PinAccess}
                     options={{ headerShown: false }}
-                /> */}
+                />
                 <MainStack.Screen
                     name="WSDB"
                     component={BottomNav}

@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import styles from './style';
-
+import { retrieveData } from '../../components/AllLocalDatabaseFunction';
 const Dashboard = ({navigation}) => {
+    const fetchTableData=async()=>{
+    }
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={()=>navigation.navigate("Progress Report")}>
+            <TouchableOpacity onPress={()=>fetchTableData()}>
             <Text>Dashboard</Text>
             </TouchableOpacity>
         </View>

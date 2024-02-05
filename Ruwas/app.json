@@ -1,5 +1,6 @@
 {
   "expo": {
+
     "name": "RUWAS",
     "slug": "ruwas",
     "version": "1.0.0",
@@ -11,6 +12,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#0F0C29"
     },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],
