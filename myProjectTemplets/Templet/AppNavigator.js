@@ -20,15 +20,16 @@ export default function AppNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="LogIn"
-          component={LogIn}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
           name="SignUp"
           component={SignUp}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="LogIn"
+          component={LogIn}
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen
           name="NavigateDecider"
           component={NavigateDecider}

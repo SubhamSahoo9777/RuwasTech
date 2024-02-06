@@ -17,6 +17,7 @@ import {
   Animated,
   Vibration,
   FlatList,
+  BackHandler,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from "@react-navigation/native";
@@ -38,6 +39,7 @@ export {
   ImageBackground,
   FlatList,
   StyleSheet,
+  BackHandler,
   TouchableOpacity,
   View,
   Text,

@@ -2,24 +2,41 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import ImageView from "../../components/imageView";
-
+import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
+import { CustomButton } from "../../allProjectComponents/AllButtons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const SignUp = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRePassword] = useState("");
-
+  const handleSignUp = async () => {
+    try {
+      if (repassword == "" || password == "" || username == "") {
+        return alert("All Input Should Require !");
+      }
+      if (repassword !== password) {
+        return alert("Password Missmatch");
+      }
+      await AsyncStorage.setItem("username", username);
+      await AsyncStorage.setItem("password", password);
+      navigation.navigate("LogIn");
+    } catch (error) {
+      alert("Error In Inserting Data To Async Stroge ");
+    }
+  };
   return (
     <ImageView imageSource={require("../../assets/signupimage.jpg")}>
       <View style={styles.overlay}>
         <Text style={styles.title}>Register !</Text>
-        <TextInput
+        <CustomTextInput
           style={styles.input}
           placeholder="Username"
           placeholderTextColor="#ebe1c5"
           onChangeText={(text) => setUsername(text)}
           value={username}
         />
-        <TextInput
+
+        <CustomTextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#ebe1c5"
@@ -27,7 +44,7 @@ const SignUp = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           value={password}
         />
-        <TextInput
+        <CustomTextInput
           style={styles.input}
           placeholder="Re-Password"
           placeholderTextColor="#ebe1c5"
@@ -35,20 +52,7 @@ const SignUp = ({ navigation }) => {
           onChangeText={(text) => setRePassword(text)}
           value={repassword}
         />
-
-        <Pressable
-          style={{
-            backgroundColor: "#3498db",
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingVertical: 7,
-            borderRadius: 10,
-          }}
-          onPress={() => navigation.navigate("NavigateDecider")}
-        >
-          <Text>Login</Text>
-        </Pressable>
+        <CustomButton title="Sign Up" onPress={handleSignUp} />
       </View>
     </ImageView>
   );

@@ -10,13 +10,29 @@ import {
   SafeAreaView,
 } from "../../allProjectComponents/allPackages";
 import ImageView from "../../components/imageView";
+import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
+import { CustomButton } from "../../allProjectComponents/AllButtons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LogIn = ({ navigation }) => {
   const theme = useTheme();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const handleLogin = () => {
-    navigation.navigate("SignUp");
+  const handleLogin = async () => {
+    try {
+      if (username == "" || password == "") {
+        return alert("Need to Enter All Field");
+      }
+      const storedUsername = await AsyncStorage.getItem("username");
+      const storedPassword = await AsyncStorage.getItem("password");
+      console.log(storedUsername, storedPassword);
+      if (username !== storedUsername && password !== storedPassword) {
+        return alert("Wrong User Name Or Password You Have Enterd");
+      }
+      navigation.navigate("NavigateDecider");
+    } catch (error) {
+      alert("Error In Fetching Data From Async Stroge ");
+    }
   };
   return (
     <ImageView imageSource={require("../../assets/signupimage.jpg")}>
@@ -24,14 +40,14 @@ const LogIn = ({ navigation }) => {
         style={[styles.container, { backgroundColor: "rgba(0,0,0,0.5)" }]}
       >
         <Text style={styles.title}>Login !</Text>
-        <TextInput
+        <CustomTextInput
           placeholderTextColor="#ebe1c5"
           style={styles.input}
           placeholder="Username"
           onChangeText={(text) => setUsername(text)}
           value={username}
         />
-        <TextInput
+        <CustomTextInput
           placeholderTextColor="#ebe1c5"
           style={styles.input}
           placeholder="Password"
@@ -39,9 +55,7 @@ const LogIn = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           value={password}
         />
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
+        <CustomButton title="LogIn" onPress={handleLogin} />
       </SafeAreaView>
     </ImageView>
   );
