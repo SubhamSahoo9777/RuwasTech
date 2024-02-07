@@ -1,19 +1,17 @@
 import masterData from "../DataBaseHandle/masterData";
-import { React, useState, height, VectorIcon } from "../components/AllPackages";
+import {useState, height } from "../components/AllPackages";
+import React from "react";
+import VectorIcon from "../components/VectorIcon"
 import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
-import { SubmitButton, SubmitButton2 } from "../components/AllButtons";
+import { SubmitButton,} from "../components/AllButtons";
 import {
-  TouchableOpacity,
   Vibration,
-  StyleSheet,
   View,
   ScrollView,
   TextInput,
   Text,
-  Image,
-  ActivityIndicator,
 } from "react-native";
 
 import styles from "./style";
@@ -21,6 +19,7 @@ import { useEffect, useRef } from "react";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
+import { SuccessModal } from "../components/AllModals";
 
 const ProgressReport = () => {
   const [loading, setLoading] = useState(true);
@@ -31,7 +30,7 @@ const ProgressReport = () => {
   const [file, setFiles] = useState("");
   const [title, setTitle] = useState("");
   const [showTable, setShowTable] = useState(false);
-
+const[show,setShow]=useState(false)
   const [apiYear, setApiYear] = useState([]);
   const [apiRwsrc, setApiRwsrc] = useState([]);
   const [apiDistricts, setApiDistricts] = useState([]);
@@ -68,7 +67,7 @@ const ProgressReport = () => {
         setApiQuater(quaterUri);
     
       } catch (error) {
-        alert("Can't Fetch Data");
+        setShow(true)
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -145,7 +144,6 @@ const ProgressReport = () => {
           contentContainerStyle={{ paddingBottom: 20 }}
         >
           <CustomDropDown
-            // dropData={masterData.dshcg.finantialYear}
             dropData={apiYear}
             setSelect={setYear}
             title="financial Year"
@@ -317,6 +315,7 @@ const ProgressReport = () => {
           })}
           <SubmitButton onPress={handleSubmit} />
         </ScrollView>
+        <SuccessModal show={show} setShow={setShow} type="info" title="Can't Fetch Data From Your Local DataBase" content="Need To ReStart The App"/>
       </View>
       {loading && <LottieFileLoader />}
     </>

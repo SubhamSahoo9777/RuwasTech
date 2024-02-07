@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import colors from "./colors";
-import LocalData from "../Constants/index";
 import VectorIcon from "./VectorIcon";
 import { useState } from "react";
 import { ReactNativeModal1 } from "./ReactNativeModal";
@@ -19,7 +18,6 @@ import masterData from "../DataBaseHandle/masterData";
 const ProgressReportTable = () => {
   const [moadalVisiable, setModalVisiable] = useState(false);
   const [TableData, setTableData] = useState(masterData.dshcg.table);
-  // const [TableData, setTableData] = useState(LocalData.tableData);
   const [items, setItems] = useState("");
   const [showTotal, setShowTotal] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
@@ -34,6 +32,7 @@ const ProgressReportTable = () => {
 
     setFilteredData(filteredResults);
   }, [searchTerm, TableData]);
+ 
   return (
     <View
       style={{
@@ -142,7 +141,7 @@ const ProgressReportTable = () => {
                           size={30}
                           color={colors.tableHeaderColor}
                           onPress={() => {
-                            setItems(item), setModalVisiable(true);
+                            setItems({item,id:index}), setModalVisiable(true);
                           }}
                         />
           

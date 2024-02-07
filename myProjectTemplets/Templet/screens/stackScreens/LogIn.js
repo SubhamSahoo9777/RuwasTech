@@ -9,7 +9,6 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "../../allProjectComponents/allPackages";
-import ImageView from "../../components/imageView";
 import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
 import { CustomButton } from "../../allProjectComponents/AllButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -35,7 +34,7 @@ const LogIn = ({ navigation }) => {
     }
   };
   return (
-    <ImageView imageSource={require("../../assets/signupimage.jpg")}>
+    <View style={{backgroundColor:"#4a5ac7" ,flex:1}}>
       <SafeAreaView
         style={[styles.container, { backgroundColor: "rgba(0,0,0,0.5)" }]}
       >
@@ -57,7 +56,7 @@ const LogIn = ({ navigation }) => {
         />
         <CustomButton title="LogIn" onPress={handleLogin} />
       </SafeAreaView>
-    </ImageView>
+    </View>
   );
 };
 

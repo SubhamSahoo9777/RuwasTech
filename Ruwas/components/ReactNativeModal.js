@@ -6,29 +6,41 @@ import { CustomComments, ModifiedTextInput1, ModifiedTextInput2 } from "./AllReu
 import { SubmitButton } from "../components/AllButtons";
 import colors from "./colors";
 import { height,width } from "./AllPackages";
+import masterData from "../DataBaseHandle/masterData";
 
 export const ReactNativeModal1 = ({
   isModalVisible,
   setModalVisible,
   item,
-  setIconColor
 }) => {
+
+  const allkeys=Object.keys(item !==undefined && item.item ||{})
+  const unitData=item !==undefined && item.item ||{}
+  console.log(allkeys);
   const [isLoading, setLoading] = useState(true);
  
   const [text, setText] = useState("");
-  const allkeys=Object.keys(item)
   const [cda,setCda]=useState("5")
   const[qt,setQt]=useState("10")
   const [workplan,setWorkplan]=useState(0)
-  
+  // --------
+  const [pqa,setPqa]=useState(0)
+  const [expenditure,setExpenditure]=useState(0)
+
+  const updateData=(index,pqa,expenditure)=>{
+let temp=[...masterData.dshcg.table]
+temp=temp.map((item,index)=>{
+
+})
+  }
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-useEffect(()=>{
+// useEffect(()=>{
 
-  setWorkplan(`${(parseInt(cda) / parseInt(qt))*100} %`)
+//   setWorkplan(`${(parseInt(cda) / parseInt(qt))*100} %`)
 
-},[cda,qt,item])
+// },[cda,qt,item])
   return (
     <Modal
       animationIn={"slideInRight"}
@@ -49,7 +61,7 @@ useEffect(()=>{
             padding: 10,
           }}
         >
-          <ScrollView 
+         <ScrollView 
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 70 }}>
             <View
@@ -62,14 +74,14 @@ useEffect(()=>{
               <ModifiedTextInput2
               //no
                 header={allkeys[0]}
-                value={`${item[allkeys[0]]}`}
+                value={`${unitData[allkeys[0]]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
               <ModifiedTextInput2
               //Quarter Target
                 header={allkeys[3]}
-                value={`${item[allkeys[3]]}`}
+                value={`${unitData[allkeys[3]]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
@@ -77,14 +89,14 @@ useEffect(()=>{
             <ModifiedTextInput2
             //Modal Activity
               header={allkeys[1]}
-              value={`${item[allkeys[1]]}`}
+              value={`${unitData[allkeys[1]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
             //Approved Annual Workplan Target
               header={allkeys[2]}
-              value={`${item[allkeys[2]]}`}
+              value={`${unitData[allkeys[2]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -93,21 +105,21 @@ useEffect(()=>{
               setInput={setText}
               title={allkeys[4]}
               header={allkeys[4]}
-              value={`${item[allkeys[4]]}`}
+              value={`${unitData[allkeys[4]]}`}
               keyboardType="numeric"
             />
             <ModifiedTextInput2
             //"Cumulative to Date Achieved
               header={allkeys[5]}
               value={`${cda}`}
-              // value={`${item[allkeys[5]]}`}
+              // value={`${unitData[allkeys[5]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
             // Workplan
               header={`${allkeys[6]} (%)`}
-              // value={`${item[allkeys[6]]}`}
+              // value={`${unitData[allkeys[6]]}`}
               value={`${workplan}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
@@ -124,7 +136,7 @@ useEffect(()=>{
             //Cumulative Expenditure(Ugx)
                setInput={setText}
                header={`${allkeys[8]} (%)`}
-               value={`${item[allkeys[8]]}`}
+               value={`${unitData[allkeys[8]]}`}
                editable={false}
                CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -132,7 +144,7 @@ useEffect(()=>{
            //Annual Budget(Ugx)
                setInput={setText}
                header={`${allkeys[9]} (%)`}
-               value={`${item[allkeys[9]]}`}
+               value={`${unitData[allkeys[9]]}`}
                editable={false}
                CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -140,7 +152,7 @@ useEffect(()=>{
            <CustomComments/>
           </ScrollView>
           <SubmitButton
-  
+            onPress={updateData}
             title={"Save"}
             buttonStyle={{
               position: "absolute",

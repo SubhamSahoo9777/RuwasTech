@@ -1,7 +1,6 @@
 // SignUp.js
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
-import ImageView from "../../components/imageView";
 import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
 import { CustomButton } from "../../allProjectComponents/AllButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,7 +24,7 @@ const SignUp = ({ navigation }) => {
     }
   };
   return (
-    <ImageView imageSource={require("../../assets/signupimage.jpg")}>
+    <View style={{backgroundColor:"#4a5ac7" ,flex:1}}>
       <View style={styles.overlay}>
         <Text style={styles.title}>Register !</Text>
         <CustomTextInput
@@ -54,7 +53,7 @@ const SignUp = ({ navigation }) => {
         />
         <CustomButton title="Sign Up" onPress={handleSignUp} />
       </View>
-    </ImageView>
+    </View>
   );
 };
 

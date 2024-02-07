@@ -1,6 +1,5 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import ImageView from "../../components/imageView";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Splash = ({ navigation }) => {
@@ -19,7 +18,7 @@ const Splash = ({ navigation }) => {
   };
 
   return (
-    <ImageView imageSource={require("../../assets/signupimage.jpg")}>
+    <View style={{backgroundColor:"#4a5ac7" ,flex:1}}>
       <Text style={{ color: "#fff", fontSize: 50, alignSelf: "center" }}>
         Project Template
       </Text>
@@ -33,7 +32,7 @@ const Splash = ({ navigation }) => {
       >
         By Subham
       </Text>
-    </ImageView>
+    </View>
   );
 };
 

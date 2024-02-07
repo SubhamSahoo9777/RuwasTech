@@ -5,7 +5,7 @@ import VectorIcon from "./VectorIcon";
 import { Dropdown } from 'react-native-element-dropdown';
 import colors from "./colors";
 import * as DocumentPicker from 'expo-document-picker';
-import {IntructModal} from "./AllModals"
+import {IntructModal, SuccessModal} from "./AllModals"
 export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon,fieldName,valueFieldName})=>{
   const [value, setValue] = React.useState(null);
   const [isFocus, setIsFocus] = React.useState(false);
@@ -131,9 +131,9 @@ export const AttachFile=(props)=>{
       onPress={()=>pickDocument()}
       >
         <Image source={require("../assets/file.png")} style={{height:37,width:37,marginRight: -7,}}/>
-        {/* <Image source={require("../assets/folder.png")} style={{height:37,width:37}}/> */}
       </TouchableOpacity>
-      <IntructModal show={show} setShow={setShow} info={"You Haven't Selected Any Thing.."} btnTitle={"OK"}/>
+     
+      <SuccessModal show={show} setShow={setShow} type="info" title="You Haven't Selected Any Thing" content ="" />
     </View>
   );
 }
