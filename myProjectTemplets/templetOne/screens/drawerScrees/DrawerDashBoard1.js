@@ -7,30 +7,10 @@ import {
   useState,
   useEffect,
   React,
+  StatusBar,
 } from "../../allProjectComponents/allPackages";
 
 const DrawerDashBoard1 = () => {
-  const [dropData, setDropData] = useState([]);
-
-useEffect(()=>{
-fetchDeta()
-
-},[])
-const fetchDeta=async()=>{
-  const uri="http://182.18.181.115:8066/Api/Wfp/Fetch_Basin"
-  console.log("fetch starting..");
-  try {
-    let response = await fetch(uri);
-    let data = await response.json();
-        data=JSON.parse(data)
-    setDropData(data)
-    console.log(data);
-
-  } catch (error) {
-    alert("data not fetch")
-  }
- 
-}
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -63,22 +43,14 @@ const fetchDeta=async()=>{
       ],
       { cancelable: true }
     );
-
-    // Return true to prevent the default behavior (closing the app)
     return true;
   };
 
   return (
-    <View style={{ flex: 1,backgroundColor:"#d0e0fb" }}>
-  <CustomDropDown
-  dropData={dropData}
-  fieldName={"txt_basin"}
-  valueFieldName={"txt_basin"}
-  />
+    <View style={{ flex: 1, backgroundColor: "#d0e0fb" }}>
+      <StatusBar backgroundColor="#0D47a4" barStyle="dark-content" />
     </View>
   );
 };
 
 export default DrawerDashBoard1;
-
-const styles = StyleSheet.create({});

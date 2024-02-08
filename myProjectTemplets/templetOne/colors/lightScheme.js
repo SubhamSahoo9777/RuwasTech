@@ -1,29 +1,19 @@
 export const LightScheme = {
   primary: "rgb(220, 184, 255)",
   sbc: "red",
-  button:{
-    drawerButton:"green",
-    drawerText:"black",
+  button: {
+    drawerButton: "green",
+    drawerText: "black",
   },
-  dropDown:{
-
+  dropDown: {},
+  dateTimePicker: {},
+  textInput: {},
+  screenHeader: {},
+  screen: {
+    login: "red",
   },
-  dateTimePicker:{
-
-  },
-  textInput:{
-
-  },
-  screenHeader:{
-
-  },
-  screenBackGround:{
-logIn:"red"
-  },
-  icon:{
-
-  },
-  statusbar:{
-global:"red",
+  icon: {},
+  statusbar: {
+    global: "red",
   },
 };

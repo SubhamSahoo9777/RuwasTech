@@ -1,5 +1,8 @@
 import * as React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "react-native"; // Import StatusBar
 import LogIn from "./screens/stackScreens/LogIn";
@@ -13,14 +16,21 @@ import { useTheme } from "react-native-paper";
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
-  theme=useTheme()
-  console.log('====================================');
-  console.log(theme.colors.statusbar.global);
-  console.log('====================================');
+  const theme = useTheme(); // Fix: Added const keyword
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor={theme.colors.statusbar.global} barStyle="light-content" />
-      <Stack.Navigator>
+      <StatusBar
+        backgroundColor={theme.colors.statusbar.global}
+        barStyle="light-content"
+      />
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
+          ...TransitionPresets.ModalFadeTransition,
+        }}
+      >
         <Stack.Screen
           name="Splash"
           component={Splash}

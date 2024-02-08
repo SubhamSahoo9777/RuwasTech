@@ -4,13 +4,13 @@ import {
   useState,
   View,
   Text,
-  StyleSheet,
   SafeAreaView,
 } from "../../allProjectComponents/allPackages";
 import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
 import { CustomButton } from "../../allProjectComponents/AllButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { customStyle } from "../../components/allStyles";
+const loginStyle = customStyle.login;
 const LogIn = ({ navigation }) => {
   const theme = useTheme();
   const [username, setUsername] = useState("");
@@ -32,66 +32,42 @@ const LogIn = ({ navigation }) => {
     }
   };
   return (
-    <View style={{backgroundColor:theme.colors.screenBackGround.logIn,flex:1}}>
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: "rgba(0,0,0,0.5)" }]}
-      >
-        <Text style={styles.title}>Login !</Text>
+    <View
+      style={[
+        customStyle.container,
+        { backgroundColor: theme.colors.screen.login },
+      ]}
+    >
+      <SafeAreaView style={[loginStyle.container]}>
+        <Text style={loginStyle.title}>Login !</Text>
         <CustomTextInput
           placeholderTextColor="#ebe1c5"
-          style={styles.input}
+          style={loginStyle.input}
           placeholder="Username"
           onChangeText={(text) => setUsername(text)}
           value={username}
         />
         <CustomTextInput
           placeholderTextColor="#ebe1c5"
-          style={styles.input}
+          style={loginStyle.input}
           placeholder="Password"
           secureTextEntry
           onChangeText={(text) => setPassword(text)}
           value={password}
         />
         <CustomButton title="LogIn" onPress={handleLogin} />
+        <Text style={{ color: "#fff", marginTop: 15 }}>
+          New User ?{"   "}
+          <Text
+            style={{ color: "yellow" }}
+            onPress={() => navigation.navigate("SignUp")}
+          >
+            SignUp
+          </Text>
+        </Text>
       </SafeAreaView>
     </View>
   );
 };
 
 export default LogIn;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    color: "#fff",
-    marginBottom: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: "#fff",
-    borderWidth: 1,
-    color: "#fff",
-    marginBottom: 16,
-    padding: 8,
-    width: "100%",
-    borderRadius: 10,
-  },
-  loginButton: {
-    backgroundColor: "#3498db",
-    padding: 10,
-    borderRadius: 5,
-    width: "100%",
-    alignItems: "center",
-  },
-  loginButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-});

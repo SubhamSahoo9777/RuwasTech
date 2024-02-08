@@ -4,6 +4,8 @@ import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
 import { CustomButton } from "../../allProjectComponents/AllButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { customStyle } from "../../components/allStyles";
+const signupStyle = customStyle.login;
 const SignUp = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,11 +26,11 @@ const SignUp = ({ navigation }) => {
     }
   };
   return (
-    <View style={{backgroundColor:"#4a5ac7" ,flex:1}}>
-      <View style={styles.overlay}>
-        <Text style={styles.title}>Register !</Text>
+    <View style={{ backgroundColor: "#4a5ac7", flex: 1 }}>
+      <View style={signupStyle.container}>
+        <Text style={signupStyle.title}>Register !</Text>
         <CustomTextInput
-          style={styles.input}
+          style={signupStyle.input}
           placeholder="Username"
           placeholderTextColor="#ebe1c5"
           onChangeText={(text) => setUsername(text)}
@@ -36,7 +38,7 @@ const SignUp = ({ navigation }) => {
         />
 
         <CustomTextInput
-          style={styles.input}
+          style={signupStyle.input}
           placeholder="Password"
           placeholderTextColor="#ebe1c5"
           secureTextEntry
@@ -44,7 +46,7 @@ const SignUp = ({ navigation }) => {
           value={password}
         />
         <CustomTextInput
-          style={styles.input}
+          style={signupStyle.input}
           placeholder="Re-Password"
           placeholderTextColor="#ebe1c5"
           secureTextEntry
@@ -52,34 +54,18 @@ const SignUp = ({ navigation }) => {
           value={repassword}
         />
         <CustomButton title="Sign Up" onPress={handleSignUp} />
+        <Text style={{ color: "#fff", marginTop: 15 }}>
+          Already have an account?{"   "}
+          <Text
+            style={{ color: "yellow" }}
+            onPress={() => navigation.navigate("LogIn")}
+          >
+            Log In
+          </Text>
+        </Text>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    color: "#fff",
-    marginBottom: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: "#fff",
-    borderWidth: 1,
-    color: "#fff",
-    marginBottom: 16,
-    padding: 8,
-    width: "100%",
-    borderRadius: 10,
-  },
-});
 
 export default SignUp;
