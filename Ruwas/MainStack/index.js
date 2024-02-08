@@ -14,6 +14,8 @@ import Login from '../Autherization/Login';
 import PinAccess from '../Autherization/PinAccess';
 import PinGeneration from '../Autherization/PinGeneration';
 import { scale } from 'react-native-size-matters';
+import Report from '../Pages/Report';
+import SyncData from '../Pages/SyncData';
 
 const MainStack = createStackNavigator();
 
@@ -135,6 +137,16 @@ const MainStackScreen = () => {
               <MainStack.Screen
                     name="Profile"
                     component={Profile}
+                    options={Options}
+                />
+              <MainStack.Screen
+                    name="Report"
+                    component={Report}
+                    options={Options}
+                />
+              <MainStack.Screen
+                    name="Sync Data"
+                    component={SyncData}
                     options={Options}
                 />
             </MainStack.Navigator>

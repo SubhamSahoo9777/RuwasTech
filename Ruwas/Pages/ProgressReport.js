@@ -21,7 +21,11 @@ import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
 
-const ProgressReport = () => {
+const ProgressReport = ({navigation,route}) => {
+  const allDetails=route.params.data
+  console.log('====================================');
+  console.log(allDetails);
+  console.log('====================================');
   const [loading, setLoading] = useState(true);
   const [year, setYear] = useState("");
   const [rwsrc, setRwsrc] = useState("");
@@ -143,6 +147,16 @@ const[show,setShow]=useState(false)
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
         >
+          <View style={{flexDirection:"row",backgroundColor:colors.tableHeaderColor,padding:16,borderRadius:10}}>
+            <View style={{flexDirection:"row",width:"50%"}}>
+            <Text style={{color:'#fff',fontSize:16}}>Work Plan Id</Text>
+            <Text style={{color:'#fff',fontSize:16}}> : {allDetails.workPlanId}</Text>
+            </View>
+            <View style={{flexDirection:"row",width:"50%"}}>
+            <Text style={{color:'#fff',fontSize:16}}>Planed Budget</Text>
+            <Text style={{color:'#fff',fontSize:16}}> : {allDetails.planedBudget}</Text>
+            </View>
+          </View>
           <CustomDropDown
             dropData={apiYear}
             setSelect={setYear}

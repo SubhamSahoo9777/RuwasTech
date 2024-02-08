@@ -9,7 +9,7 @@ import { useDrawerStatus } from '@react-navigation/drawer';
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const CustomDrawerContent = ({ navigation }) => {
-    const data = ['Dashboard', 'Progress Report',];
+    const data = ['Dashboard',"Sync Data"];
     const drawerStatus = useDrawerStatus();
     const [isExp, setExp] = React.useState(null)
 
@@ -38,10 +38,10 @@ const CustomDrawerContent = ({ navigation }) => {
                         {v == 'Dashboard' &&
                             <MaterialIcons name="dashboard" size={20} color="#808080" />
                         }
-                        {
-                            v !== 'Dashboard' &&
-                            <Octicons  name={icons[index]} size={20} color="#808080" />
+                        {v == 'Sync Data' &&
+                            <MaterialIcons name="sync" size={24} color="black" />
                         }
+                       
 
                         <Text style={styles.drawerText}>{v}</Text>
 
