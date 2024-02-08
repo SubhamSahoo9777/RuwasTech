@@ -10,25 +10,28 @@ import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
 import { CustomButton } from "../../allProjectComponents/AllButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { customStyle } from "../../components/allStyles";
+import { CommonModal } from "../../allProjectComponents/masterModals";
 const loginStyle = customStyle.login;
 const LogIn = ({ navigation }) => {
   const theme = useTheme();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showNullPasswordMoadal, setShowNullPasswordMoadal] = useState(false);
+  const [showWrongPasswordMoadl, setShowWrongPasswordMoadl] = useState(false);
+  const [showErrorApiModal, SetShowErrorApiModal] = useState(false);
   const handleLogin = async () => {
     try {
       if (username == "" || password == "") {
-        return alert("Need to Enter All Field");
+        return setShowNullPasswordMoadal(true);
       }
       const storedUsername = await AsyncStorage.getItem("username");
       const storedPassword = await AsyncStorage.getItem("password");
-      console.log(storedUsername, storedPassword);
       if (username !== storedUsername && password !== storedPassword) {
-        return alert("Wrong User Name Or Password You Have Enterd");
+        return setShowWrongPasswordMoadl(true);
       }
       navigation.navigate("NavigateDecider");
     } catch (error) {
-      alert("Error In Fetching Data From Async Stroge ");
+      SetShowErrorApiModal(true);
     }
   };
   return (
@@ -66,6 +69,27 @@ const LogIn = ({ navigation }) => {
           </Text>
         </Text>
       </SafeAreaView>
+      <CommonModal
+        show={showNullPasswordMoadal}
+        setShow={setShowNullPasswordMoadal}
+        title="All Input Should Fill"
+        content="Fill All Inputs"
+        type="info"
+      />
+      <CommonModal
+        show={showWrongPasswordMoadl}
+        setShow={setShowWrongPasswordMoadl}
+        title="You Have Enter Wrong Inputs"
+        content="Fill The Correct One"
+        type="warning"
+      />
+      <CommonModal
+        show={showErrorApiModal}
+        setShow={SetShowErrorApiModal}
+        title="Error in Fetching Apis"
+        content="Need To Connect To The Network"
+        type="info"
+      />
     </View>
   );
 };

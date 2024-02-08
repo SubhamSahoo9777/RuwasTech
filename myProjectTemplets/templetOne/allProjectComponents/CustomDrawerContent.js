@@ -75,8 +75,12 @@ const CustomDrawerContent = ({ navigation }) => {
       <View style={{ flexDirection: "row-reverse" }}>
         <CustomButton
           title="LogOut"
-          buttonStyle={{ width: "auto" }}
+          buttonStyle={{ width: "100%", height: 50, borderRadius: 0 }}
+          textStyle={{ marginLeft: 10 }}
           onPress={() => navigation.navigate("LogIn")}
+          icon={
+            <VectorIcon type="AntDesign" name="logout" size={24} color="#fff" />
+          }
         />
       </View>
     </View>
