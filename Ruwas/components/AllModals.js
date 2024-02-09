@@ -156,7 +156,7 @@ export const SuccessModal = (
                   top: -25,
                   backgroundColor:type === "delete" ? "#ff1a1a" : 
                   type === "success" ? "#33cc33" :
-                  type === "warning" ? "#ffcc00" :
+                  type === "warning" ? "#fff" :
                   type === "info" ? "#ffff00" :
                   "#00b300",
                   
@@ -165,7 +165,7 @@ export const SuccessModal = (
                   alignItems:"center"
                 }}>{
                     type =="delete"?<VectorIcon type="AntDesign" name="delete" size={30} color="#fff" />:
-                    type =="warning"?<VectorIcon type="AntDesign" name="warning" size={30} color="#fff" />:
+                    type =="warning"?<VectorIcon type="AntDesign" name="warning" size={30} color="red" />:
                     type =="info"?<VectorIcon type="Ionicons" name="information-circle-outline" size={30} color="black" />:
                     type =="success"?<VectorIcon type="Ionicons" name="checkmark-sharp" size={30} color="black" />:null
                     
@@ -182,7 +182,7 @@ export const SuccessModal = (
                   top: -25,
                   backgroundColor:type === "delete" ? "#ff1a1a" : 
                   type === "success" ? "#33cc33" :
-                  type === "warning" ? "#ffcc00" :
+                  type === "warning" ? "#fff" :
                   type === "info" ? "#ffff00" :
                   "#00b300",
                   borderRadius:100,
@@ -197,90 +197,24 @@ export const SuccessModal = (
     </Modal>
   );
 };
-export const DeleteModal = ({ show, setShow }) => {
-  const [delay, setDelay] = useState(false);
+export const LoaderModal = ({ show, setShow,icon,title }) => {
 
   return (
     <Modal
-      onShow={() =>
-        setTimeout(() => {
-          setDelay(true);
-        }, 500)
-      }
+      onShow={() =>{}}
       animationType="slide"
       transparent={true}
       visible={show}
       onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
         setShow(!show);
       }}
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={[styles.modalText, { color: "#F34235" }]}>
-            Do You Want To Delete ?
-          </Text>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-evenly" }}
-          >
-            <Pressable
-              style={[
-                {
-                  backgroundColor: "#F34235",
-                  marginRight: 10,
-                  width: "45%",
-                  borderRadius: scale(20),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 5,
-                },
-              ]}
-              onPress={() => {
-                setDelay(false), setShow(!show);
-              }}
-            >
-              <Text style={styles.textStyle}>Delete</Text>
-            </Pressable>
-            <Pressable
-              style={[
-                {
-                  backgroundColor: "green",
-                  marginRight: 10,
-                  width: "45%",
-                  borderRadius: scale(20),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 5,
-                },
-              ]}
-              onPress={() => {
-                setDelay(false), setShow(!show);
-              }}
-            >
-              <Text style={styles.textStyle}>Cancel</Text>
-            </Pressable>
-          </View>
-          {delay ? (
-            <Image
-              source={require("../assets/bin.png")}
-              style={{
-                height: scale(45),
-                width: scale(45),
-                position: "absolute",
-                top: -25,
-              }}
-            />
-          ) : (
-            <Image
-              source={require("../assets/bin2.png")}
-              style={{
-                height: scale(45),
-                width: scale(45),
-                position: "absolute",
-                top: -25,
-              }}
-            />
-          )}
+        {
+          icon && icon 
+        }
+        <Text style={{marginTop:20,}}>{title && title}</Text>
         </View>
       </View>
     </Modal>

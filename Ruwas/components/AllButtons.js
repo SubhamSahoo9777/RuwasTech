@@ -2,12 +2,12 @@ import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-nativ
 import React from 'react'
 import colors from './colors'
 
-export const SubmitButton = ({title,onPress,buttonStyle}) => {
+export const SubmitButton = ({title,onPress,buttonStyle,textStyle}) => {
   return (
     <TouchableOpacity 
     onPress={onPress}
     style={[{minHeight:45,justifyContent:"center",alignItems:"center",backgroundColor:colors.submitBackColor,marginTop: 25,borderRadius:10},buttonStyle && buttonStyle]}>
-        <Text style={[{color:colors.submitTitleColor,fontWeight:"500",fontSize:13}]}>{title || "Submit"}</Text>
+        <Text style={[{color:colors.submitTitleColor,fontWeight:"500",fontSize:13},textStyle]}>{title || "Submit"}</Text>
     </TouchableOpacity>
   )
 }

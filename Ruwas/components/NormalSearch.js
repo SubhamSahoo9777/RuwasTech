@@ -12,11 +12,11 @@ const NormalSearch = ({
       style={{
         flexDirection: "row",
         alignItems: "center",
-        borderRadius: 5,
+        borderRadius:10,
         justifyContent:"space-between",
         backgroundColor:colors.tableHeaderColor,
-        borderRadius:15,
         paddingVertical:2,
+        marginTop:20
       }}
     >
 

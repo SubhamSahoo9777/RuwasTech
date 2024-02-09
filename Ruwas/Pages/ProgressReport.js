@@ -1,18 +1,12 @@
 import masterData from "../DataBaseHandle/masterData";
-import {useState, height } from "../components/AllPackages";
+import { useState, height } from "../components/AllPackages";
 import React from "react";
-import VectorIcon from "../components/VectorIcon"
+import VectorIcon from "../components/VectorIcon";
 import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
-import { SubmitButton,} from "../components/AllButtons";
-import {
-  Vibration,
-  View,
-  ScrollView,
-  TextInput,
-  Text,
-} from "react-native";
+import { SubmitButton } from "../components/AllButtons";
+import { Vibration, View, ScrollView, TextInput, Text } from "react-native";
 
 import styles from "./style";
 import { useEffect, useRef } from "react";
@@ -20,12 +14,13 @@ import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
+import Divider from "../components/Divider";
 
-const ProgressReport = ({navigation,route}) => {
-  const allDetails=route.params.data
-  console.log('====================================');
-  console.log(allDetails);
-  console.log('====================================');
+const ProgressReport = ({ navigation, route }) => {
+  const allDetails = route.params.data;
+  const [show, setShow] = useState(false);
+  const [addErrorModal, setAddErrorModal] = useState(false);
+  const [finalSuccessModal, setFinalSuccessModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [year, setYear] = useState("");
   const [rwsrc, setRwsrc] = useState("");
@@ -34,7 +29,6 @@ const ProgressReport = ({navigation,route}) => {
   const [file, setFiles] = useState("");
   const [title, setTitle] = useState("");
   const [showTable, setShowTable] = useState(false);
-const[show,setShow]=useState(false)
   const [apiYear, setApiYear] = useState([]);
   const [apiRwsrc, setApiRwsrc] = useState([]);
   const [apiDistricts, setApiDistricts] = useState([]);
@@ -56,22 +50,20 @@ const[show,setShow]=useState(false)
   });
   useEffect(() => {
     const fetchData = async () => {
-
-      const quaterUri = masterData.dshcg.quarter
+      const quaterUri = masterData.dshcg.quarter;
       try {
         allmasterYear = await retrieveData("finantialYear");
         setApiYear(allmasterYear);
-        allmasterRwsrc = await retrieveData("rwsrc")
+        allmasterRwsrc = await retrieveData("rwsrc");
         setApiRwsrc(allmasterRwsrc);
-        allmasterDistricts =await retrieveData("districts")
+        allmasterDistricts = await retrieveData("districts");
         let selectedDistricts = allmasterDistricts.filter((item) => {
           return item.rwsrcId == rwsrc;
         });
         setApiDistricts(selectedDistricts);
         setApiQuater(quaterUri);
-    
       } catch (error) {
-        setShow(true)
+        setShow(true);
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -90,7 +82,6 @@ const[show,setShow]=useState(false)
       setShowTable(true);
     }
   }, [year, rwsrc, localGovt, quarter]);
- 
 
   const handleSubmit = () => {
     if (
@@ -105,6 +96,13 @@ const[show,setShow]=useState(false)
         alert("Please Press On Save Button");
         Vibration.vibrate(500);
       }
+      // -----------------------------------final result submit--------------------
+      setLoading(true)
+      setTimeout(()=>{
+        setLoading(false)
+        setFinalSuccessModal(true)
+      },2000)
+      // -------------------------------------------------------
     } else {
       if (!year) {
         setIsWrong({ ...isWrong, wrongYear: true });
@@ -147,16 +145,31 @@ const[show,setShow]=useState(false)
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
         >
-          <View style={{flexDirection:"row",backgroundColor:colors.tableHeaderColor,padding:16,borderRadius:10}}>
-            <View style={{flexDirection:"row",width:"50%"}}>
-            <Text style={{color:'#fff',fontSize:16}}>Work Plan Id</Text>
-            <Text style={{color:'#fff',fontSize:16}}> : {allDetails.workPlanId}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              backgroundColor: colors.tableHeaderColor,
+              padding: 16,
+              borderRadius: 10,
+              marginBottom: 10,
+            }}
+          >
+            <View style={{ flexDirection: "row", width: "45%" }}>
+              <Text style={{ color: "#fff", fontSize: 16 }}>Work Plan Id</Text>
+              <Text style={{ color: "#fff", fontSize: 16 }}>
+                {" "}
+                : {allDetails.workPlanId}
+              </Text>
             </View>
-            <View style={{flexDirection:"row",width:"50%"}}>
-            <Text style={{color:'#fff',fontSize:16}}>Planed Budget</Text>
-            <Text style={{color:'#fff',fontSize:16}}> : {allDetails.planedBudget}</Text>
+            <View style={{ flexDirection: "row", width: "55%" }}>
+              <Text style={{ color: "#fff", fontSize: 16 }}>Planed Budget</Text>
+              <Text style={{ color: "#fff", fontSize: 16 }}>
+                {" "}
+                : {allDetails.planedBudget}
+              </Text>
             </View>
           </View>
+          
           <CustomDropDown
             dropData={apiYear}
             setSelect={setYear}
@@ -166,7 +179,7 @@ const[show,setShow]=useState(false)
             fieldName={"financialYearName"}
             valueFieldName={"financialYearId"}
           />
-           <CustomDropDown
+          <CustomDropDown
             dropData={apiRwsrc}
             fieldName={"RWSRCName"}
             setSelect={setRwsrc}
@@ -193,18 +206,9 @@ const[show,setShow]=useState(false)
             isWrong={isWrong.wrongQuarter}
             setIsWrong={setIsWrong}
           />
-          <TextInput
-            placeholderTextColor={colors.commonTextPlaceHolderColor}
-            placeholder="Funds Received (UGX)"
-            editable={false}
-            style={styles.DisableTxtInput}
-          />
-          <TextInput
-            placeholderTextColor={colors.commonTextPlaceHolderColor}
-            placeholder="Funds Received Cumulative"
-            editable={false}
-            style={styles.DisableTxtInput}
-          />
+          <Text style={{backgroundColor:colors.tableHeaderColor,color:"#fff",paddingVertical:15,paddingLeft:10,borderRadius:10,marginTop: 10,}}>{"Funds Received (UGX)"}</Text>
+          <Text style={{backgroundColor:colors.tableHeaderColor,color:"#fff",paddingVertical:15,paddingLeft:10,borderRadius:10,marginTop: 10,}}>{"Funds Received (UGX)"}</Text>
+          
           {showTable ? <ProgressReportTable /> : null}
 
           {addedFiles.length < 3 ? (
@@ -238,7 +242,7 @@ const[show,setShow]=useState(false)
               />
 
               <SubmitButton
-                title="Save "
+                title={addedFiles.length >1 && "Add More" || "Add"}
                 buttonStyle={{ width: "30%", alignSelf: "center" }}
                 onPress={() => {
                   if (file && title) {
@@ -250,7 +254,7 @@ const[show,setShow]=useState(false)
                       },
                     ]);
                   } else {
-                    alert("please add description and file");
+                    setAddErrorModal(true)
                   }
 
                   setTitle("");
@@ -327,9 +331,29 @@ const[show,setShow]=useState(false)
               );
             }
           })}
-          <SubmitButton onPress={handleSubmit} />
+          <SubmitButton onPress={handleSubmit} title={"Save"} textStyle={{fontSize:20}} />
         </ScrollView>
-        <SuccessModal show={show} setShow={setShow} type="info" title="Can't Fetch Data From Your Local DataBase" content="Need To ReStart The App"/>
+        <SuccessModal
+          show={show}
+          setShow={setShow}
+          type="info"
+          title="Can't Fetch Data From Your Local DataBase"
+          content="Need To ReStart The App"
+        />
+        <SuccessModal
+          show={addErrorModal}
+          setShow={setAddErrorModal}
+          type="warning"
+          title="You Have Not Selected Any File"
+          content="Please Select At least One File And File Description"
+        />
+        <SuccessModal
+          show={finalSuccessModal}
+          setShow={setFinalSuccessModal}
+          type="success"
+          title="You Have Successfully Filled The Data"
+          content="Thanks For Your Cooperate "
+        />
       </View>
       {loading && <LottieFileLoader />}
     </>

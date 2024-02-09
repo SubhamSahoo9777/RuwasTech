@@ -1,6 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { SubmitButton } from "../components/AllButtons";
 import { height } from "../components/AllPackages";
 
 const Report = ({ navigation, route }) => {

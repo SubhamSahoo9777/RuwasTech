@@ -11,8 +11,6 @@ const data=[
     budgetType:"water",
     dateOfApprovedByCouncil:"12/7/2022",
     planedBudget:"120000",
-
-
     },
     {
     workPlanId:2,

@@ -14,6 +14,7 @@ import { ReactNativeModal1 } from "./ReactNativeModal";
 import ButtonSheet from "./ButtonSheet";
 import NormalSearch from "./NormalSearch";
 import masterData from "../DataBaseHandle/masterData";
+import Divider from "./Divider";
 
 const ProgressReportTable = () => {
   const [moadalVisiable, setModalVisiable] = useState(false);
@@ -38,9 +39,10 @@ const ProgressReportTable = () => {
       style={{
         backgroundColor: "#f1f1f1",
         paddingVertical: 10,
-        paddingHorizontal: 5,
+        marginTop: 10,
       }}
     >
+      <Divider/>
       <NormalSearch
         searchValue={searchTerm}
         setSearchValue={setSearchTerm}
