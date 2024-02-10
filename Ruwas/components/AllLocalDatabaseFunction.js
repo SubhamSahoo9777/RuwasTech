@@ -72,4 +72,27 @@ export const retrieveData = (tableName) => {
     });
 };
 
+export const doesTableExist = (tableName) => {
+    return new Promise((resolve, reject) => {
+        const checkTableSQL = `SELECT name FROM sqlite_master WHERE type='table' AND name=?`;
+
+        LocalDb.transaction(
+            (tx) => {
+                tx.executeSql(
+                    checkTableSQL,
+                    [tableName],
+                    (tx, result) => {
+                        if (result.rows.length > 0) {
+                            resolve(true); // Table exists
+                        } else {
+                            resolve(false); // Table does not exist
+                        }
+                    },
+                    (error) => reject(`Error checking table existence: ${error.message}`)
+                );
+            },
+            (error) => reject(`Transaction error: ${error.message}`)
+        );
+    });
+};
 

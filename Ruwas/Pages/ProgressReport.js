@@ -14,12 +14,11 @@ import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
-import Divider from "../components/Divider";
-
 const ProgressReport = ({ navigation, route }) => {
   const allDetails = route.params.data;
   const [show, setShow] = useState(false);
   const [addErrorModal, setAddErrorModal] = useState(false);
+  const [addModal, setAddModal] = useState(false);
   const [finalSuccessModal, setFinalSuccessModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [year, setYear] = useState("");
@@ -93,8 +92,9 @@ const ProgressReport = ({ navigation, route }) => {
       (addedFiles.length > 1 || file)
     ) {
       if (addedFiles.length <= 1) {
-        alert("Please Press On Save Button");
-        Vibration.vibrate(500);
+        setAddModal(true)
+       return  Vibration.vibrate(500);
+        
       }
       // -----------------------------------final result submit--------------------
       setLoading(true)
@@ -333,6 +333,7 @@ const ProgressReport = ({ navigation, route }) => {
           })}
           <SubmitButton onPress={handleSubmit} title={"Save"} textStyle={{fontSize:20}} />
         </ScrollView>
+        {/* ------------------------------------------------all modals here */}
         <SuccessModal
           show={show}
           setShow={setShow}
@@ -346,6 +347,13 @@ const ProgressReport = ({ navigation, route }) => {
           type="warning"
           title="You Have Not Selected Any File"
           content="Please Select At least One File And File Description"
+        />
+        <SuccessModal
+          show={addModal}
+          setShow={setAddModal}
+          type="warning"
+          title="Please Press On The Add Button"
+          content="By Pressing On Add Button You Can Able To Add Selected Files"
         />
         <SuccessModal
           show={finalSuccessModal}

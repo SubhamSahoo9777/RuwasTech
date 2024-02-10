@@ -11,7 +11,7 @@ const Report = ({ navigation, route }) => {
         onPress={()=>{navigation.navigate("Progress Report",{data:allDetails})}}
           style={{
             backgroundColor: "#99c2ff",
-            height: height * 0.2,
+            minHeight: height * 0.2,
             marginTop: 10,
             borderRadius: 10,
             padding:16
