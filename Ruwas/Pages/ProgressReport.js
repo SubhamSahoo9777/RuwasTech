@@ -92,16 +92,15 @@ const ProgressReport = ({ navigation, route }) => {
       (addedFiles.length > 1 || file)
     ) {
       if (addedFiles.length <= 1) {
-        setAddModal(true)
-       return  Vibration.vibrate(500);
-        
+        setAddModal(true);
+        return Vibration.vibrate(500);
       }
       // -----------------------------------final result submit--------------------
-      setLoading(true)
-      setTimeout(()=>{
-        setLoading(false)
-        setFinalSuccessModal(true)
-      },2000)
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        setFinalSuccessModal(true);
+      }, 2000);
       // -------------------------------------------------------
     } else {
       if (!year) {
@@ -154,22 +153,22 @@ const ProgressReport = ({ navigation, route }) => {
               marginBottom: 10,
             }}
           >
-            <View style={{ flexDirection: "row", width: "45%" }}>
-              <Text style={{ color: "#fff", fontSize: 16 }}>Work Plan Id</Text>
-              <Text style={{ color: "#fff", fontSize: 16 }}>
+            <View style={{ flexDirection: "row", width: "40%" }}>
+              <Text style={{ color: "#fff", fontSize: 15 }}>Work Plan Id</Text>
+              <Text style={{ color: "#fff", fontSize: 15 }}>
                 {" "}
-                : {allDetails.workPlanId}
+                : {allDetails.districtid || "0"}
               </Text>
             </View>
-            <View style={{ flexDirection: "row", width: "55%" }}>
-              <Text style={{ color: "#fff", fontSize: 16 }}>Planed Budget</Text>
-              <Text style={{ color: "#fff", fontSize: 16 }}>
+            <View style={{ flexDirection: "row", width: "60%" }}>
+              <Text style={{ color: "#fff", fontSize: 15 }}>Planed Budget</Text>
+              <Text style={{ color: "#fff", fontSize: 15 }}>
                 {" "}
-                : {allDetails.planedBudget}
+                : {allDetails.totalapprovedbudget || "0"}
               </Text>
             </View>
           </View>
-          
+
           <CustomDropDown
             dropData={apiYear}
             setSelect={setYear}
@@ -206,9 +205,31 @@ const ProgressReport = ({ navigation, route }) => {
             isWrong={isWrong.wrongQuarter}
             setIsWrong={setIsWrong}
           />
-          <Text style={{backgroundColor:colors.tableHeaderColor,color:"#fff",paddingVertical:15,paddingLeft:10,borderRadius:10,marginTop: 10,}}>{"Funds Received (UGX)"}</Text>
-          <Text style={{backgroundColor:colors.tableHeaderColor,color:"#fff",paddingVertical:15,paddingLeft:10,borderRadius:10,marginTop: 10,}}>{"Funds Received (UGX)"}</Text>
-          
+          <Text
+            style={{
+              backgroundColor: colors.tableHeaderColor,
+              color: "#fff",
+              paddingVertical: 15,
+              paddingLeft: 10,
+              borderRadius: 10,
+              marginTop: 10,
+            }}
+          >
+            {"Funds Received (UGX)"}
+          </Text>
+          <Text
+            style={{
+              backgroundColor: colors.tableHeaderColor,
+              color: "#fff",
+              paddingVertical: 15,
+              paddingLeft: 10,
+              borderRadius: 10,
+              marginTop: 10,
+            }}
+          >
+            {"Funds Received (UGX)"}
+          </Text>
+
           {showTable ? <ProgressReportTable /> : null}
 
           {addedFiles.length < 3 ? (
@@ -242,7 +263,7 @@ const ProgressReport = ({ navigation, route }) => {
               />
 
               <SubmitButton
-                title={addedFiles.length >1 && "Add More" || "Add"}
+                title={(addedFiles.length > 1 && "Add More") || "Add"}
                 buttonStyle={{ width: "30%", alignSelf: "center" }}
                 onPress={() => {
                   if (file && title) {
@@ -254,7 +275,7 @@ const ProgressReport = ({ navigation, route }) => {
                       },
                     ]);
                   } else {
-                    setAddErrorModal(true)
+                    setAddErrorModal(true);
                   }
 
                   setTitle("");
@@ -331,7 +352,11 @@ const ProgressReport = ({ navigation, route }) => {
               );
             }
           })}
-          <SubmitButton onPress={handleSubmit} title={"Save"} textStyle={{fontSize:20}} />
+          <SubmitButton
+            onPress={handleSubmit}
+            title={"Save"}
+            textStyle={{ fontSize: 20 }}
+          />
         </ScrollView>
         {/* ------------------------------------------------all modals here */}
         <SuccessModal

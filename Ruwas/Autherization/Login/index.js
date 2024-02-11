@@ -15,7 +15,11 @@ import TableCreations from "../../DataBaseHandle/TableCreations";
 import AwesomeAlert from "react-native-awesome-alerts";
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createTable, insertDataArray } from "../../components/AllLocalDatabaseFunction";
+import {
+  createTable,
+  insertDataArray,
+  retrieveData,
+} from "../../components/AllLocalDatabaseFunction";
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = React.useState("");
@@ -42,8 +46,16 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
+    // const cheakingToken = await retrieveData("userDetais");
+    // if (cheakingToken.length > 0) {
+    //   cheakingToken[0];
+    // }
     console.log("Username:", username);
     console.log("Password:", password);
+
+    const authData = await authFunction(username, password);
+
+    console.log(authData);
     const check = await checkItemExists();
     if (check !== null) {
       const pinCheck = await AsyncStorage.getItem("Pin");
@@ -64,9 +76,61 @@ const Login = ({ navigation }) => {
     const rwsrcUri = "http://182.18.181.115:8084/api/masterdata/getRWSRCdtls";
     const districtUri =
       "http://182.18.181.115:8084/api/masterdata/getRWSRCdistrictdtls";
+    const waterWorkPlanuri =
+      "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
+    const sanitationWorkPlanuri =
+      "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
+    const workplanModalActivityuri =
+      "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
+    const sanitationWorkPlanModalActivityuri =
+      "http://182.18.181.115:8084/api/masterdata/getsanitizationworkplanmodelactivitydtls?districtid=113";
     try {
-        //year insert Data into loacal database 
-      let allmasterYear = JSON.parse(await (await fetch(yearUri1)).json())
+      //sanitationWorkPlanModalActivity
+      let sanitationWorkPlanModalActivity = JSON.parse(
+        await (await fetch(sanitationWorkPlanModalActivityuri)).json()
+      );
+      let spmTemp = {
+        tableName: "sanitationWorkPlanModalActivity",
+        TEXT: Object.keys(sanitationWorkPlanModalActivity[0]),
+      };
+      await createTable(spmTemp);
+      let spmTemp2 = { ...spmTemp, table: sanitationWorkPlanModalActivity };
+      insertDataArray(spmTemp2);
+      //workplanModalActivity
+      let workplanModalActivity = JSON.parse(
+        await (await fetch(workplanModalActivityuri)).json()
+      );
+      let wmTemp = {
+        tableName: "workplanModalActivity",
+        TEXT: Object.keys(workplanModalActivity[0]),
+      };
+      await createTable(wmTemp);
+      let wmTemp2 = { ...wmTemp, table: workplanModalActivity };
+      insertDataArray(wmTemp2);
+      //sanitationWorkPlan
+      let sanitationWorkPlan = JSON.parse(
+        await (await fetch(sanitationWorkPlanuri)).json()
+      );
+      let swTemp = {
+        tableName: "sanitationWorkPlan",
+        TEXT: Object.keys(sanitationWorkPlan[0]),
+      };
+      await createTable(swTemp);
+      let swTemp2 = { ...swTemp, table: sanitationWorkPlan };
+      insertDataArray(swTemp2);
+      //waterWorkPlan
+      let waterWorkPlan = JSON.parse(
+        await (await fetch(waterWorkPlanuri)).json()
+      );
+      let WorkTemp = {
+        tableName: "waterWorkPlan",
+        TEXT: Object.keys(waterWorkPlan[0]),
+      };
+      await createTable(WorkTemp);
+      let WorkTemp2 = { ...WorkTemp, table: waterWorkPlan };
+      insertDataArray(WorkTemp2);
+      //year insert Data into loacal database
+      let allmasterYear = JSON.parse(await (await fetch(yearUri1)).json());
 
       let temp1 = {
         tableName: "finantialYear",
@@ -75,9 +139,9 @@ const Login = ({ navigation }) => {
       await createTable(temp1);
       let temp2 = { ...temp1, table: allmasterYear };
       insertDataArray(temp2);
-      
-    //   rwsrc insert Data into loacal database 
-      let masterRwsrc = JSON.parse(await (await fetch(rwsrcUri)).json())
+
+      //   rwsrc insert Data into loacal database
+      let masterRwsrc = JSON.parse(await (await fetch(rwsrcUri)).json());
       let temp3 = {
         tableName: "rwsrc",
         TEXT: Object.keys(masterRwsrc[0]),
@@ -85,8 +149,8 @@ const Login = ({ navigation }) => {
       await createTable(temp3);
       let temp4 = { ...temp3, table: masterRwsrc };
       insertDataArray(temp4);
-    //   districts insert dataintolocal data base 
-      let masterDistricts = JSON.parse(await (await fetch(districtUri)).json())
+      //   districts insert dataintolocal data base
+      let masterDistricts = JSON.parse(await (await fetch(districtUri)).json());
       let temp5 = {
         tableName: "districts",
         TEXT: Object.keys(masterDistricts[0]),
@@ -95,9 +159,29 @@ const Login = ({ navigation }) => {
       let temp6 = { ...temp5, table: masterDistricts };
       insertDataArray(temp6);
       setLoading(false);
-
     } catch (error) {
-    alert("error fetching data")
+      alert("error fetching data");
+    }
+  };
+  const authFunction = async (username, password) => {
+    try {
+      const response = await fetch(
+        `http://182.18.181.115:8084/api/login/loginservice?username=${username}&password=${password}`
+      );
+      const authUriData = JSON.parse(await response.json());
+      let temp1 = {
+        tableName: "userDetais",
+        TEXT: Object.keys(authUriData[0]),
+      };
+      await createTable(temp1);
+      let temp2 = { ...temp1, table: authUriData };
+      insertDataArray(temp2);
+      return authUriData;
+    } catch (error) {
+      alert(
+        "Authentication failed. Please check your credentials and try again."
+      );
+      return [];
     }
   };
   const InsertLoc = async () => {
