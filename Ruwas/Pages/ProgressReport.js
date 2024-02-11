@@ -1,20 +1,18 @@
 import masterData from "../DataBaseHandle/masterData";
-import { useState, height } from "../components/AllPackages";
-import React from "react";
+import {height } from "../components/AllPackages";
+import React, { memo,useState,useEffect, useRef  } from "react";
 import VectorIcon from "../components/VectorIcon";
 import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton } from "../components/AllButtons";
-import { Vibration, View, ScrollView, TextInput, Text } from "react-native";
-
-import styles from "./style";
-import { useEffect, useRef } from "react";
+import { Vibration, View, ScrollView, TextInput, Text, ActivityIndicator } from "react-native";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
-const ProgressReport = ({ navigation, route }) => {
+const ProgressReport = memo(({ navigation, route }) => {
+
   const allDetails = route.params.data;
   const [show, setShow] = useState(false);
   const [addErrorModal, setAddErrorModal] = useState(false);
@@ -47,10 +45,13 @@ const ProgressReport = ({ navigation, route }) => {
     wrongFile: false,
     wrongAdd: false,
   });
+  const [tableDetails,setTableDetails]=useState([])
   useEffect(() => {
     const fetchData = async () => {
       const quaterUri = masterData.dshcg.quarter;
       try {
+        workplanModalActivityDetails = await retrieveData("workplanModalActivity");
+        setTableDetails(workplanModalActivityDetails);
         allmasterYear = await retrieveData("finantialYear");
         setApiYear(allmasterYear);
         allmasterRwsrc = await retrieveData("rwsrc");
@@ -64,9 +65,9 @@ const ProgressReport = ({ navigation, route }) => {
       } catch (error) {
         setShow(true);
       } finally {
-        setTimeout(() => {
+        
           setLoading(false);
-        }, 3000);
+        
       }
     };
 
@@ -78,7 +79,9 @@ const ProgressReport = ({ navigation, route }) => {
   };
   useEffect(() => {
     if (year && rwsrc && localGovt && quarter) {
+      setLoading(true)
       setShowTable(true);
+      setLoading(false)
     }
   }, [year, rwsrc, localGovt, quarter]);
 
@@ -129,7 +132,6 @@ const ProgressReport = ({ navigation, route }) => {
       }
     }
   };
-
   return (
     <>
       <View
@@ -157,7 +159,7 @@ const ProgressReport = ({ navigation, route }) => {
               <Text style={{ color: "#fff", fontSize: 15 }}>Work Plan Id</Text>
               <Text style={{ color: "#fff", fontSize: 15 }}>
                 {" "}
-                : {allDetails.districtid || "0"}
+                : {allDetails["workplanid"] || "0"}
               </Text>
             </View>
             <View style={{ flexDirection: "row", width: "60%" }}>
@@ -229,9 +231,8 @@ const ProgressReport = ({ navigation, route }) => {
           >
             {"Funds Received (UGX)"}
           </Text>
-
-          {showTable ? <ProgressReportTable /> : null}
-
+          {showTable ? <ProgressReportTable tableDatas={tableDetails} setTableDatas={setTableDetails}/> : null}
+          
           {addedFiles.length < 3 ? (
             <>
               <CommonTextInput
@@ -391,6 +392,8 @@ const ProgressReport = ({ navigation, route }) => {
       {loading && <LottieFileLoader />}
     </>
   );
-};
+
+});
+
 
 export default ProgressReport;

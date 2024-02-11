@@ -6,13 +6,17 @@ import {
   Pressable,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { colors, height } from "../../components/AllPackages";
 import { retrieveData } from "../../components/AllLocalDatabaseFunction";
+
 const Dashboard = ({ navigation }) => {
   const [tap, setTap] = useState(true);
   const [waterWorkPlan, setWaterWorkPlan] = useState([]);
   const [filteredata, setfilteredata] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
+
   const data = [
     {
       workPlanId: 1,
@@ -22,31 +26,9 @@ const Dashboard = ({ navigation }) => {
       dateOfApprovedByCouncil: "12/7/2022",
       planedBudget: "120000",
     },
-    {
-      workPlanId: 2,
-      rwsrc: "rwsrc4",
-      localGovt: "Adjumani",
-      budgetType: "water",
-      dateOfApprovedByCouncil: "12/7/2022",
-      planedBudget: "1130000",
-    },
-    {
-      workPlanId: 3,
-      rwsrc: "rwsrc3",
-      localGovt: "Adjumani",
-      budgetType: "water",
-      dateOfApprovedByCouncil: "12/7/2022",
-      planedBudget: "450000",
-    },
-    {
-      workPlanId: 4,
-      rwsrc: "rwsrc2",
-      localGovt: "Adjumani",
-      budgetType: "water",
-      dateOfApprovedByCouncil: "12/7/2022",
-      planedBudget: "1780000",
-    },
+    // Other data...
   ];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,18 +39,15 @@ const Dashboard = ({ navigation }) => {
           (item) => item.districtid === userDetais[0].districtid
         );
         setfilteredata(x);
+        setLoading(false); // Set loading to false when data is fetched
       } catch (error) {
         alert("error");
-        // setShow(true);
-      } finally {
-        // setTimeout(() => {
-        //   setLoading(false);
-        // }, 3000);
+        setLoading(false); // Set loading to false in case of error
       }
     };
 
     fetchData();
-  }, []);
+  }, [waterWorkPlan]);
 
   const toggleTap = () => {
     setTap(!tap);
@@ -105,7 +84,7 @@ const Dashboard = ({ navigation }) => {
           }}
         >
           <Text style={{ color: (tap && "white") || "black", fontSize: 25 }}>
-            Sanitation
+            Water
           </Text>
         </Pressable>
         <Pressable
@@ -122,45 +101,51 @@ const Dashboard = ({ navigation }) => {
           }}
         >
           <Text style={{ color: (!tap && "white") || "black", fontSize: 25 }}>
-            Water
+            Sanitation
           </Text>
         </Pressable>
       </View>
-      {tap ? (
-        <View style={{ flex: 1, padding: 16 }}>
-          <ScrollView>
-            {filteredata.map((item, index) => {
-              return (
-                <Pressable
-                  onPress={() =>
-                    navigation.navigate("Report", { data: { item } })
-                  }
-                  key={index}
-                  style={{
-                    backgroundColor: "#5b54ab",
-                    marginTop: 10,
-                    height: "auto",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 10,
-                    paddingVertical: 10,
-                    elevation: 10,
-                  }}
-                >
-                  <Text style={{ color: "#fff" }}>
-                    {Object.keys(item)[1]}: {item[Object.keys(item)[1]]}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
+      {loading ? (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
       ) : (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text>No Workplan</Text>
-        </View>
+        tap ? (
+          <View style={{ flex: 1, padding: 16 }}>
+            <ScrollView>
+              {filteredata.map((item, index) => {
+                return (
+                  <Pressable
+                    onPress={() =>
+                      navigation.navigate("Report", { data: { item } })
+                    }
+                    key={index}
+                    style={{
+                      backgroundColor: "#5b54ab",
+                      marginTop: 10,
+                      height: "auto",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 10,
+                      paddingVertical: 10,
+                      elevation: 10,
+                    }}
+                  >
+                    <Text style={{ color: "#fff" }}>
+                      {Object.keys(item)[1]}: {item[Object.keys(item)[1]]}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+          </View>
+        ) : (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text>No Workplan</Text>
+          </View>
+        )
       )}
     </View>
   );

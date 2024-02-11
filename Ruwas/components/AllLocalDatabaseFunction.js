@@ -71,8 +71,8 @@ export const retrieveData = (tableName) => {
           retrieveDataSQL,
           [],
           (_, result) => resolve(result.rows._array),
-          // (error) => reject(`Error retrieving data from '${tableName}': ${error.message}`)
-          (error) => resolve(undefined)
+          (error) => reject(`Error retrieving data from '${tableName}': ${error.message}`)
+          // (error) => resolve(undefined)
         );
       },
       (error) => reject(`Transaction error: ${error.message}`)
@@ -103,3 +103,21 @@ export const doesTableExist = (tableName) => {
     );
   });
 };
+export const retrieveDataById = (tableName, id) => {
+  return new Promise((resolve, reject) => {
+    const retrieveDataSQL = `SELECT * FROM ${tableName} WHERE id = ?`; // Assuming the primary key column is named 'id'
+
+    LocalDb.transaction(
+      (tx) => {
+        tx.executeSql(
+          retrieveDataSQL,
+          [id], // Pass the ID as a parameter to avoid SQL injection
+          (_, result) => resolve(result.rows._array),
+          (error) => reject(`Error retrieving data from '${tableName}' with ID ${id}: ${error.message}`)
+        );
+      },
+      (error) => reject(`Transaction error: ${error.message}`)
+    );
+  });
+};
+

@@ -16,24 +16,27 @@ import NormalSearch from "./NormalSearch";
 import masterData from "../DataBaseHandle/masterData";
 import Divider from "./Divider";
 
-const ProgressReportTable = () => {
+const ProgressReportTable = ({tableDatas,setTableDatas}) => {
   const [moadalVisiable, setModalVisiable] = useState(false);
   const [TableData, setTableData] = useState(masterData.dshcg.table);
   const [items, setItems] = useState("");
   const [showTotal, setShowTotal] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  console.log(tableDatas[0]);
   useEffect(() => {
     // Perform filtering based on the search term
-    const filteredResults = TableData.filter(item => {
-      const noValue = item.No.toLowerCase();
-      const modalActivityValue = item['Modal Activity'].toLowerCase();
+    const filteredResults = tableDatas.filter(item => {
+      const noValue = item["Sno"].toLowerCase();
+      const modalActivityValue = item['modelActivity'].toLowerCase();
       return noValue.includes(searchTerm.toLowerCase()) || modalActivityValue.includes(searchTerm.toLowerCase());
     });
 
     setFilteredData(filteredResults);
-  }, [searchTerm, TableData]);
- 
+  }, [searchTerm, tableDatas]);
+  const handlefunction=(item)=>{
+setModalVisiable(true)
+  }
   return (
     <View
       style={{
@@ -109,7 +112,7 @@ const ProgressReportTable = () => {
               style={{ height: 400 }}
             >
               {filteredData.map((item, index) => {
-                const allkeys = Object.keys(item);
+                
                 return (
                   <View
                     key={index}
@@ -124,12 +127,12 @@ const ProgressReportTable = () => {
                   >
                     <Text style={{ width: "15%", textAlign: "center" }}>
                       {/* no */}
-                      {item[allkeys[0]]}
+                      {item["Sno"]}
                     </Text>
                     <Text style={{ width: "70%", textAlign: "center" }}>
-                      {item[allkeys[1]]}
+                      {item["modelActivity"]}
                     </Text>
-                    <TouchableOpacity
+                    <View
                       style={{
                         width: "15%",
                         justifyContent: "center",
@@ -143,11 +146,12 @@ const ProgressReportTable = () => {
                           size={30}
                           color={colors.tableHeaderColor}
                           onPress={() => {
-                            setItems({item,id:index}), setModalVisiable(true);
+                            handlefunction(item)
+                            // setItems({item,id:index}), setModalVisiable(true);
                           }}
                         />
           
-                    </TouchableOpacity>
+                    </View>
                   </View>
                 );
               })}

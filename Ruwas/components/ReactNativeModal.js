@@ -73,14 +73,14 @@ temp=temp.map((item,index)=>{
             >
               <ModifiedTextInput2
               //no
-                header={allkeys[0]}
+                header={"No"}
                 value={`${unitData[allkeys[0]]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
               <ModifiedTextInput2
               //Quarter Target
-                header={allkeys[3]}
+                header={"Quarter Target"}
                 value={`${unitData[allkeys[3]]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
@@ -88,14 +88,14 @@ temp=temp.map((item,index)=>{
             </View>
             <ModifiedTextInput2
             //Modal Activity
-              header={allkeys[1]}
+              header={"Model Activity"}
               value={`${unitData[allkeys[1]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
             //Approved Annual Workplan Target
-              header={allkeys[2]}
+              header={"Approved Annual Workplan Target"}
               value={`${unitData[allkeys[2]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}

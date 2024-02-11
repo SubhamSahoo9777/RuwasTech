@@ -81,7 +81,7 @@ const Login = ({ navigation }) => {
     const sanitationWorkPlanuri =
       "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
     const workplanModalActivityuri =
-      "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
+      "http://182.18.181.115:8084/api/masterdata/getworkplanmodelactivitydtls?districtid=113";
     const sanitationWorkPlanModalActivityuri =
       "http://182.18.181.115:8084/api/masterdata/getsanitizationworkplanmodelactivitydtls?districtid=113";
     try {
