@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -107,55 +108,53 @@ setModalVisiable(true)
           </View>
 
           <View>
-            <ScrollView
-              nestedScrollEnabled={true}
-              style={{ height: 400 }}
-            >
-              {filteredData.map((item, index) => {
-                
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      backgroundColor: "#efeef7",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingVertical: 10,
-                      paddingHorizontal: 10,
-                      borderBottomWidth: 0.2,
-                    }}
-                  >
-                    <Text style={{ width: "15%", textAlign: "center" }}>
-                      {/* no */}
-                      {item["Sno"]}
-                    </Text>
-                    <Text style={{ width: "70%", textAlign: "center" }}>
-                      {item["modelActivity"]}
-                    </Text>
-                    <View
-                      style={{
-                        width: "15%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                
-                        <VectorIcon
-                          type="MaterialCommunityIcons"
-                          name="database-plus"
-                          size={30}
-                          color={colors.tableHeaderColor}
-                          onPress={() => {
-                            handlefunction(item)
-                            // setItems({item,id:index}), setModalVisiable(true);
-                          }}
-                        />
-          
-                    </View>
-                  </View>
-                );
-              })}
-            </ScrollView>
+          <FlatList
+                    nestedScrollEnabled={true}
+
+  data={filteredData}
+  renderItem={({ item, index }) => (
+    <View
+      key={index}
+      style={{
+        backgroundColor: "#efeef7",
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        borderBottomWidth: 0.2,
+      }}
+    >
+      <Text style={{ width: "15%", textAlign: "center" }}>
+        {/* no */}
+        {item["Sno"]}
+      </Text>
+      <Text style={{ width: "70%", textAlign: "center" }}>
+        {item["modelActivity"]}
+      </Text>
+      <View
+        style={{
+          width: "15%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <VectorIcon
+          type="MaterialCommunityIcons"
+          name="database-plus"
+          size={30}
+          color={colors.tableHeaderColor}
+          onPress={() => {
+            handlefunction(item);
+            // setItems({item,id:index}), setModalVisiable(true);
+          }}
+        />
+      </View>
+    </View>
+  )}
+  keyExtractor={(item, index) => index.toString()}
+  style={{ height: 400 }}
+/>
+
           </View>
         </View>
         {/* ------------------footer of table----------------- */}

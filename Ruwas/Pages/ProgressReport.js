@@ -142,6 +142,8 @@ const ProgressReport = memo(({ navigation, route }) => {
         }}
       >
         <ScrollView
+                            nestedScrollEnabled={true}
+
           ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
@@ -231,7 +233,7 @@ const ProgressReport = memo(({ navigation, route }) => {
           >
             {"Funds Received (UGX)"}
           </Text>
-          {showTable ? <ProgressReportTable tableDatas={tableDetails} setTableDatas={setTableDetails}/> : null}
+          {showTable ? <View><ProgressReportTable tableDatas={tableDetails} setTableDatas={setTableDetails}/></View> : null}
           
           {addedFiles.length < 3 ? (
             <>
