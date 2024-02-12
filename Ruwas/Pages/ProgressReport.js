@@ -10,16 +10,16 @@ import {
   Vibration,
   View,
   ScrollView,
-  TextInput,
   Text,
-  ActivityIndicator,
 } from "react-native";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
+import AutoSelectDrop from "../components/AutoSelectDrop";
 const ProgressReport = memo(({ navigation, route }) => {
-  const allDetails = route.params.data;
+  const allDetails = route.params.data.allDetails;
+  const reportType = route.params.data.reportType;
   const [show, setShow] = useState(false);
   const [addErrorModal, setAddErrorModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -56,22 +56,42 @@ const ProgressReport = memo(({ navigation, route }) => {
     const fetchData = async () => {
       const quaterUri = masterData.dshcg.quarter;
       try {
-        workplanModalActivityDetails = await retrieveData(
-          "workplanModalActivity"
-        );
-        let temp = workplanModalActivityDetails.filter(
-          (item) => item.workplanid === allDetails.workplanid
-        );
-        setTableDetails(temp);
+        if(reportType=="water"){
+          workplanModalActivityDetails = await retrieveData(
+            "workplanModalActivity"
+          );
+          let temp = workplanModalActivityDetails.filter(
+            (item) => item.workplanid === allDetails.workplanid
+          );
+          setTableDetails(temp);
+        }else{
+          sanitationWorkPlanModalActivity = await retrieveData(
+            "sanitationWorkPlanModalActivity"
+          );
+    
+          let temp = sanitationWorkPlanModalActivity.filter(
+            (item) => item.sanitationId === allDetails.sanitationid
+          );
+          setTableDetails(temp);
+        
+        }
+       
         allmasterYear = await retrieveData("finantialYear");
-        setApiYear(allmasterYear);
-        allmasterRwsrc = await retrieveData("rwsrc");
-        setApiRwsrc(allmasterRwsrc);
+        let yearName=allmasterYear.filter((item)=>allDetails.financialyearid === item.financialYearId)
+        setApiYear(yearName[0].financialYearName)
+        
         allmasterDistricts = await retrieveData("districts");
         let selectedDistricts = allmasterDistricts.filter((item) => {
-          return item.rwsrcId == rwsrc;
+          return item.LCId == allDetails.districtid;
         });
-        setApiDistricts(selectedDistricts);
+        let rwsrcId=selectedDistricts[0].rwsrcId
+        setApiDistricts(selectedDistricts[0].LCName);
+        
+        allmasterRwsrc = await retrieveData("rwsrc");
+        const selectedRwsrc=allmasterRwsrc.filter((item)=>item.RWSRCId==rwsrcId)
+        setApiRwsrc(selectedRwsrc[0].RWSRCName);
+        
+       
         setApiQuater(quaterUri);
       } catch (error) {
         setShow(true);
@@ -87,18 +107,14 @@ const ProgressReport = memo(({ navigation, route }) => {
     scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   };
   useEffect(() => {
-    if (year && rwsrc && localGovt && quarter) {
+    if (quarter) {
       setLoading(true);
       setShowTable(true);
       setLoading(false);
     }
   }, [year, rwsrc, localGovt, quarter]);
-
   const handleSubmit = () => {
     if (
-      year &&
-      rwsrc &&
-      localGovt &&
       quarter &&
       (addedFiles.length > 1 || title) &&
       (addedFiles.length > 1 || file)
@@ -115,19 +131,7 @@ const ProgressReport = memo(({ navigation, route }) => {
       }, 2000);
       // -------------------------------------------------------
     } else {
-      if (!year) {
-        setIsWrong({ ...isWrong, wrongYear: true });
-        Vibration.vibrate(500);
-        scrollUp();
-      } else if (!rwsrc) {
-        setIsWrong({ ...isWrong, wrongRwsrc: true });
-        Vibration.vibrate(500);
-        scrollUp();
-      } else if (!localGovt) {
-        setIsWrong({ ...isWrong, wrongGovt: true });
-        Vibration.vibrate(500);
-        scrollUp();
-      } else if (!quarter) {
+     if (!quarter) {
         setIsWrong({ ...isWrong, wrongQuarter: true });
         Vibration.vibrate(500);
         scrollUp();
@@ -141,6 +145,7 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
     }
   };
+  console.log(apiYear)
   return (
     <>
       <View
@@ -180,8 +185,10 @@ const ProgressReport = memo(({ navigation, route }) => {
               </Text>
             </View>
           </View>
-
-          <CustomDropDown
+          <AutoSelectDrop label={apiYear} title={"financial Year"}/>
+          <AutoSelectDrop label={apiDistricts} title={"Local Government"}/>
+          <AutoSelectDrop label={apiRwsrc} title={"RWSRC"}/>
+          {/* <CustomDropDown
             dropData={apiYear}
             setSelect={setYear}
             title="financial Year"
@@ -189,8 +196,8 @@ const ProgressReport = memo(({ navigation, route }) => {
             setIsWrong={setIsWrong}
             fieldName={"financialYearName"}
             valueFieldName={"financialYearId"}
-          />
-          <CustomDropDown
+          /> */}
+          {/* <CustomDropDown
             dropData={apiRwsrc}
             fieldName={"RWSRCName"}
             setSelect={setRwsrc}
@@ -198,9 +205,9 @@ const ProgressReport = memo(({ navigation, route }) => {
             isWrong={isWrong.wrongRwsrc}
             setIsWrong={setIsWrong}
             valueFieldName={"RWSRCId"}
-          />
+          /> */}
 
-          <CustomDropDown
+          {/* <CustomDropDown
             setSelect={setLocalGovt}
             title="Local Government"
             isWrong={isWrong.wrongGovt}
@@ -208,7 +215,7 @@ const ProgressReport = memo(({ navigation, route }) => {
             dropData={apiDistricts}
             fieldName={"LCName"}
             valueFieldName={"rwsrcId"}
-          />
+          /> */}
           <CustomDropDown
             dropData={apiQuater}
             fieldName={"label"}
@@ -239,7 +246,7 @@ const ProgressReport = memo(({ navigation, route }) => {
               marginTop: 10,
             }}
           >
-            {"Funds Received (UGX)"}
+            {"Funds Received Cumulative"}
           </Text>
           {showTable ? (
             <View>
@@ -281,7 +288,7 @@ const ProgressReport = memo(({ navigation, route }) => {
               />
 
               <SubmitButton
-                title={(addedFiles.length > 1 && "Add More") || "Add"}
+                title={(addedFiles.length > 1 && "Attach More") || "Attach"}
                 buttonStyle={{ width: "30%", alignSelf: "center" }}
                 onPress={() => {
                   if (file && title) {

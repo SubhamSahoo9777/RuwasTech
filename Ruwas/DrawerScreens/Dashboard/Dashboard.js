@@ -129,7 +129,7 @@ const Dashboard = ({ navigation }) => {
             renderItem={({ item, index }) => (
               <Pressable
                 onPress={() =>
-                  navigation.navigate("Report", { data: { item } })
+                  navigation.navigate("Report", { data: { item,type:"water" } })
                 }
                 key={index}
                 style={{
@@ -153,7 +153,7 @@ const Dashboard = ({ navigation }) => {
                     color="#fff"
                   />
                   <Text style={{ color: "#fff", marginLeft: 10 }}>
-                    {Object.keys(item)[1]}: {item[Object.keys(item)[1]]}
+                    {"WorkPlan Id"}: {item["workplanid"]}
                   </Text>
                 </View>
 
@@ -176,7 +176,7 @@ const Dashboard = ({ navigation }) => {
             renderItem={({ item, index }) => (
               <Pressable
                 onPress={() =>
-                  navigation.navigate("Report", { data: { item } })
+                  navigation.navigate("Report", { data: { item,type:"sanitation" } })
                 }
                 key={index}
                 style={{
@@ -200,7 +200,7 @@ const Dashboard = ({ navigation }) => {
                     color="#fff"
                   />
                   <Text style={{ color: "#fff", marginLeft: 10 }}>
-                    {Object.keys(item)[1]}: {item[Object.keys(item)[1]]}
+                    {"Work Plan Id"}: {item["sanitationid"]}
                   </Text>
                 </View>
 

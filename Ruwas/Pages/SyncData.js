@@ -48,11 +48,12 @@ const SyncData = () => {
                   style={{ flexDirection: "row-reverse", paddingBottom: 5 }}
                 >
                   <VectorIcon
-                    type="MaterialCommunityIcons"
-                    name="delete"
+                    type="AntDesign"
+                    name="cloudupload"
                     size={27}
                     color="#fff"
                   />
+               
                 </View>
               </View>
             );

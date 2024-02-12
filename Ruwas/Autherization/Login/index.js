@@ -204,7 +204,7 @@ const Login = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../../assets/waterBackground.jpg")} // Replace with your background image
+      source={require("../../assets/waterBackground.jpg")}
       style={styles.backgroundImage}
     >
       <LinearGradient

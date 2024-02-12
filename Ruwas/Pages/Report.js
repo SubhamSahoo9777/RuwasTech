@@ -1,9 +1,22 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { VectorIcon, colors, height } from "../components/AllPackages";
+import { retrieveData } from "../components/AllLocalDatabaseFunction";
 
 const Report = ({ navigation, route }) => {
   let allDetails = route.params.data.item;
+  let reportType=route.params.data.type
+  const[getDistrictName,setGetDistrictName]=useState("")
+  useEffect(()=>{
+    conformDistrict(allDetails.districtid)
+  },[allDetails])
+ const conformDistrict=async(districtid)=>{
+ let allmasterDistricts = await retrieveData("districts");
+   let selectedDistricts = allmasterDistricts.filter((item) => {
+    return item.LCId == districtid;
+   })
+setGetDistrictName(selectedDistricts[0].LCName)
+ }
   return (
     <View style={{ flex: 1, justifyContent: "space-between", padding: 16 }}>
       <View style={{ flex: 1 }}>
@@ -25,23 +38,79 @@ const Report = ({ navigation, route }) => {
             padding: 16,
           }}
         >
-          {Object.keys(allDetails).map((item, index) => (
-            <View key={index} style={{ flexDirection: "row" }}>
-              <Text style={{ width: "55%", color: "#fff" }}>{item}</Text>
+
+         
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>WorkPlan Id</Text>
               <Text style={{ width: "45%", color: "#fff" }}>
-                : {allDetails[item] || "0"}
+                : {reportType=="water"?allDetails["workplanid"]:reportType=="sanitation"?allDetails["sanitationid"] : "0"}
               </Text>
             </View>
-          ))}
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>District</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {getDistrictName || "0"}
+              </Text>
+            </View>
+
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>QuaterOne Funds</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["quarteronefunds"] || "0"}
+              </Text>
+            </View>
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>QuaterTwo Funds</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["quartertwofunds"] || "0"}
+              </Text>
+            </View>
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>QuaterThree Funds</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["quarterthreefunds"] || "0"}
+              </Text>
+            </View>
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>QuaterFour Funds</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["quarterfourfunds"] || "0"}
+              </Text>
+            </View>
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>Total Approved Budget</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["totalapprovedbudget"] || "0"}
+              </Text>
+            </View>
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>Title</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["tittle"] || "0"}
+              </Text>
+            </View>
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>Date</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["date"].slice(0,9) || "0"}
+              </Text>
+            </View>
+            <View  style={{ flexDirection: "row" }}>
+              <Text style={{ width: "55%", color: "#fff" }}>Status</Text>
+              <Text style={{ width: "45%", color: "#fff" }}>
+                : {allDetails["status"] || "0"}
+              </Text>
+            </View>
+    
         </View>
 
         <Pressable
           onPress={() => {
-            navigation.navigate("Progress Report", { data: allDetails });
+            navigation.navigate("Progress Report", { data: {allDetails,reportType} });
           }}
           style={{
             height: "auto",
-            width: 200,
+            width: "70%",
             borderRadius: 200,
             backgroundColor: colors.tableHeaderColor,
             alignItems: "center",
@@ -50,11 +119,13 @@ const Report = ({ navigation, route }) => {
             alignSelf: "center",
             padding: 10,
             elevation: 10,
+            flexDirection:"row"
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>
+          <Text style={{ color: "#fff", fontSize: 16,marginRight: 10, }}>
             Go Progress Report
           </Text>
+          <VectorIcon type="Ionicons" name="paper-plane" size={20} color="#fff" />
         </Pressable>
       </View>
       <View></View>

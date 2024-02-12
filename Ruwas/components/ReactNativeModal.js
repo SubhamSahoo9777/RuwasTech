@@ -23,9 +23,11 @@ export const ReactNativeModal1 = ({
   setModalVisible,
   item,
 }) => {
+  console.log('====================================');
+  console.log(item.item);
+  console.log('====================================');
   const allkeys = Object.keys((item !== undefined && item.item) || {});
   const unitData = (item !== undefined && item.item) || {};
-  console.log(allkeys);
   const [isLoading, setLoading] = useState(true);
 
   const [text, setText] = useState("");
