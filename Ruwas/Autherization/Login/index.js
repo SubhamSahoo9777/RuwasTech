@@ -46,18 +46,13 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-    // const cheakingToken = await retrieveData("userDetais");
-    // if (cheakingToken.length > 0) {
-    //   cheakingToken[0];
-    // }
     console.log("Username:", username);
     console.log("Password:", password);
 
-    const authData = await authFunction(username, password);
-
-    console.log(authData);
     const check = await checkItemExists();
+
     if (check !== null) {
+      // User exists
       const pinCheck = await AsyncStorage.getItem("Pin");
       if (pinCheck !== null) {
         navigation.navigate("PinAccess");
@@ -65,10 +60,17 @@ const Login = ({ navigation }) => {
         navigation.navigate("PinGeneration");
       }
     } else {
-      InsertLoc();
-      allApiCall();
+      // New user
+      // Perform one-time actions here
+      await InsertLoc();
+      await allApiCall();
+
+      // Authenticate the user
+      const authData = await authFunction(username, password);
+      console.log(authData);
     }
   };
+
   const allApiCall = async () => {
     setLoading(true);
     const yearUri1 =
@@ -79,7 +81,7 @@ const Login = ({ navigation }) => {
     const waterWorkPlanuri =
       "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
     const sanitationWorkPlanuri =
-      "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
+      "http://182.18.181.115:8084/api/masterdata/getsanitationworkplandtls?districtid=113";
     const workplanModalActivityuri =
       "http://182.18.181.115:8084/api/masterdata/getworkplanmodelactivitydtls?districtid=113";
     const sanitationWorkPlanModalActivityuri =

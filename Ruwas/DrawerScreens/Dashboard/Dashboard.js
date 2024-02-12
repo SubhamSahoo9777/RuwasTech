@@ -7,14 +7,17 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
-import { colors, height } from "../../components/AllPackages";
+import { VectorIcon, colors, height } from "../../components/AllPackages";
 import { retrieveData } from "../../components/AllLocalDatabaseFunction";
 
 const Dashboard = ({ navigation }) => {
   const [tap, setTap] = useState(true);
   const [waterWorkPlan, setWaterWorkPlan] = useState([]);
+  const [sanitationWorkPlan, setSanitationWorkPlan] = useState([]);
   const [filteredata, setfilteredata] = useState([]);
+  const [filteredSanitation, setFilteredSanitation] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
 
   const data = [
@@ -35,19 +38,27 @@ const Dashboard = ({ navigation }) => {
         const waterWorkPlanSql = await retrieveData("waterWorkPlan");
         const userDetais = await retrieveData("userDetais");
         setWaterWorkPlan(waterWorkPlanSql);
-        let x = waterWorkPlan.filter(
+        let x = waterWorkPlanSql.filter(
           (item) => item.districtid === userDetais[0].districtid
         );
         setfilteredata(x);
-        setLoading(false); // Set loading to false when data is fetched
+        //sanitationWorkPlan
+        const sanitationWorkPlanSql = await retrieveData("sanitationWorkPlan");
+        setSanitationWorkPlan(sanitationWorkPlanSql);
+        let y = sanitationWorkPlanSql.filter(
+          (item) => item.districtid === userDetais[0].districtid
+        );
+        setFilteredSanitation(y);
+        console.log(sanitationWorkPlanSql);
+        setLoading(false);
       } catch (error) {
         alert("error");
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [waterWorkPlan]);
+  }, []);
 
   const toggleTap = () => {
     setTap(!tap);
@@ -106,46 +117,105 @@ const Dashboard = ({ navigation }) => {
         </Pressable>
       </View>
       {loading ? (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
+      ) : tap ? (
+        <View style={{ flex: 1, padding: 16 }}>
+          <FlatList
+            data={filteredata}
+            renderItem={({ item, index }) => (
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("Report", { data: { item } })
+                }
+                key={index}
+                style={{
+                  backgroundColor: "#5b54ab",
+                  marginTop: 10,
+                  height: "auto",
+                  alignItems: "center",
+                  borderRadius: 10,
+                  paddingVertical: 10,
+                  elevation: 10,
+                  flexDirection: "row",
+                  paddingHorizontal: 10,
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <VectorIcon
+                    type="FontAwesome5"
+                    name="hand-point-right"
+                    size={24}
+                    color="#fff"
+                  />
+                  <Text style={{ color: "#fff", marginLeft: 10 }}>
+                    {Object.keys(item)[1]}: {item[Object.keys(item)[1]]}
+                  </Text>
+                </View>
+
+                <VectorIcon
+                  type="AntDesign"
+                  name="rightcircle"
+                  size={24}
+                  color="#fff"
+                />
+              </Pressable>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       ) : (
-        tap ? (
-          <View style={{ flex: 1, padding: 16 }}>
-            <ScrollView>
-              {filteredata.map((item, index) => {
-                return (
-                  <Pressable
-                    onPress={() =>
-                      navigation.navigate("Report", { data: { item } })
-                    }
-                    key={index}
-                    style={{
-                      backgroundColor: "#5b54ab",
-                      marginTop: 10,
-                      height: "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: 10,
-                      paddingVertical: 10,
-                      elevation: 10,
-                    }}
-                  >
-                    <Text style={{ color: "#fff" }}>
-                      {Object.keys(item)[1]}: {item[Object.keys(item)[1]]}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
-          </View>
-        ) : (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text>No Workplan</Text>
-          </View>
-        )
+        <View style={{ flex: 1, padding: 16 }}>
+          <FlatList
+            data={filteredSanitation}
+            renderItem={({ item, index }) => (
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("Report", { data: { item } })
+                }
+                key={index}
+                style={{
+                  backgroundColor: "#5b54ab",
+                  marginTop: 10,
+                  height: "auto",
+                  alignItems: "center",
+                  borderRadius: 10,
+                  paddingVertical: 10,
+                  elevation: 10,
+                  flexDirection: "row",
+                  paddingHorizontal: 10,
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <VectorIcon
+                    type="FontAwesome5"
+                    name="hand-point-right"
+                    size={24}
+                    color="#fff"
+                  />
+                  <Text style={{ color: "#fff", marginLeft: 10 }}>
+                    {Object.keys(item)[1]}: {item[Object.keys(item)[1]]}
+                  </Text>
+                </View>
+
+                <VectorIcon
+                  type="AntDesign"
+                  name="rightcircle"
+                  size={24}
+                  color="#fff"
+                />
+              </Pressable>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       )}
     </View>
   );

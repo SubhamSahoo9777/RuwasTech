@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import Modal from "react-native-modal";
 import VectorIcon from "./VectorIcon";
-import { CustomComments, ModifiedTextInput1, ModifiedTextInput2 } from "./AllReusableComponets";
+import {
+  CustomComments,
+  ModifiedTextInput1,
+  ModifiedTextInput2,
+} from "./AllReusableComponets";
 import { SubmitButton } from "../components/AllButtons";
 import colors from "./colors";
-import { height,width } from "./AllPackages";
+import { height, width } from "./AllPackages";
 import masterData from "../DataBaseHandle/masterData";
 
 export const ReactNativeModal1 = ({
@@ -13,57 +23,62 @@ export const ReactNativeModal1 = ({
   setModalVisible,
   item,
 }) => {
-
-  const allkeys=Object.keys(item !==undefined && item.item ||{})
-  const unitData=item !==undefined && item.item ||{}
+  const allkeys = Object.keys((item !== undefined && item.item) || {});
+  const unitData = (item !== undefined && item.item) || {};
   console.log(allkeys);
   const [isLoading, setLoading] = useState(true);
- 
+
   const [text, setText] = useState("");
-  const [cda,setCda]=useState("5")
-  const[qt,setQt]=useState("10")
-  const [workplan,setWorkplan]=useState(0)
+  const [cda, setCda] = useState("5");
+  const [qt, setQt] = useState("10");
+  const [workplan, setWorkplan] = useState(0);
   // --------
-  const [pqa,setPqa]=useState(0)
-  const [expenditure,setExpenditure]=useState(0)
+  const [pqa, setPqa] = useState(0);
+  const [expenditure, setExpenditure] = useState(0);
 
-  const updateData=(index,pqa,expenditure)=>{
-let temp=[...masterData.dshcg.table]
-temp=temp.map((item,index)=>{
-
-})
-  }
+  const updateData = (index, pqa, expenditure) => {
+    let temp = [...masterData.dshcg.table];
+    temp = temp.map((item, index) => {});
+  };
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-// useEffect(()=>{
+  // useEffect(()=>{
 
-//   setWorkplan(`${(parseInt(cda) / parseInt(qt))*100} %`)
+  //   setWorkplan(`${(parseInt(cda) / parseInt(qt))*100} %`)
 
-// },[cda,qt,item])
+  // },[cda,qt,item])
   return (
     <Modal
-      animationIn={"slideInRight"}
-      animationInTiming={1000}
-      animationOut={"zoomOutDown"}
-      animationOutTiming={1000}
+      // animationIn={"slideInRight"}
+      // animationInTiming={1000}
+      // animationOut={"zoomOutDown"}
+      // animationOutTiming={1000}
+      // isVisible={isModalVisible}
+      // onBackdropPress={() => setModalVisible(false)}
+      // animationIn={"fadeIn"} // Change animation to fadeIn
+      animationOut={"fadeOut"} // Change animation to fadeOut
+      animationIn={"zoomIn"}
+      // animationOut={"zoomOut"}
+      animationInTiming={500} // Adjust animation timing
+      animationOutTiming={1} // Adjust animation timing
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
     >
-      <View style={{ flex:1, justifyContent: "center", alignItems: "center" ,}}>
-      
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
           style={{
             backgroundColor: colors.commonTextLabelBackColor,
-            height: height*0.8,
+            height: height * 0.8,
             width: "95%",
             borderRadius: 10,
             padding: 10,
           }}
         >
-         <ScrollView 
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 70 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 70 }}
+          >
             <View
               style={{
                 flexDirection: "row",
@@ -72,14 +87,14 @@ temp=temp.map((item,index)=>{
               }}
             >
               <ModifiedTextInput2
-              //no
+                //no
                 header={"No"}
                 value={`${unitData[allkeys[0]]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
               <ModifiedTextInput2
-              //Quarter Target
+                //Quarter Target
                 header={"Quarter Target"}
                 value={`${unitData[allkeys[3]]}`}
                 editable={false}
@@ -87,69 +102,69 @@ temp=temp.map((item,index)=>{
               />
             </View>
             <ModifiedTextInput2
-            //Modal Activity
+              //Modal Activity
               header={"Model Activity"}
               value={`${unitData[allkeys[1]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
-            //Approved Annual Workplan Target
+              //Approved Annual Workplan Target
               header={"Approved Annual Workplan Target"}
               value={`${unitData[allkeys[2]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput1
-            //Performance in Quarter Achieved
+              //Performance in Quarter Achieved
               setInput={setText}
-              title={allkeys[4]}
-              header={allkeys[4]}
+              title={"Performance in Quarter Achieved"}
+              header={"Performance in Quarter Achieved"}
               value={`${unitData[allkeys[4]]}`}
               keyboardType="numeric"
             />
             <ModifiedTextInput2
-            //"Cumulative to Date Achieved
-              header={allkeys[5]}
+              //"Cumulative to Date Achieved
+              header={"Cumulative to Date Achieved"}
               value={`${cda}`}
               // value={`${unitData[allkeys[5]]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
-            // Workplan
-              header={`${allkeys[6]} (%)`}
+              // Workplan
+              header={`Workplan (%)`}
               // value={`${unitData[allkeys[6]]}`}
               value={`${workplan}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-            
+
             <ModifiedTextInput1
-            //Expenditure (Quarter) (Ugx)
-              title={allkeys[7]}
+              //Expenditure (Quarter) (Ugx)
+              title={"Expenditure (Quarter)(Ugx)"}
+              header={"Expenditure (Quarter)(Ugx)"}
               setInput={setText}
-              header={allkeys[7]}
               value="12"
             />
             <ModifiedTextInput2
-            //Cumulative Expenditure(Ugx)
-               setInput={setText}
-               header={`${allkeys[8]} (%)`}
-               value={`${unitData[allkeys[8]]}`}
-               editable={false}
-               CustomStyle={{ backgroundColor: "#e8f1fc" }}
+              //Cumulative Expenditure(Ugx)
+              setInput={setText}
+              header={`Cumulative Expenditure(Ugx)`}
+              value={`${unitData[allkeys[8]]}`}
+              editable={false}
+              CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-           <ModifiedTextInput2
-           //Annual Budget(Ugx)
-               setInput={setText}
-               header={`${allkeys[9]} (%)`}
-               value={`${unitData[allkeys[9]]}`}
-               editable={false}
-               CustomStyle={{ backgroundColor: "#e8f1fc" }}
+            <ModifiedTextInput2
+              //Annual Budget(Ugx)
+              setInput={setText}
+              header={`Annual Budget(Ugx)`}
+              value={`${unitData[allkeys[9]]}`}
+              editable={false}
+              CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-          {/* //cmt */}
-           <CustomComments/>
+            {/* //cmt */}
+            <CustomComments />
           </ScrollView>
           <SubmitButton
             onPress={updateData}

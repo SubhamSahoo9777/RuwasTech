@@ -1,18 +1,24 @@
 import masterData from "../DataBaseHandle/masterData";
-import {height } from "../components/AllPackages";
-import React, { memo,useState,useEffect, useRef  } from "react";
+import { height } from "../components/AllPackages";
+import React, { memo, useState, useEffect, useRef } from "react";
 import VectorIcon from "../components/VectorIcon";
 import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton } from "../components/AllButtons";
-import { Vibration, View, ScrollView, TextInput, Text, ActivityIndicator } from "react-native";
+import {
+  Vibration,
+  View,
+  ScrollView,
+  TextInput,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
 const ProgressReport = memo(({ navigation, route }) => {
-
   const allDetails = route.params.data;
   const [show, setShow] = useState(false);
   const [addErrorModal, setAddErrorModal] = useState(false);
@@ -45,13 +51,18 @@ const ProgressReport = memo(({ navigation, route }) => {
     wrongFile: false,
     wrongAdd: false,
   });
-  const [tableDetails,setTableDetails]=useState([])
+  const [tableDetails, setTableDetails] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const quaterUri = masterData.dshcg.quarter;
       try {
-        workplanModalActivityDetails = await retrieveData("workplanModalActivity");
-        setTableDetails(workplanModalActivityDetails);
+        workplanModalActivityDetails = await retrieveData(
+          "workplanModalActivity"
+        );
+        let temp = workplanModalActivityDetails.filter(
+          (item) => item.workplanid === allDetails.workplanid
+        );
+        setTableDetails(temp);
         allmasterYear = await retrieveData("finantialYear");
         setApiYear(allmasterYear);
         allmasterRwsrc = await retrieveData("rwsrc");
@@ -65,23 +76,21 @@ const ProgressReport = memo(({ navigation, route }) => {
       } catch (error) {
         setShow(true);
       } finally {
-        
-          setLoading(false);
-        
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [rwsrc]);
+  }, [rwsrc, allDetails]);
   const scrollViewRef = useRef(null);
   const scrollUp = () => {
     scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   };
   useEffect(() => {
     if (year && rwsrc && localGovt && quarter) {
-      setLoading(true)
+      setLoading(true);
       setShowTable(true);
-      setLoading(false)
+      setLoading(false);
     }
   }, [year, rwsrc, localGovt, quarter]);
 
@@ -142,8 +151,7 @@ const ProgressReport = memo(({ navigation, route }) => {
         }}
       >
         <ScrollView
-                            nestedScrollEnabled={true}
-
+          nestedScrollEnabled={true}
           ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
@@ -233,8 +241,15 @@ const ProgressReport = memo(({ navigation, route }) => {
           >
             {"Funds Received (UGX)"}
           </Text>
-          {showTable ? <View><ProgressReportTable tableDatas={tableDetails} setTableDatas={setTableDetails}/></View> : null}
-          
+          {showTable ? (
+            <View>
+              <ProgressReportTable
+                tableDatas={tableDetails}
+                setTableDatas={setTableDetails}
+              />
+            </View>
+          ) : null}
+
           {addedFiles.length < 3 ? (
             <>
               <CommonTextInput
@@ -394,8 +409,6 @@ const ProgressReport = memo(({ navigation, route }) => {
       {loading && <LottieFileLoader />}
     </>
   );
-
 });
-
 
 export default ProgressReport;
