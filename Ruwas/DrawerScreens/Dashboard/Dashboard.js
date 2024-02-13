@@ -49,7 +49,6 @@ const Dashboard = ({ navigation }) => {
           (item) => item.districtid === userDetais[0].districtid
         );
         setFilteredSanitation(y);
-        console.log(sanitationWorkPlanSql);
         setLoading(false);
       } catch (error) {
         alert("error");

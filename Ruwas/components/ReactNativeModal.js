@@ -17,53 +17,44 @@ import { SubmitButton } from "../components/AllButtons";
 import colors from "./colors";
 import { height, width } from "./AllPackages";
 import masterData from "../DataBaseHandle/masterData";
-
+import { useDispatch,useSelector } from "react-redux";
 export const ReactNativeModal1 = ({
   isModalVisible,
   setModalVisible,
   item,
+  quarterType,
 }) => {
-  console.log('====================================');
-  console.log(item.item);
-  console.log('====================================');
-  const allkeys = Object.keys((item !== undefined && item.item) || {});
   const unitData = (item !== undefined && item.item) || {};
+  const data=useSelector((state)=>state.UserReducer)
+  const id=data
+const Dispatch=useDispatch()
   const [isLoading, setLoading] = useState(true);
-
   const [text, setText] = useState("");
-  const [cda, setCda] = useState("5");
-  const [qt, setQt] = useState("10");
+  const [quaterAchieved, setQuaterAchieved] = useState(unitData["quarterOneAchieved"]);
+  const [quaterExpenditure, SetQuaterExpenditure] = useState(unitData["quarterOneExpenditure"]);
+const [comment,setComments]=useState("")
   const [workplan, setWorkplan] = useState(0);
-  // --------
-  const [pqa, setPqa] = useState(0);
-  const [expenditure, setExpenditure] = useState(0);
-
-  const updateData = (index, pqa, expenditure) => {
-    let temp = [...masterData.dshcg.table];
-    temp = temp.map((item, index) => {});
-  };
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  // useEffect(()=>{
+  const onSaveHandle=()=>{
+Dispatch({type:"modalUpdate",object:{
+  ...id,
+    "Sno":unitData["Sno"],
+    "quarteSelected":quarterType,
+    'quarterAchieved':quaterAchieved,
+    'quarterExpenditure':quaterExpenditure,
+    'quarterComment':comment
 
-  //   setWorkplan(`${(parseInt(cda) / parseInt(qt))*100} %`)
+}})
 
-  // },[cda,qt,item])
+  }
   return (
     <Modal
-      // animationIn={"slideInRight"}
-      // animationInTiming={1000}
-      // animationOut={"zoomOutDown"}
-      // animationOutTiming={1000}
-      // isVisible={isModalVisible}
-      // onBackdropPress={() => setModalVisible(false)}
-      // animationIn={"fadeIn"} // Change animation to fadeIn
-      animationOut={"fadeOut"} // Change animation to fadeOut
+      animationOut={"fadeOut"} 
       animationIn={"zoomIn"}
-      // animationOut={"zoomOut"}
-      animationInTiming={500} // Adjust animation timing
-      animationOutTiming={1} // Adjust animation timing
+      animationInTiming={500} 
+      animationOutTiming={1} 
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
     >
@@ -91,14 +82,15 @@ export const ReactNativeModal1 = ({
               <ModifiedTextInput2
                 //no
                 header={"No"}
-                value={`${unitData[allkeys[0]]}`}
+                value={`${unitData["Sno"]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
               <ModifiedTextInput2
                 //Quarter Target
                 header={"Quarter Target"}
-                value={`${unitData[allkeys[3]]}`}
+                // value={`${unitData["quarterOne"]}`}
+                value={quarterType==="1"?`${unitData["quarterOne"]}`:quarterType==="2"?`${unitData["quarterTwo"]}`:quarterType==="3"?`${unitData["quarterFour"]}`:`${unitData["quarterOne"]}`}
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
@@ -106,37 +98,35 @@ export const ReactNativeModal1 = ({
             <ModifiedTextInput2
               //Modal Activity
               header={"Model Activity"}
-              value={`${unitData[allkeys[1]]}`}
+              value={`${unitData["modelActivity"]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
               //Approved Annual Workplan Target
               header={"Approved Annual Workplan Target"}
-              value={`${unitData[allkeys[2]]}`}
+              value={`${unitData["approvedAnnualTarget"]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput1
               //Performance in Quarter Achieved
-              setInput={setText}
+              setInput={setQuaterAchieved}
               title={"Performance in Quarter Achieved"}
               header={"Performance in Quarter Achieved"}
-              value={`${unitData[allkeys[4]]}`}
+              value={quaterAchieved}
               keyboardType="numeric"
             />
             <ModifiedTextInput2
               //"Cumulative to Date Achieved
               header={"Cumulative to Date Achieved"}
-              value={`${cda}`}
-              // value={`${unitData[allkeys[5]]}`}
+              value={quaterAchieved}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
-              // Workplan
+              // Workplan %
               header={`Workplan (%)`}
-              // value={`${unitData[allkeys[6]]}`}
               value={`${workplan}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
@@ -146,14 +136,14 @@ export const ReactNativeModal1 = ({
               //Expenditure (Quarter) (Ugx)
               title={"Expenditure (Quarter)(Ugx)"}
               header={"Expenditure (Quarter)(Ugx)"}
-              setInput={setText}
-              value="12"
+              value={quaterExpenditure}
+              setInput={SetQuaterExpenditure}
             />
             <ModifiedTextInput2
               //Cumulative Expenditure(Ugx)
               setInput={setText}
               header={`Cumulative Expenditure(Ugx)`}
-              value={`${unitData[allkeys[8]]}`}
+              value={`${unitData["quarterOneExpenditure"]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -161,15 +151,21 @@ export const ReactNativeModal1 = ({
               //Annual Budget(Ugx)
               setInput={setText}
               header={`Annual Budget(Ugx)`}
-              value={`${unitData[allkeys[9]]}`}
+              value={`${unitData["funds"]}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             {/* //cmt */}
-            <CustomComments />
+            <ModifiedTextInput1
+              //Expenditure (Quarter) (Ugx)
+              title={"Comments"}
+              header={"Comments"}
+              value={comment}
+              setInput={setComments}
+            />
           </ScrollView>
           <SubmitButton
-            onPress={updateData}
+            onPress={onSaveHandle}
             title={"Save"}
             buttonStyle={{
               position: "absolute",

@@ -217,10 +217,10 @@ const [text,setText]=useState(false)
     </View>
   )
 }
-export const CustomComments=()=>{
+export const CustomComments=(comment="")=>{
   return(
     <View style={{marginTop: 10,}}>
-       <Text style={{paddingLeft:5,color:colors.tableHeaderColor,fontWeight:"500"}}>Comments</Text>
+       <Text style={{paddingLeft:5,color:colors.tableHeaderColor,fontWeight:"500"}}>{comment}</Text>
             <TextInput
             placeholder="Write Here..."
             multiline={true}

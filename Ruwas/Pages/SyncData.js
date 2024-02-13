@@ -5,10 +5,11 @@ import { SubmitButton } from "../components/AllButtons";
 import { LoaderModal } from "../components/AllModals";
 import colors from "../components/colors";
 import VectorIcon from "../components/VectorIcon";
+import { useSelector } from "react-redux";
 const SyncData = () => {
-  const [updatedData, setUpdatedData] = useState([
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-  ]);
+  const updatedData1=useSelector((state)=>state.ModalActivityReducer)
+  const [updatedData, setUpdatedData] = useState(updatedData1);
+  console.log(updatedData);
   const [show, setShow] = useState(false);
   return (
     <View

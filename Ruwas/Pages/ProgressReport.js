@@ -17,7 +17,9 @@ import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
 import AutoSelectDrop from "../components/AutoSelectDrop";
+import { useSelector } from "react-redux";
 const ProgressReport = memo(({ navigation, route }) => {
+  const alltableData=useSelector((state)=>state.ModalActivityReducer)
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
   const [show, setShow] = useState(false);
@@ -42,6 +44,7 @@ const ProgressReport = memo(({ navigation, route }) => {
       file: "",
     },
   ]);
+
   const [isWrong, setIsWrong] = useState({
     wrongYear: false,
     wrongRwsrc: false,
@@ -68,14 +71,14 @@ const ProgressReport = memo(({ navigation, route }) => {
           sanitationWorkPlanModalActivity = await retrieveData(
             "sanitationWorkPlanModalActivity"
           );
-    
+ 
           let temp = sanitationWorkPlanModalActivity.filter(
             (item) => item.sanitationId === allDetails.sanitationid
           );
+   
           setTableDetails(temp);
         
         }
-       
         allmasterYear = await retrieveData("finantialYear");
         let yearName=allmasterYear.filter((item)=>allDetails.financialyearid === item.financialYearId)
         setApiYear(yearName[0].financialYearName)
@@ -145,7 +148,9 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
     }
   };
-  console.log(apiYear)
+  const tableDatas=()=>{
+    
+  }
   return (
     <>
       <View
@@ -188,41 +193,14 @@ const ProgressReport = memo(({ navigation, route }) => {
           <AutoSelectDrop label={apiYear} title={"financial Year"}/>
           <AutoSelectDrop label={apiDistricts} title={"Local Government"}/>
           <AutoSelectDrop label={apiRwsrc} title={"RWSRC"}/>
-          {/* <CustomDropDown
-            dropData={apiYear}
-            setSelect={setYear}
-            title="financial Year"
-            isWrong={isWrong.wrongYear}
-            setIsWrong={setIsWrong}
-            fieldName={"financialYearName"}
-            valueFieldName={"financialYearId"}
-          /> */}
-          {/* <CustomDropDown
-            dropData={apiRwsrc}
-            fieldName={"RWSRCName"}
-            setSelect={setRwsrc}
-            title="RWSRC"
-            isWrong={isWrong.wrongRwsrc}
-            setIsWrong={setIsWrong}
-            valueFieldName={"RWSRCId"}
-          /> */}
-
-          {/* <CustomDropDown
-            setSelect={setLocalGovt}
-            title="Local Government"
-            isWrong={isWrong.wrongGovt}
-            setIsWrong={setIsWrong}
-            dropData={apiDistricts}
-            fieldName={"LCName"}
-            valueFieldName={"rwsrcId"}
-          /> */}
           <CustomDropDown
-            dropData={apiQuater}
-            fieldName={"label"}
             setSelect={setQuarter}
             title="Quarter"
             isWrong={isWrong.wrongQuarter}
             setIsWrong={setIsWrong}
+            dropData={apiQuater}
+            fieldName={"label"}
+            valueFieldName={"value"}
           />
           <Text
             style={{
@@ -253,6 +231,8 @@ const ProgressReport = memo(({ navigation, route }) => {
               <ProgressReportTable
                 tableDatas={tableDetails}
                 setTableDatas={setTableDetails}
+                quarter={quarter!==undefined && quarter}
+                reportType={route.params.data}
               />
             </View>
           ) : null}

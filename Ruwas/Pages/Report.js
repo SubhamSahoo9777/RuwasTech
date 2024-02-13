@@ -2,10 +2,13 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { VectorIcon, colors, height } from "../components/AllPackages";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
-
+import { useDispatch } from "react-redux";
 const Report = ({ navigation, route }) => {
+  const Dispatch=useDispatch()
   let allDetails = route.params.data.item;
   let reportType=route.params.data.type
+
+  let userinfo=reportType=="water"?{workplanid:allDetails.workplanid}:{sanitationid:allDetails.sanitationid}
   const[getDistrictName,setGetDistrictName]=useState("")
   useEffect(()=>{
     conformDistrict(allDetails.districtid)
@@ -106,6 +109,7 @@ setGetDistrictName(selectedDistricts[0].LCName)
 
         <Pressable
           onPress={() => {
+            Dispatch({type:"userId",userId:userinfo})
             navigation.navigate("Progress Report", { data: {allDetails,reportType} });
           }}
           style={{

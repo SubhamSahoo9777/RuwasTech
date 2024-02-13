@@ -121,3 +121,21 @@ export const retrieveDataById = (tableName, id) => {
   });
 };
 
+export const deletetable = (tableName) => {
+  return new Promise((resolve, reject) => {
+    LocalDb.transaction((tx) => {
+      tx.executeSql(
+       `DROP TABLE IF EXISTS ${tableName};`,
+        [],
+        (_, results) => {
+          console.log(`Table '${tableName}' removed successfully`);
+          resolve(`Table '${tableName}' removed successfully`);
+        },
+        (_, error) => {
+          console.error(`Error removing table '${tableName}': ${error.message}`);
+          reject(`Error removing table '${tableName}': ${error.message}`);
+        }
+      );
+    });
+  });
+};

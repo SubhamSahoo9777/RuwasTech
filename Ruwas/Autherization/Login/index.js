@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   TouchableOpacity,
   Text,
   Image,
   ImageBackground,
+  Alert
 } from "react-native";
 import { Hoshi } from "react-native-textinput-effects";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -20,12 +21,28 @@ import {
   insertDataArray,
   retrieveData,
 } from "../../components/AllLocalDatabaseFunction";
-
+import NetInfo from "@react-native-community/netinfo";
 const Login = ({ navigation }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  useEffect(() => {
+    const restoreUser = async () => {
+      try {
+        const userJSON = await AsyncStorage.getItem("token");
+        const userData = userJSON ? JSON.parse(userJSON) : null;
+        if (userData !== null) {
+          navigation.navigate("PinAccess");
+        }
+        return userData;
+      } catch (error) {
+        console.error("Error restoring user data:", error);
+      } finally {
+      }
+    };
 
+    restoreUser();
+  }, []);
   React.useEffect(() => {
     TableCreations();
   }, []);
@@ -40,36 +57,91 @@ const Login = ({ navigation }) => {
     })();
   }, []);
 
-  const checkItemExists = async () => {
-    const value = await AsyncStorage.getItem("LocationDetails");
-    return value;
-  };
-
+  // const checkItemExists = async () => {
+  //   const value = await AsyncStorage.getItem("LocationDetails");
+  //   return value;
+  // };
   const handleLogin = async () => {
-    console.log("Username:", username);
-    console.log("Password:", password);
-
-    const check = await checkItemExists();
-
-    if (check !== null) {
-      // User exists
-      const pinCheck = await AsyncStorage.getItem("Pin");
-      if (pinCheck !== null) {
-        navigation.navigate("PinAccess");
-      } else {
-        navigation.navigate("PinGeneration");
-      }
+    const netInfo = await NetInfo.fetch();
+    const isConnected = netInfo.isConnected;
+    if (isConnected == false) {
+      Alert.alert(
+        "No Network Connection",
+        "Please connect to a network and try again.",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
     } else {
-      // New user
-      // Perform one-time actions here
-      await InsertLoc();
-      await allApiCall();
+      setLoading(true);
+      if (username !== "" && password !== "") {
+        try {
+          const apiUrl = `http://182.18.181.115:8084/api/login/loginservice?username=${username}&password=${password}`;
+          const apiResponse = await fetch(apiUrl);
+          const responseData = await apiResponse.json();
+          let response = await JSON.parse(responseData);
 
-      // Authenticate the user
-      const authData = await authFunction(username, password);
-      console.log(authData);
+          if (response[0]?.token && response[0]?.token !== "") {
+            setLoading(false);
+            let token1 = await response[0]?.token;
+            await AsyncStorage.setItem("token", JSON.stringify(token1));
+            await AsyncStorage.setItem("userdata",JSON.stringify(response[0]));
+
+            let token2 = await AsyncStorage.getItem("token");
+            if (token2 !== "") {
+              allApiCall();
+              let temp1 = {
+                tableName: "userDetais",
+                TEXT: Object.keys(response[0]),
+              };
+              await createTable(temp1);
+              let temp2 = { ...temp1, table: response };
+              insertDataArray(temp2);
+              navigation.navigate("PinGeneration");
+            }
+          } else {
+            setLoading(false);
+            Alert.alert(
+              "Error",
+              "You have entered an invalid username or password",
+              [
+                {
+                  text: "OK",
+                },
+              ]
+            );
+          }
+        } catch (error) {
+          setLoading(false);
+          Alert.alert("Error", error.message);
+        }
+      }
     }
   };
+  // const handleLogin = async () => {
+  //   console.log("Username:", username);
+  //   console.log("Password:", password);
+
+  //   const check = await checkItemExists();
+
+  //   if (check !== null) {
+  //     // User exists
+  //     const pinCheck = await AsyncStorage.getItem("Pin");
+  //     if (pinCheck !== null) {
+  //       navigation.navigate("PinAccess");
+  //     } else {
+  //       navigation.navigate("PinGeneration");
+  //     }
+  //   } else {
+  //     // New user
+  //     // Perform one-time actions here
+  //     await InsertLoc();
+  //     await allApiCall();
+
+  //     // Authenticate the user
+  //     const authData = await authFunction(username, password);
+  //     console.log(authData);
+  //   }
+  // };
 
   const allApiCall = async () => {
     setLoading(true);

@@ -7,13 +7,14 @@ import Divider from "./Divider";
 import { ReactNativeModal1 } from "./ReactNativeModal";
 import ButtonSheet from "./ButtonSheet";
 
-const ProgressReportTable = ({ tableDatas, setTableDatas }) => {
+const ProgressReportTable = ({ tableDatas, setTableDatas,quarter}) => {
+ 
+  let quarterType=quarter!==undefined && quarter
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [items, setItems] = useState([]);
   const [moadalVisiable, setModalVisiable] = useState(false);
   const [showTotal, setShowTotal] = useState(false);
-
   useEffect(() => {
     // Perform filtering based on the search term
     const filteredResults = tableDatas.filter((item) => {
@@ -27,7 +28,6 @@ const ProgressReportTable = ({ tableDatas, setTableDatas }) => {
 
     setFilteredData(filteredResults);
   }, [searchTerm, tableDatas]);
-
   return (
     <View
       style={{
@@ -130,7 +130,7 @@ const ProgressReportTable = ({ tableDatas, setTableDatas }) => {
                     size={30}
                     color={colors.tableHeaderColor}
                     onPress={() => {
-                      setItems({ item, id: index }), setModalVisiable(true);
+                      setItems({ item, id: index ,quarterType,}), setModalVisiable(true);
                     }}
                   />
                 </View>
@@ -180,6 +180,7 @@ const ProgressReportTable = ({ tableDatas, setTableDatas }) => {
         isModalVisible={moadalVisiable}
         setModalVisible={setModalVisiable}
         item={items}
+        quarterType={quarterType} 
       />
       <ButtonSheet isVisible={showTotal} onClose={setShowTotal} />
     </View>
