@@ -7,7 +7,7 @@ import colors from "../components/colors";
 import VectorIcon from "../components/VectorIcon";
 import { useSelector } from "react-redux";
 const SyncData = () => {
-  const updatedData1=useSelector((state)=>state.ModalActivityReducer)
+  const updatedData1 = useSelector((state) => state.ModalActivityReducer);
   const [updatedData, setUpdatedData] = useState(updatedData1);
   console.log(updatedData);
   const [show, setShow] = useState(false);
@@ -25,6 +25,7 @@ const SyncData = () => {
           renderItem={({ item, index }) => {
             return (
               <View
+                key={index}
                 style={{
                   alignSelf: "center",
                   backgroundColor: "#5b54ab",
@@ -37,13 +38,19 @@ const SyncData = () => {
                 }}
               >
                 <Text style={{ color: "#fff", fontSize: 16 }}>
-                  Work Plan Id: {index}
+                  {item.hasOwnProperty("sanitationid")
+                    ? "Sanitation"
+                    : "Workplanid"}
+                  :{" "}
+                  {item.hasOwnProperty("sanitationid")
+                    ? item["sanitationid"]
+                    : item["workplanid"]}
                 </Text>
                 <Text style={{ color: "#fff", fontSize: 16 }}>
-                  comments: {"ruwas"}
+                  quter: {item["quarteSelected"]}
                 </Text>
                 <Text style={{ color: "#fff", fontSize: 16 }}>
-                  status: {"ruwas"}
+                  comments: {item["quarterComment"]}
                 </Text>
                 <View
                   style={{ flexDirection: "row-reverse", paddingBottom: 5 }}
@@ -54,7 +61,6 @@ const SyncData = () => {
                     size={27}
                     color="#fff"
                   />
-               
                 </View>
               </View>
             );
@@ -62,6 +68,7 @@ const SyncData = () => {
         />
       </View>
       <SubmitButton
+        title={"Sync All At Once"}
         onPress={() => setShow(!show)}
         buttonStyle={{ width: "90%", alignSelf: "center" }}
         textStyle={{ fontSize: 22 }}

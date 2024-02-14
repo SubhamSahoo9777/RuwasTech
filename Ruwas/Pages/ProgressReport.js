@@ -6,12 +6,7 @@ import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton } from "../components/AllButtons";
-import {
-  Vibration,
-  View,
-  ScrollView,
-  Text,
-} from "react-native";
+import { Vibration, View, ScrollView, Text } from "react-native";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { retrieveData } from "../components/AllLocalDatabaseFunction";
@@ -19,7 +14,7 @@ import { SuccessModal } from "../components/AllModals";
 import AutoSelectDrop from "../components/AutoSelectDrop";
 import { useSelector } from "react-redux";
 const ProgressReport = memo(({ navigation, route }) => {
-  const alltableData=useSelector((state)=>state.ModalActivityReducer)
+  const alltableData = useSelector((state) => state.ModalActivityReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
   const [show, setShow] = useState(false);
@@ -59,42 +54,45 @@ const ProgressReport = memo(({ navigation, route }) => {
     const fetchData = async () => {
       const quaterUri = masterData.dshcg.quarter;
       try {
-        if(reportType=="water"){
+        if (reportType == "water") {
           workplanModalActivityDetails = await retrieveData(
             "workplanModalActivity"
           );
+          console.log(workplanModalActivityDetails);
           let temp = workplanModalActivityDetails.filter(
             (item) => item.workplanid === allDetails.workplanid
           );
           setTableDetails(temp);
-        }else{
+        } else {
           sanitationWorkPlanModalActivity = await retrieveData(
             "sanitationWorkPlanModalActivity"
           );
- 
+
           let temp = sanitationWorkPlanModalActivity.filter(
             (item) => item.sanitationId === allDetails.sanitationid
           );
-   
+
           setTableDetails(temp);
-        
         }
         allmasterYear = await retrieveData("finantialYear");
-        let yearName=allmasterYear.filter((item)=>allDetails.financialyearid === item.financialYearId)
-        setApiYear(yearName[0].financialYearName)
-        
+        let yearName = allmasterYear.filter(
+          (item) => allDetails.financialyearid === item.financialYearId
+        );
+        setApiYear(yearName[0].financialYearName);
+
         allmasterDistricts = await retrieveData("districts");
         let selectedDistricts = allmasterDistricts.filter((item) => {
           return item.LCId == allDetails.districtid;
         });
-        let rwsrcId=selectedDistricts[0].rwsrcId
+        let rwsrcId = selectedDistricts[0].rwsrcId;
         setApiDistricts(selectedDistricts[0].LCName);
-        
+
         allmasterRwsrc = await retrieveData("rwsrc");
-        const selectedRwsrc=allmasterRwsrc.filter((item)=>item.RWSRCId==rwsrcId)
+        const selectedRwsrc = allmasterRwsrc.filter(
+          (item) => item.RWSRCId == rwsrcId
+        );
         setApiRwsrc(selectedRwsrc[0].RWSRCName);
-        
-       
+
         setApiQuater(quaterUri);
       } catch (error) {
         setShow(true);
@@ -128,13 +126,14 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
       // -----------------------------------final result submit--------------------
       setLoading(true);
+      SantToDataBase();
       setTimeout(() => {
         setLoading(false);
         setFinalSuccessModal(true);
       }, 2000);
       // -------------------------------------------------------
     } else {
-     if (!quarter) {
+      if (!quarter) {
         setIsWrong({ ...isWrong, wrongQuarter: true });
         Vibration.vibrate(500);
         scrollUp();
@@ -148,9 +147,9 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
     }
   };
-  const tableDatas=()=>{
-    
-  }
+  const SantToDataBase = () => {
+    console.log(alltableData);
+  };
   return (
     <>
       <View
@@ -190,9 +189,9 @@ const ProgressReport = memo(({ navigation, route }) => {
               </Text>
             </View>
           </View>
-          <AutoSelectDrop label={apiYear} title={"financial Year"}/>
-          <AutoSelectDrop label={apiDistricts} title={"Local Government"}/>
-          <AutoSelectDrop label={apiRwsrc} title={"RWSRC"}/>
+          <AutoSelectDrop label={apiYear} title={"financial Year"} />
+          <AutoSelectDrop label={apiDistricts} title={"Local Government"} />
+          <AutoSelectDrop label={apiRwsrc} title={"RWSRC"} />
           <CustomDropDown
             setSelect={setQuarter}
             title="Quarter"
@@ -231,13 +230,13 @@ const ProgressReport = memo(({ navigation, route }) => {
               <ProgressReportTable
                 tableDatas={tableDetails}
                 setTableDatas={setTableDetails}
-                quarter={quarter!==undefined && quarter}
+                quarter={quarter !== undefined && quarter}
                 reportType={route.params.data}
               />
             </View>
           ) : null}
 
-          {addedFiles.length < 3 ? (
+          {alltableData.length > 0 ? (
             <>
               <CommonTextInput
                 setInput={setTitle}

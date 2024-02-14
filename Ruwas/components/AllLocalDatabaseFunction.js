@@ -71,8 +71,32 @@ export const retrieveData = (tableName) => {
           retrieveDataSQL,
           [],
           (_, result) => resolve(result.rows._array),
-          (error) => reject(`Error retrieving data from '${tableName}': ${error.message}`)
+          (error) =>
+            reject(
+              `Error retrieving data from '${tableName}': ${error.message}`
+            )
           // (error) => resolve(undefined)
+        );
+      },
+      (error) => reject(`Transaction error: ${error.message}`)
+    );
+  });
+};
+
+export const retrieveDataById = (tableName, id) => {
+  return new Promise((resolve, reject) => {
+    const retrieveDataSQL = `SELECT * FROM ${tableName} WHERE id = ?`; // Assuming the primary key column is named 'id'
+
+    LocalDb.transaction(
+      (tx) => {
+        tx.executeSql(
+          retrieveDataSQL,
+          [id], // Pass the ID as a parameter to avoid SQL injection
+          (_, result) => resolve(result.rows._array),
+          (error) =>
+            reject(
+              `Error retrieving data from '${tableName}' with ID ${id}: ${error.message}`
+            )
         );
       },
       (error) => reject(`Transaction error: ${error.message}`)
@@ -103,39 +127,156 @@ export const doesTableExist = (tableName) => {
     );
   });
 };
-export const retrieveDataById = (tableName, id) => {
-  return new Promise((resolve, reject) => {
-    const retrieveDataSQL = `SELECT * FROM ${tableName} WHERE id = ?`; // Assuming the primary key column is named 'id'
-
-    LocalDb.transaction(
-      (tx) => {
-        tx.executeSql(
-          retrieveDataSQL,
-          [id], // Pass the ID as a parameter to avoid SQL injection
-          (_, result) => resolve(result.rows._array),
-          (error) => reject(`Error retrieving data from '${tableName}' with ID ${id}: ${error.message}`)
-        );
-      },
-      (error) => reject(`Transaction error: ${error.message}`)
-    );
-  });
-};
 
 export const deletetable = (tableName) => {
   return new Promise((resolve, reject) => {
     LocalDb.transaction((tx) => {
       tx.executeSql(
-       `DROP TABLE IF EXISTS ${tableName};`,
+        `DROP TABLE IF EXISTS ${tableName};`,
         [],
         (_, results) => {
           console.log(`Table '${tableName}' removed successfully`);
           resolve(`Table '${tableName}' removed successfully`);
         },
         (_, error) => {
-          console.error(`Error removing table '${tableName}': ${error.message}`);
+          console.error(
+            `Error removing table '${tableName}': ${error.message}`
+          );
           reject(`Error removing table '${tableName}': ${error.message}`);
         }
       );
     });
+  });
+};
+
+export const updateMasterData = async (tableRow) => {
+  return new Promise((resolve, reject) => {
+    LocalDb.transaction(
+      (tx) => {
+        tableRow.forEach((row) => {
+          const {
+            Sno,
+            quarteSelected,
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            workplanid,
+          } = row;
+          const updateQuery = `UPDATE masterData 
+                                         SET 
+                                            quarter${quarteSelected} = ?,
+                                            quarter${quarteSelected}Achieved = ?,
+                                            quarter${quarteSelected}Comment = ?,
+                                            quarter${quarteSelected}Expenditure = ?
+                                         WHERE 
+                                            workplanid = ? 
+                                            AND Sno = ?`;
+          tx.executeSql(
+            updateQuery,
+            [
+              quarterAchieved,
+              quarterComment,
+              quarterExpenditure,
+              workplanid,
+              Sno,
+            ],
+            (_, result) => {
+              // Check if rows affected to verify if the update was successful
+              if (result.rowsAffected > 0) {
+                console.log(
+                  `Row updated for Sno: ${Sno}, workplanid: ${workplanid}`
+                );
+              } else {
+                console.log(
+                  `No rows updated for Sno: ${Sno}, workplanid: ${workplanid}`
+                );
+              }
+            },
+            (_, error) => {
+              console.error("Error updating row:", error);
+              reject(error);
+            }
+          );
+        });
+      },
+      (error) => {
+        console.error("Transaction error:", error);
+        reject(error);
+      },
+      () => {
+        resolve("All rows updated successfully");
+      }
+    );
+  });
+};
+
+export const updateMasterDataUniqueKey = async (
+  tableName,
+  tableRow,
+  uniqueKeys
+) => {
+  return new Promise((resolve, reject) => {
+    LocalDb.transaction(
+      (tx) => {
+        tableRow.forEach((row) => {
+          const {
+            Sno,
+            quarteSelected,
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            workplanid,
+          } = row;
+          const uniqueKeyConditions = uniqueKeys
+            .map((key) => `${key} = ?`)
+            .join(" AND ");
+          const updateQuery = `UPDATE ${tableName} 
+                                         SET 
+                                            quarter${quarteSelected} = ?,
+                                            quarter${quarteSelected}Achieved = ?,
+                                            quarter${quarteSelected}Comment = ?,
+                                            quarter${quarteSelected}Expenditure = ?
+                                         WHERE 
+                                            ${uniqueKeyConditions}`;
+          const values = [
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            ...uniqueKeys.map((key) => row[key]),
+          ];
+          tx.executeSql(
+            updateQuery,
+            values,
+            (_, result) => {
+              // Check if rows affected to verify if the update was successful
+              if (result.rowsAffected > 0) {
+                console.log(
+                  `Row updated for ${uniqueKeys
+                    .map((key) => `${key}: ${row[key]}`)
+                    .join(", ")}`
+                );
+              } else {
+                console.log(
+                  `No rows updated for ${uniqueKeys
+                    .map((key) => `${key}: ${row[key]}`)
+                    .join(", ")}`
+                );
+              }
+            },
+            (_, error) => {
+              console.error("Error updating row:", error);
+              reject(error);
+            }
+          );
+        });
+      },
+      (error) => {
+        console.error("Transaction error:", error);
+        reject(error);
+      },
+      () => {
+        resolve("All rows updated successfully");
+      }
+    );
   });
 };

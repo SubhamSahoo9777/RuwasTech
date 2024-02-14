@@ -123,12 +123,31 @@ const Dashboard = ({ navigation }) => {
         </View>
       ) : tap ? (
         <View style={{ flex: 1, padding: 16 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 10,
+            }}
+          >
+            <VectorIcon
+              type="FontAwesome5"
+              name="arrow-circle-right"
+              size={24}
+              color="green"
+            />
+            <Text style={{ marginLeft: 10, fontSize: 16, color: "green" }}>
+              DWSCG
+            </Text>
+          </View>
           <FlatList
             data={filteredata}
             renderItem={({ item, index }) => (
               <Pressable
                 onPress={() =>
-                  navigation.navigate("Report", { data: { item,type:"water" } })
+                  navigation.navigate("Report", {
+                    data: { item, type: "water" },
+                  })
                 }
                 key={index}
                 style={{
@@ -152,7 +171,7 @@ const Dashboard = ({ navigation }) => {
                     color="#fff"
                   />
                   <Text style={{ color: "#fff", marginLeft: 10 }}>
-                    {"WorkPlan Id"}: {item["workplanid"]}
+                    {"Work Plan Id"}: {item["workplanid"]}
                   </Text>
                 </View>
 
@@ -170,12 +189,31 @@ const Dashboard = ({ navigation }) => {
         </View>
       ) : (
         <View style={{ flex: 1, padding: 16 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 10,
+            }}
+          >
+            <VectorIcon
+              type="FontAwesome5"
+              name="arrow-circle-right"
+              size={24}
+              color="green"
+            />
+            <Text style={{ marginLeft: 10, fontSize: 16, color: "green" }}>
+              DSHCG
+            </Text>
+          </View>
           <FlatList
             data={filteredSanitation}
             renderItem={({ item, index }) => (
               <Pressable
                 onPress={() =>
-                  navigation.navigate("Report", { data: { item,type:"sanitation" } })
+                  navigation.navigate("Report", {
+                    data: { item, type: "sanitation" },
+                  })
                 }
                 key={index}
                 style={{

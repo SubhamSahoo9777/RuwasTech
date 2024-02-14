@@ -17,7 +17,7 @@ import { SubmitButton } from "../components/AllButtons";
 import colors from "./colors";
 import { height, width } from "./AllPackages";
 import masterData from "../DataBaseHandle/masterData";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 export const ReactNativeModal1 = ({
   isModalVisible,
   setModalVisible,
@@ -25,36 +25,43 @@ export const ReactNativeModal1 = ({
   quarterType,
 }) => {
   const unitData = (item !== undefined && item.item) || {};
-  const data=useSelector((state)=>state.UserReducer)
-  const id=data
-const Dispatch=useDispatch()
+  console.log(unitData, "hi");
+  const data = useSelector((state) => state.UserReducer);
+  const id = data;
+  const Dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true);
   const [text, setText] = useState("");
-  const [quaterAchieved, setQuaterAchieved] = useState(unitData["quarterOneAchieved"]);
-  const [quaterExpenditure, SetQuaterExpenditure] = useState(unitData["quarterOneExpenditure"]);
-const [comment,setComments]=useState("")
+  const [quaterAchieved, setQuaterAchieved] = useState(
+    unitData["quarterOneAchieved"]
+  );
+  const [quaterExpenditure, SetQuaterExpenditure] = useState(
+    unitData["quarterOneExpenditure"]
+  );
+  const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const onSaveHandle=()=>{
-Dispatch({type:"modalUpdate",object:{
-  ...id,
-    "Sno":unitData["Sno"],
-    "quarteSelected":quarterType,
-    'quarterAchieved':quaterAchieved,
-    'quarterExpenditure':quaterExpenditure,
-    'quarterComment':comment
-
-}})
-
-  }
+  const onSaveHandle = () => {
+    Dispatch({
+      type: "modalUpdate",
+      object: {
+        ...id,
+        id: unitData["id"],
+        Sno: unitData["Sno"],
+        quarteSelected: quarterType,
+        quarterAchieved: quaterAchieved,
+        quarterExpenditure: quaterExpenditure,
+        quarterComment: comment,
+      },
+    });
+  };
   return (
     <Modal
-      animationOut={"fadeOut"} 
+      animationOut={"fadeOut"}
       animationIn={"zoomIn"}
-      animationInTiming={500} 
-      animationOutTiming={1} 
+      animationInTiming={500}
+      animationOutTiming={1}
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
     >
@@ -90,7 +97,15 @@ Dispatch({type:"modalUpdate",object:{
                 //Quarter Target
                 header={"Quarter Target"}
                 // value={`${unitData["quarterOne"]}`}
-                value={quarterType==="1"?`${unitData["quarterOne"]}`:quarterType==="2"?`${unitData["quarterTwo"]}`:quarterType==="3"?`${unitData["quarterFour"]}`:`${unitData["quarterOne"]}`}
+                value={
+                  quarterType === "1"
+                    ? `${unitData["quarterOne"]}`
+                    : quarterType === "2"
+                    ? `${unitData["quarterTwo"]}`
+                    : quarterType === "3"
+                    ? `${unitData["quarterFour"]}`
+                    : `${unitData["quarterOne"]}`
+                }
                 editable={false}
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
