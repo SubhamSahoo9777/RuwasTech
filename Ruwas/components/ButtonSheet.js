@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import colors from "./colors";
 import VectorIcon from "./VectorIcon";
+import { useSelector } from "react-redux";
+
 const ButtonSheet = ({ isVisible, onClose }) => {
+  const totalinfo=useSelector(state=>state.TotalCalculationreducer)
   return (
     <Modal
       transparent={true}
@@ -33,7 +36,7 @@ const ButtonSheet = ({ isVisible, onClose }) => {
                 borderColor:"#9d98cd",
               }}
             >
-              <Text style={{color:"#6c65b3"}}>1345</Text>
+              <Text style={{color:"#6c65b3"}}>{totalinfo.totalExpenditure}</Text>
             </View>
             <Text style={{ marginTop: 10,color:"#4d4791",fontWeight:"600" }}>Cumulative Expenditure(Ugx)</Text>
             <View
@@ -47,7 +50,7 @@ const ButtonSheet = ({ isVisible, onClose }) => {
                 borderColor:"#9d98cd",
               }}
             >
-              <Text style={{color:"#6c65b3",}}>23545</Text>
+              <Text style={{color:"#6c65b3",}}>{totalinfo.totalCumulativeExpenditure}</Text>
             </View>
             <Text style={{ marginTop: 10,color:"#4d4791",fontWeight:"600" }}>Annual Budget(Ugx)</Text>
             <View
@@ -61,7 +64,7 @@ const ButtonSheet = ({ isVisible, onClose }) => {
                 borderColor:"#9d98cd",
               }}
             >
-              <Text style={{color:"#6c65b3"}}>12566</Text>
+              <Text style={{color:"#6c65b3"}}>{totalinfo.totalAnuallBudget}</Text>
             </View>
           </View>
         </View>

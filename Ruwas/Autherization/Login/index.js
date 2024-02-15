@@ -61,6 +61,11 @@ const Login = ({ navigation }) => {
   //   const value = await AsyncStorage.getItem("LocationDetails");
   //   return value;
   // };
+  const isValidEmail = (username) => {
+    // Regular expression for basic email validation
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(username)
+  }
   const handleLogin = async () => {
     const netInfo = await NetInfo.fetch();
     const isConnected = netInfo.isConnected;
@@ -72,8 +77,13 @@ const Login = ({ navigation }) => {
         { cancelable: false }
       );
     } else {
-      setLoading(true);
       if (username !== "" && password !== "") {
+        if (!isValidEmail(username)) {
+          setLoading(false);
+        Alert.alert("Please enter a valid email address")
+            
+          return;
+        }
         try {
           const apiUrl = `http://182.18.181.115:8084/api/login/loginservice?username=${username}&password=${password}`;
           const apiResponse = await fetch(apiUrl);
@@ -96,6 +106,8 @@ const Login = ({ navigation }) => {
               await createTable(temp1);
               let temp2 = { ...temp1, table: response };
               insertDataArray(temp2);
+                         Alert.alert("User Logged In Successfully");
+
               navigation.navigate("PinGeneration");
             }
           } else {
@@ -114,7 +126,22 @@ const Login = ({ navigation }) => {
           setLoading(false);
           Alert.alert("Error", error.message);
         }
+      }else{
+        if (!username) {
+          alert("Please Enter Email");
+
+          // Alert.alert("Please Enter Email");
+          return false;
+        }
+        if (!password) {
+          alert("Please Enter Password");
+          // Alert.alert("Please Enter Password");
+          return false;
+        }
+        return true;
       }
+    
+      
     }
   };
   // const handleLogin = async () => {
@@ -237,6 +264,25 @@ const Login = ({ navigation }) => {
       alert("error fetching data");
     }
   };
+  const createtablesaveddata = async () => {
+    let temp = {
+      tableName: "UserSavedData",
+      TEXT: ["USERID", "SYNC", "USERSAVEDATA"],
+    };
+
+    try {
+      const result = await createTable(temp);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    createtablesaveddata();
+  }, []);
+
+
   const authFunction = async (username, password) => {
     try {
       const response = await fetch(

@@ -5,16 +5,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import MainStackScreen from './MainStack';
 import { Provider } from 'react-redux';
 import Store from './Redux/Store';
-Store
+
+import { ToastProvider } from 'react-native-toast-notifications';
 
 const App = () => {
   return (
+    <ToastProvider>
     <Provider store={Store}>
 
       <NavigationContainer>
         <MainStackScreen />
       </NavigationContainer>  
     </Provider>
+    </ToastProvider>
   );
 };
 

@@ -77,68 +77,73 @@ export const CustomDropDown=({dropData,setSelect,title,isWrong,setIsWrong,icon,f
   </View>
   )
 }
-export const AttachFile=(props)=>{
+export const AttachFile = (props) => {
   const [selectedDocument, setSelectedDocument] = useState({});
   const [show, setShow] = useState(false);
+  const [isPickingDocument, setIsPickingDocument] = useState(false); // State to track if document picking is in progress
 
   const pickDocument = async () => {
     try {
+      if (isPickingDocument) return; // If document picking is already in progress, return early
+      
+      setIsPickingDocument(true); // Set the flag to indicate document picking is in progress
       const result = await DocumentPicker.getDocumentAsync({});
       
       if (result.canceled === true) {
-       setShow(true)
+        setShow(true);
       } else {
         setSelectedDocument(result.assets[0]);
-        props.setFile(result.assets[0])
-         props.setIsWrong({
+        props.setFile(result.assets[0]);
+        props.setIsWrong({
           wrongYear: false,
           wrongRwsrc: false,
           wrongGovt: false,
           wrongQuarter: false,
           wrongTitle: false,
           wrongFile: false,
-        })
+        });
       }
     } catch (error) {
       console.error('Error picking document:', error);
+    } finally {
+      setIsPickingDocument(false); // Reset the flag after document picking is complete or if there's an error
     }
   };
 
   return (
     <View style={{
-      borderWidth:1.5,
-      flexDirection:"row",
-      justifyContent:"space-between",
-      borderRadius:10,
-      height:50,
-      alignItems:'center',
-      paddingLeft:5,
-      borderColor:props.isWrong ? "red" : colors.commonTextBorderColor,
-      
-       }}>
-      <Text style={{width:"80%",color:colors.documentBodyTextColor}}>{props.file && props.file?.name || ""}</Text>
+      borderWidth: 1.5,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      borderRadius: 10,
+      height: 50,
+      alignItems: 'center',
+      paddingLeft: 5,
+      borderColor: props.isWrong ? "red" : colors.commonTextBorderColor,
+    }}>
+      <Text style={{ width: "80%", color: colors.documentBodyTextColor }}>{props.file && props.file?.name || ""}</Text>
       <TouchableOpacity
-      style={{
-        backgroundColor:props.isWrong ? "#ff6666" : colors.tableHeaderColor,
-        height:50,
-        width:"20%",
-        borderTopRightRadius:10,
-        borderBottomRightRadius:10,
-        justifyContent:"center",
-        alignItems:"center",
-      
-      }}
-      onPress={()=>pickDocument()}
+        style={{
+          backgroundColor: props.isWrong ? "#ff6666" : colors.tableHeaderColor,
+          height: 50,
+          width: "20%",
+          borderTopRightRadius: 10,
+          borderBottomRightRadius: 10,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onPress={() => pickDocument()}
+        disabled={isPickingDocument} // Disable the button while document picking is in progress
       >
-        <Image source={require("../assets/file.png")} style={{height:37,width:37,marginRight: -7,}}/>
+        <Image source={require("../assets/file.png")} style={{ height: 37, width: 37, marginRight: -7, }} />
       </TouchableOpacity>
      
-      <SuccessModal show={show} setShow={setShow} type="info" title="You Haven't Selected Any Thing" content ="" />
+      <SuccessModal show={show} setShow={setShow} type="info" title="You Haven't Selected Anything" content="" />
     </View>
   );
 }
 export const ModifiedTextInput1=(props)=>{
-  const {title,setInput,header,value,keyboardType} =props
+  const {title,setInput,header,value="0",keyboardType,} =props
 const [show,setShow]=useState(false)
 const [text,setText]=useState("")
   return (
@@ -150,7 +155,7 @@ const [text,setText]=useState("")
         }}>
      <TextInput 
     onFocus={()=>{setShow(true)}}
-    value={`${value || text}`}
+    value={`${parseInt(value) || text}`}
      placeholder={show?"": title}
      cursorColor={"#000"}
      onBlur={()=>setShow(false)}
@@ -179,7 +184,7 @@ const [text,setText]=useState("")
   )
 }
 export const ModifiedTextInput2=(props)=>{
-  const {title,header,editable,value,CustomStyle} =props
+  const {title,header,editable,value="0",CustomStyle,dependentValue="0"} =props
 const [show,setShow]=useState(true)
 const [text,setText]=useState(false)
   return (
@@ -191,7 +196,7 @@ const [text,setText]=useState(false)
         paddingLeft:10
         },CustomStyle]}>
      <TextInput 
-     value={value}
+     value={`${parseInt(value)+parseInt(dependentValue)}`}
      multiline={true}
     onFocus={()=>{setShow(true)}}
      editable={editable || false}

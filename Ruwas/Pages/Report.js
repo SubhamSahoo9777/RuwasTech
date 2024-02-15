@@ -110,6 +110,7 @@ setGetDistrictName(selectedDistricts[0].LCName)
         <Pressable
           onPress={() => {
             Dispatch({type:"userId",userId:userinfo})
+            Dispatch({type:"types",typeof:{type:reportType}})
             navigation.navigate("Progress Report", { data: {allDetails,reportType} });
           }}
           style={{

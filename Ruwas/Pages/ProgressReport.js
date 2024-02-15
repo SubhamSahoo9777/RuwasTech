@@ -6,15 +6,17 @@ import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton } from "../components/AllButtons";
-import { Vibration, View, ScrollView, Text } from "react-native";
+import { Vibration, View, ScrollView, Text, Alert } from "react-native";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
-import { retrieveData } from "../components/AllLocalDatabaseFunction";
+import { createTable, insertDataArray, insertDataArray2, retrieveData, updateMasterDataUniqueKey, updateMasterDataUniqueKey1, updateMasterDataUniqueKey3 } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
 import AutoSelectDrop from "../components/AutoSelectDrop";
 import { useSelector } from "react-redux";
+import { GpsSet } from "../CustomComponents/GpsCordinates";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
+  const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
   const [show, setShow] = useState(false);
@@ -37,6 +39,8 @@ const ProgressReport = memo(({ navigation, route }) => {
     {
       title: "",
       file: "",
+     workplanid:reportType=="water"?allDetails.workplanid:allDetails.sanitationid,
+     userId:userifomation.userId,
     },
   ]);
 
@@ -58,7 +62,6 @@ const ProgressReport = memo(({ navigation, route }) => {
           workplanModalActivityDetails = await retrieveData(
             "workplanModalActivity"
           );
-          console.log(workplanModalActivityDetails);
           let temp = workplanModalActivityDetails.filter(
             (item) => item.workplanid === allDetails.workplanid
           );
@@ -126,10 +129,11 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
       // -----------------------------------final result submit--------------------
       setLoading(true);
-      SantToDataBase();
+      LocationCheak()
       setTimeout(() => {
         setLoading(false);
         setFinalSuccessModal(true);
+        navigation.navigate("Dashboard")
       }, 2000);
       // -------------------------------------------------------
     } else {
@@ -147,9 +151,77 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
     }
   };
-  const SantToDataBase = () => {
-    console.log(alltableData);
+  const LocationCheak = async () => {
+    try {
+      const { latitude, longitude } = await GpsSet();
+      console.log(latitude, "latitude");
+  
+
+        const requestBody = {
+          BasicDetails: {
+            logitude:latitude,
+            latitude:latitude,
+            type:userifomation.type,
+            userId:userifomation.userId,
+            districtid:userifomation.districtId,
+            workplanid:reportType=="water"?allDetails.workplanid:allDetails.sanitationid,
+          },
+          modalActivityData:alltableData,
+          filesAttached:addedFiles.slice(1),
+        }
+    
+        try {
+          const resultUserSavedData = insertDataArray({
+            tableName: "UserSavedData",
+            TEXT: ["USERID", "SYNC", "USERSAVEDATA"],
+            table: [{USERID:userifomation.userId,SYNC:JSON.stringify(false),USERSAVEDATA:JSON.stringify(requestBody)}],
+          });
+          
+     
+        } catch (error) {
+        Alert.alert("Sorry something went wrong")
+        }
+       
+       
+      } 
+     catch (error) {
+      Alert.alert("Error", "Please Grand Location Permission.");
+    }
   };
+ 
+ 
+  const SendToDataBase=async()=>{
+try {
+ 
+let objectsByWorkplanId = [];
+let objectsBySanitationId = [];
+
+alltableData.forEach(obj => {
+    if (obj.workplanid) {
+        objectsByWorkplanId.push(obj);
+    }
+    if (obj.sanitationId) {
+        objectsBySanitationId.push(obj);
+    }
+});
+
+  let temp={
+    tableName:"workplanSavedInfo",
+    TEXT: Object.keys(objectsByWorkplanId[0]),
+  }
+  await createTable(temp);
+  //  insertDataArray({...temp,objectsByWorkplanId});
+  let temp1={
+    tableName:"SanitationSavedInfo",
+    TEXT: Object.keys(objectsBySanitationId[0]),
+  }
+  await createTable(temp1);
+  //  insertDataArray({...temp1,objectsBySanitationId});
+} catch (error) {
+  alert("data cant insert")
+}
+  }
+  
   return (
     <>
       <View
@@ -276,6 +348,8 @@ const ProgressReport = memo(({ navigation, route }) => {
                       {
                         title: title,
                         file: file.name,
+                        workplanid:reportType=="water"?allDetails.workplanid:allDetails.sanitationid,
+                        userId:userifomation.userId,
                       },
                     ]);
                   } else {

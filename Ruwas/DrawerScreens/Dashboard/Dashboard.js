@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   Pressable,
-  Image,
-  ScrollView,
   ActivityIndicator,
   FlatList,
 } from "react-native";
 import { VectorIcon, colors, height } from "../../components/AllPackages";
 import { retrieveData } from "../../components/AllLocalDatabaseFunction";
+import { useDispatch } from "react-redux";
 
 const Dashboard = ({ navigation }) => {
   const [tap, setTap] = useState(true);
@@ -20,23 +18,16 @@ const Dashboard = ({ navigation }) => {
   const [filteredSanitation, setFilteredSanitation] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
 
-  const data = [
-    {
-      workPlanId: 1,
-      rwsrc: "rwsrc1",
-      localGovt: "Adjumani",
-      budgetType: "water",
-      dateOfApprovedByCouncil: "12/7/2022",
-      planedBudget: "120000",
-    },
-    // Other data...
-  ];
-
+ const Dispatch=useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       try {
         const waterWorkPlanSql = await retrieveData("waterWorkPlan");
         const userDetais = await retrieveData("userDetais");
+        let userId=userDetais[0].userid
+        let dist=userDetais[0].districtid
+        Dispatch({type:"userDetails",userDetails:{"userId":userId,"districtId":dist}})
+       
         setWaterWorkPlan(waterWorkPlanSql);
         let x = waterWorkPlanSql.filter(
           (item) => item.districtid === userDetais[0].districtid

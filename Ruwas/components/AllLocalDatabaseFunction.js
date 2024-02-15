@@ -280,3 +280,329 @@ export const updateMasterDataUniqueKey = async (
     );
   });
 };
+
+const numberToWordMap = {
+  "1": "One",
+  "2": "Two",
+  "3": "Three",
+  "4": "Four"
+  // Add more mappings as needed
+};
+
+export const updateMasterDataUniqueKey1 = async (tableName, tableRow, uniqueKeys) => {
+  // Function to convert quarterSelected values to words
+  const convertQuarterToWord = (value) => {
+    return numberToWordMap[value] || value;
+  };
+
+  return new Promise((resolve, reject) => {
+    LocalDb.transaction(
+      (tx) => {
+        tableRow.forEach((row) => {
+          const {
+            Sno,
+            quarteSelected,
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            workplanid,
+          } = row;
+
+          // Convert quarterSelected value to word
+          const quarterSelectedWord = convertQuarterToWord(quarteSelected);
+
+          // Define unique key conditions
+          const uniqueKeyConditions = uniqueKeys
+            .map((key) => `${key} = ?`)
+            .join(" AND ");
+
+          // Use the word in your query
+          const updateQuery = `UPDATE ${tableName} 
+                                       SET 
+                                          quarter${quarterSelectedWord} = ?,
+                                          quarter${quarterSelectedWord}Achieved = ?,
+                                          quarter${quarterSelectedWord}Comment = ?,
+                                          quarter${quarterSelectedWord}Expenditure = ?
+                                       WHERE 
+                                          ${uniqueKeyConditions}`;
+
+          const values = [
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            ...uniqueKeys.map((key) => row[key]),
+          ];
+
+          tx.executeSql(
+            updateQuery,
+            values,
+            (_, result) => {
+              if (result.rowsAffected > 0) {
+                console.log(
+                  `Row updated for ${uniqueKeys
+                    .map((key) => `${key}: ${row[key]}`)
+                    .join(", ")}`
+                );
+              } else {
+                console.log(
+                  `No rows updated for ${uniqueKeys
+                    .map((key) => `${key}: ${row[key]}`)
+                    .join(", ")}`
+                );
+              }
+            },
+            (_, error) => {
+              console.error("Error updating row:", error);
+              reject(error);
+            }
+          );
+        });
+      },
+      (error) => {
+        console.error("Transaction error:", error);
+        reject(error);
+      },
+      () => {
+        resolve("All rows updated successfully");
+      }
+    );
+  });
+};
+export const updateMasterDataUniqueKey2 = async (tableName, tableRow, uniqueKeys) => {
+  const updatedRows = []; // Array to collect updated rows
+
+  // Function to convert quarterSelected values to words
+  const convertQuarterToWord = (value) => {
+    return numberToWordMap[value] || value;
+  };
+
+  return new Promise((resolve, reject) => {
+    LocalDb.transaction(
+      (tx) => {
+        tableRow.forEach((row) => {
+          const {
+            Sno,
+            quarteSelected,
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            workplanid,
+          } = row;
+
+          // Convert quarterSelected value to word
+          const quarterSelectedWord = convertQuarterToWord(quarteSelected);
+
+          // Define unique key conditions
+          const uniqueKeyConditions = uniqueKeys
+            .map((key) => `${key} = ?`)
+            .join(" AND ");
+
+          // Use the word in your query
+          const updateQuery = `UPDATE ${tableName} 
+                                       SET 
+                                          quarter${quarterSelectedWord} = ?,
+                                          quarter${quarterSelectedWord}Achieved = ?,
+                                          quarter${quarterSelectedWord}Comment = ?,
+                                          quarter${quarterSelectedWord}Expenditure = ?
+                                       WHERE 
+                                          ${uniqueKeyConditions}`;
+
+          const values = [
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            ...uniqueKeys.map((key) => row[key]),
+          ];
+
+          tx.executeSql(
+            updateQuery,
+            values,
+            (_, result) => {
+              if (result.rowsAffected > 0) {
+                // Retrieve updated row from the database and push it to the array
+                tx.executeSql(`SELECT * FROM ${tableName} WHERE ${uniqueKeyConditions}`, uniqueKeys.map((key) => row[key]),
+                  (_, resultSet) => {
+                    if (resultSet.rows.length > 0) {
+                      updatedRows.push(resultSet.rows.item(0)); // Add the updated row to the array
+                    }
+                  }
+                );
+              }
+            },
+            (_, error) => {
+              console.error("Error updating row:", error);
+              reject(error);
+            }
+          );
+        });
+      },
+      (error) => {
+        console.error("Transaction error:", error);
+        reject(error);
+      },
+      () => {
+        resolve(updatedRows); // Resolve the promise with the array of updated rows
+      }
+    );
+  });
+};
+export const updateMasterDataUniqueKey3 = async (tableName, tableRow, uniqueKeys) => {
+  const updatedRows = []; // Array to collect updated rows
+
+  // Function to convert quarterSelected values to words
+  const convertQuarterToWord = (value) => {
+    return numberToWordMap[value] || value;
+  };
+
+  return new Promise((resolve, reject) => {
+    LocalDb.transaction(
+      (tx) => {
+        tableRow.forEach((row) => {
+          const {
+            Sno,
+            quarteSelected,
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            workplanid,
+          } = row;
+
+          // Convert quarterSelected value to word
+          const quarterSelectedWord = convertQuarterToWord(quarteSelected);
+
+          // Define unique key conditions
+          const uniqueKeyConditions = uniqueKeys
+            .map((key) => `${key} = ?`)
+            .join(" AND ");
+
+          // Use the word in your query
+          const updateQuery = `UPDATE ${tableName} 
+                                       SET 
+                                          quarter${quarterSelectedWord} = ?,
+                                          quarter${quarterSelectedWord}Achieved = ?,
+                                          quarter${quarterSelectedWord}Comment = ?,
+                                          quarter${quarterSelectedWord}Expenditure = ?
+                                       WHERE 
+                                          ${uniqueKeyConditions}`;
+
+          const values = [
+            quarterAchieved,
+            quarterComment,
+            quarterExpenditure,
+            ...uniqueKeys.map((key) => row[key]),
+          ];
+
+          tx.executeSql(
+            updateQuery,
+            values,
+            (_, result) => {
+              if (result.rowsAffected > 0) {
+                // Retrieve updated row from the database and push it to the array
+                tx.executeSql(`SELECT * FROM ${tableName} WHERE ${uniqueKeyConditions}`, uniqueKeys.map((key) => row[key]),
+                  (_, resultSet) => {
+                    if (resultSet.rows.length > 0) {
+                      updatedRows.push(resultSet.rows.item(0)); // Add the updated row to the array
+                      console.log(`Row updated for ${uniqueKeys.map((key) => `${key}: ${row[key]}`).join(", ")}`);
+                    }
+                  }
+                );
+              } else {
+                console.log(`No rows updated for ${uniqueKeys.map((key) => `${key}: ${row[key]}`).join(", ")}`);
+              }
+            },
+            (_, error) => {
+              console.error("Error updating row:", error);
+              reject(error);
+            }
+          );
+        });
+      },
+      (error) => {
+        console.error("Transaction error:", error);
+        reject(error);
+      },
+      () => {
+        if (updatedRows.length > 0) {
+          resolve(updatedRows); // Resolve the promise with the array of updated rows
+        } else {
+          resolve("No rows updated");
+        }
+      }
+    );
+  });
+};
+
+export const insertDataArray2 = (dataObject) => {
+  const tableName = dataObject.tableName;
+  const columnNames = dataObject.TEXT;
+  const valuePlaceholders = columnNames.map(() => "?").join(", ");
+
+  const totalRows = dataObject.table.length;
+  let rowsInserted = 0;
+
+  dataObject.table.forEach((data, index) => {
+    const columnValues = Object.values(data);
+
+    const insertDataSQL = `INSERT INTO ${tableName} (${columnNames.join(
+      ", "
+    )}) VALUES (${valuePlaceholders})`;
+
+    LocalDb.transaction((tx) => {
+      tx.executeSql(
+        insertDataSQL,
+        columnValues,
+        () => {
+          rowsInserted++;
+          if (rowsInserted === totalRows) {
+            console.log(`${rowsInserted} Data inserted successfully to ${tableName} table`);
+          }
+        },
+        (error) => console.error("Error inserting data:", error),
+      );
+    });
+  });
+};
+export const createTable1 = (tableName, columns) => {
+  return new Promise((resolve, reject) => {
+    const columnDefinitions = [];
+    Object.keys(columns).forEach((dataType) => {
+      columns[dataType].forEach((columnName) => {
+        columnDefinitions.push(`${columnName} ${dataType}`);
+      });
+    });
+    const createTableSQL = `CREATE TABLE IF NOT EXISTS ${tableName} (id INTEGER PRIMARY KEY AUTOINCREMENT, ${columnDefinitions.join(
+      ", "
+    )})`;
+
+    LocalDb.transaction(
+      (tx) => {
+        tx.executeSql(
+          createTableSQL,
+          [],
+          () => resolve(`Table '${tableName}' created successfully`),
+          (error) =>
+            reject(`Error creating table '${tableName}': ${error.message}`)
+        );
+      },
+      (error) => reject(`Transaction error: ${error.message}`)
+    );
+  });
+};
+// New function to update sync status
+export const updateSyncStatus = (userId, newSyncStatus, rowId) => {
+  return new Promise((resolve, reject) => {
+    const updateSyncStatusSQL = `UPDATE UserSavedData SET SYNC = ? WHERE USERID = ? AND id = ?`;
+
+    LocalDb.transaction(
+      (tx) => {
+        tx.executeSql(
+          updateSyncStatusSQL,
+          [newSyncStatus, userId, rowId],
+          (_, result) => resolve(`Sync status updated successfully for USERID: ${userId}, id: ${rowId}`),
+          (error) => reject(`Error updating sync status: ${error.message}`)
+        );
+      },
+      (error) => reject(`Transaction error: ${error.message}`)
+    );
+  });
+};
