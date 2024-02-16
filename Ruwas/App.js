@@ -1,23 +1,18 @@
 // App.js
 
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import MainStackScreen from './MainStack';
-import { Provider } from 'react-redux';
-import Store from './Redux/Store';
-
-import { ToastProvider } from 'react-native-toast-notifications';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import MainStackScreen from "./MainStack";
+import { Provider } from "react-redux";
+import Store from "./Redux/Store";
 
 const App = () => {
   return (
-    <ToastProvider>
     <Provider store={Store}>
-
       <NavigationContainer>
         <MainStackScreen />
-      </NavigationContainer>  
+      </NavigationContainer>
     </Provider>
-    </ToastProvider>
   );
 };
 

@@ -27,9 +27,8 @@ export const ReactNativeModal1 = ({
   const unitData = (item !== undefined && item.item) || {};
   const data = useSelector((state) => state.UserReducer);
   const stateUpdater = useSelector((state) => state.TotalCalculationreducer);
-  
 
-  const id = data;
+  const id = quarterType !== "water" ? data.sanitationid : data.workplanid;
   const Dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true);
   const [text, setText] = useState("");
@@ -39,57 +38,121 @@ export const ReactNativeModal1 = ({
   const [quaterExpenditure, SetQuaterExpenditure] = useState(
     unitData["quarterOneExpenditure"]
   );
-  
-  useEffect(()=>{
-    
-    if(quarterType==1){
-      Dispatch({type:"quater",values:{qc1:quaterAchieved}})
-      Dispatch({type:"quater",values:{qe1:quaterExpenditure}})
-    }else if(quarterType==2){
-      Dispatch({type:"quater",values:{qc2:`${parseInt(quaterAchieved) +parseInt(stateUpdater.qc1)}`}})
-      Dispatch({type:"quater",values:{qe2:`${parseInt(quaterExpenditure) +parseInt(stateUpdater.qe1)}`}})
-    }else if(quarterType==3){
-      Dispatch({type:"quater",values:{qc3:`${parseInt(quaterAchieved) +parseInt(stateUpdater.qc2)}`}})
-      Dispatch({type:"quater",values:{qe3:`${parseInt(quaterExpenditure) +parseInt(stateUpdater.qe2)}`}})
-    }else if(quarterType==4){
-      Dispatch({type:"quater",values:{qc4:`${parseInt(quaterAchieved) +parseInt(stateUpdater.qc3)}`}})
-      Dispatch({type:"quater",values:{qe4:`${parseInt(quaterExpenditure) +parseInt(stateUpdater.qe3)}`}})
+
+  useEffect(() => {
+    if (quarterType == 1) {
+      Dispatch({ type: "quater", values: { qc1: quaterAchieved } });
+      Dispatch({ type: "quater", values: { qe1: quaterExpenditure } });
+    } else if (quarterType == 2) {
+      Dispatch({
+        type: "quater",
+        values: {
+          qc2: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc1)}`,
+        },
+      });
+      Dispatch({
+        type: "quater",
+        values: {
+          qe2: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe1)}`,
+        },
+      });
+    } else if (quarterType == 3) {
+      Dispatch({
+        type: "quater",
+        values: {
+          qc3: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc2)}`,
+        },
+      });
+      Dispatch({
+        type: "quater",
+        values: {
+          qe3: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe2)}`,
+        },
+      });
+    } else if (quarterType == 4) {
+      Dispatch({
+        type: "quater",
+        values: {
+          qc4: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc3)}`,
+        },
+      });
+      Dispatch({
+        type: "quater",
+        values: {
+          qe4: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe3)}`,
+        },
+      });
     }
-  },[quaterAchieved,quaterExpenditure])
+  }, [quaterAchieved, quaterExpenditure]);
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
-  const validation=()=>{
-    if(parseInt(quaterAchieved)>parseInt(unitData.approvedAnnualTarget)){
-      setQuaterAchieved("")
-      return alert("Performance In Quarter Achieved Should Not Be Greater Than Approved Annual WorkPlan Target")
+  const validation = () => {
+    if (parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)) {
+      setQuaterAchieved("");
+      return alert(
+        "Performance In Quarter Achieved Should Not Be Greater Than Approved Annual WorkPlan Target"
+      );
+    } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
+      SetQuaterExpenditure("");
+      return alert(
+        "Expenditure Quarter Should Not Be Greater Than Annual Budget"
+      );
+    } else {
+      Dispatch({ type: "quater", values: { totalAnuallBudget: item.funds } });
+      alert("Data Saved");
+      setModalVisible(false);
     }
-    else if(parseInt(quaterExpenditure)>parseInt(unitData.funds)){
-      SetQuaterExpenditure("")
-      return alert("Expenditure Quarter Should Not Be Greater Than Annual Budget")
-    }else{
-      Dispatch({type:"quater",values:{totalAnuallBudget:item.funds}})
-      setModalVisible(false)
-    }
-  }
+  };
 
-  useEffect(()=>{
-    setWorkplan("")
-  },[workplan])
+  useEffect(() => {
+    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "1") {
+      let x =
+        ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+          parseInt(unitData["approvedAnnualTarget"])) *
+        100;
+
+      setWorkplan(x);
+    }
+    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "2") {
+      let x =
+        ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+          parseInt(unitData["approvedAnnualTarget"])) *
+        100;
+
+      setWorkplan(x);
+    }
+    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "3") {
+      let x =
+        ((parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)) /
+          parseInt(unitData["approvedAnnualTarget"])) *
+        100;
+
+      setWorkplan(x);
+    }
+    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "4") {
+      let x =
+        ((parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)) /
+          parseInt(unitData["approvedAnnualTarget"])) *
+        100;
+
+      setWorkplan(x);
+    }
+  }, [workplan, stateUpdater, unitData, quaterAchieved]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   const onSaveHandle = () => {
-    validation()
+    validation();
     Dispatch({
       type: "modalUpdate",
       object: {
-        ...id,
+        workplanid: id,
         Sno: unitData["Sno"],
         quarteSelected: quarterType,
         quarterAchieved: quaterAchieved,
         quarterExpenditure: quaterExpenditure,
         quarterComment: comment,
-        modelActivity:unitData.modelActivity,
+        modelActivity: unitData.modelActivity,
       },
     });
   };
@@ -173,14 +236,24 @@ export const ReactNativeModal1 = ({
               //"Cumulative to Date Achieved
               // dependentValue={quaterAchieved}
               header={"Cumulative to Date Achieved"}
-              value={quarterType==1?parseInt(stateUpdater.qc1):quarterType==2?parseInt(stateUpdater.qc1)+parseInt(quaterAchieved):quarterType==3?parseInt(stateUpdater.qc2)+parseInt(quaterAchieved):quarterType==4?parseInt(stateUpdater.qc3)+parseInt(quaterAchieved):"0"}
+              value={
+                quarterType == 1
+                  ? parseInt(stateUpdater.qc1)
+                  : quarterType == 2
+                  ? parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)
+                  : quarterType == 3
+                  ? parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)
+                  : quarterType == 4
+                  ? parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)
+                  : "0"
+              }
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
               // Workplan %
               header={`Workplan (%)`}
-              value={`${workplan}`}
+              value={`${workplan} %`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -197,7 +270,17 @@ export const ReactNativeModal1 = ({
               //Cumulative Expenditure(Ugx)
               setInput={setText}
               header={`Cumulative Expenditure(Ugx)`}
-              value={quarterType==1?parseInt(stateUpdater.qe1):quarterType==2?parseInt(stateUpdater.qe1)+parseInt(quaterExpenditure):quarterType==3?parseInt(stateUpdater.qe2)+parseInt(quaterExpenditure):quarterType==4?parseInt(stateUpdater.qe3)+parseInt(quaterExpenditure):"0"}
+              value={
+                quarterType == 1
+                  ? parseInt(stateUpdater.qe1)
+                  : quarterType == 2
+                  ? parseInt(stateUpdater.qe1) + parseInt(quaterExpenditure)
+                  : quarterType == 3
+                  ? parseInt(stateUpdater.qe2) + parseInt(quaterExpenditure)
+                  : quarterType == 4
+                  ? parseInt(stateUpdater.qe3) + parseInt(quaterExpenditure)
+                  : "0"
+              }
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -216,7 +299,6 @@ export const ReactNativeModal1 = ({
               header={"Comments"}
               value={comment}
               setInput={setComments}
-             
             />
           </ScrollView>
           <SubmitButton

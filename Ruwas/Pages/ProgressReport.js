@@ -9,13 +9,22 @@ import { SubmitButton } from "../components/AllButtons";
 import { Vibration, View, ScrollView, Text, Alert } from "react-native";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
-import { createTable, insertDataArray, insertDataArray2, retrieveData, updateMasterDataUniqueKey, updateMasterDataUniqueKey1, updateMasterDataUniqueKey3 } from "../components/AllLocalDatabaseFunction";
+import {
+  createTable,
+  insertDataArray,
+  insertDataArray2,
+  retrieveData,
+  updateMasterDataUniqueKey,
+  updateMasterDataUniqueKey1,
+  updateMasterDataUniqueKey3,
+} from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
 import AutoSelectDrop from "../components/AutoSelectDrop";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GpsSet } from "../CustomComponents/GpsCordinates";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
+  console.log(alltableData);
   const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
@@ -39,11 +48,12 @@ const ProgressReport = memo(({ navigation, route }) => {
     {
       title: "",
       file: "",
-     workplanid:reportType=="water"?allDetails.workplanid:allDetails.sanitationid,
-     userId:userifomation.userId,
+      workplanid:
+        reportType == "water" ? allDetails.workplanid : allDetails.sanitationid,
+      userId: userifomation.userId,
     },
   ]);
-
+  const Dispatch = useDispatch();
   const [isWrong, setIsWrong] = useState({
     wrongYear: false,
     wrongRwsrc: false,
@@ -129,11 +139,12 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
       // -----------------------------------final result submit--------------------
       setLoading(true);
-      LocationCheak()
+      LocationCheak();
       setTimeout(() => {
-        setLoading(false);
         setFinalSuccessModal(true);
-        navigation.navigate("Dashboard")
+        setLoading(false);
+        clearRedux();
+        navigation.navigate("Dashboard");
       }, 2000);
       // -------------------------------------------------------
     } else {
@@ -151,77 +162,58 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
     }
   };
+  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const fetchLocation = async () => {
+    const { latitude, longitude } = await GpsSet();
+    setLongitude(latitude);
+
+    setLatitude(longitude);
+  };
+  const clearRedux = () => {
+    Dispatch({ type: "clearModal" });
+  };
+  useEffect(() => {
+    fetchLocation();
+  }, []);
   const LocationCheak = async () => {
     try {
-      const { latitude, longitude } = await GpsSet();
-      console.log(latitude, "latitude");
-  
+      const requestBody = {
+        BasicDetails: {
+          latitude: latitude,
+          logitude: longitude,
+          type: userifomation.type,
+          userId: userifomation.userId,
+          districtid: userifomation.districtId,
+          workplanid:
+            reportType == "water"
+              ? allDetails.workplanid
+              : allDetails.sanitationid,
+        },
+        modalActivityData: alltableData,
+        filesAttached: addedFiles.slice(1),
+      };
 
-        const requestBody = {
-          BasicDetails: {
-            logitude:latitude,
-            latitude:latitude,
-            type:userifomation.type,
-            userId:userifomation.userId,
-            districtid:userifomation.districtId,
-            workplanid:reportType=="water"?allDetails.workplanid:allDetails.sanitationid,
-          },
-          modalActivityData:alltableData,
-          filesAttached:addedFiles.slice(1),
-        }
-    
-        try {
-          const resultUserSavedData = insertDataArray({
-            tableName: "UserSavedData",
-            TEXT: ["USERID", "SYNC", "USERSAVEDATA"],
-            table: [{USERID:userifomation.userId,SYNC:JSON.stringify(false),USERSAVEDATA:JSON.stringify(requestBody)}],
-          });
-          
-     
-        } catch (error) {
-        Alert.alert("Sorry something went wrong")
-        }
-       
-       
-      } 
-     catch (error) {
+      try {
+        const resultUserSavedData = insertDataArray({
+          tableName: "UserSavedData",
+          TEXT: ["USERID", "SYNC", "USERSAVEDATA"],
+          table: [
+            {
+              USERID: userifomation.userId,
+              SYNC: JSON.stringify(false),
+              USERSAVEDATA: JSON.stringify(requestBody),
+            },
+          ],
+        });
+      } catch (error) {
+        Alert.alert("Sorry something went wrong");
+      }
+    } catch (error) {
       Alert.alert("Error", "Please Grand Location Permission.");
     }
   };
- 
- 
-  const SendToDataBase=async()=>{
-try {
- 
-let objectsByWorkplanId = [];
-let objectsBySanitationId = [];
 
-alltableData.forEach(obj => {
-    if (obj.workplanid) {
-        objectsByWorkplanId.push(obj);
-    }
-    if (obj.sanitationId) {
-        objectsBySanitationId.push(obj);
-    }
-});
-
-  let temp={
-    tableName:"workplanSavedInfo",
-    TEXT: Object.keys(objectsByWorkplanId[0]),
-  }
-  await createTable(temp);
-  //  insertDataArray({...temp,objectsByWorkplanId});
-  let temp1={
-    tableName:"SanitationSavedInfo",
-    TEXT: Object.keys(objectsBySanitationId[0]),
-  }
-  await createTable(temp1);
-  //  insertDataArray({...temp1,objectsBySanitationId});
-} catch (error) {
-  alert("data cant insert")
-}
-  }
-  
   return (
     <>
       <View
@@ -348,8 +340,11 @@ alltableData.forEach(obj => {
                       {
                         title: title,
                         file: file.name,
-                        workplanid:reportType=="water"?allDetails.workplanid:allDetails.sanitationid,
-                        userId:userifomation.userId,
+                        workplanid:
+                          reportType == "water"
+                            ? allDetails.workplanid
+                            : allDetails.sanitationid,
+                        userId: userifomation.userId,
                       },
                     ]);
                   } else {
@@ -456,7 +451,7 @@ alltableData.forEach(obj => {
           setShow={setAddModal}
           type="warning"
           title="Please Press On The Add Button"
-          content="By Pressing On Add Button You Can Able To Add Selected Files"
+          content="By Pressing On Attach Button You Can Able To Add Selected Files"
         />
         <SuccessModal
           show={finalSuccessModal}

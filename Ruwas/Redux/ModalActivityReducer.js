@@ -6,7 +6,7 @@ const ModalActivityReducer = (state = allTask, action) => {
         if (
           item.Sno === action.object.Sno &&
           item.quarteSelected === action.object.quarteSelected &&
-          item.modelActivity===action.object.modelActivity
+          item.modelActivity === action.object.modelActivity
         ) {
           // If a matching item is found, update it
           return action.object;
@@ -20,13 +20,16 @@ const ModalActivityReducer = (state = allTask, action) => {
           (item) =>
             item.Sno === action.object.Sno &&
             item.quarteSelected === action.object.quarteSelected &&
-            item.modelActivity===action.object.modelActivity
+            item.modelActivity === action.object.modelActivity
         )
       ) {
         updatedState.push(action.object);
       }
 
       return updatedState;
+    case "clearModal":
+      // Clear the state by returning an empty array
+      return [];
     default:
       return state;
   }
