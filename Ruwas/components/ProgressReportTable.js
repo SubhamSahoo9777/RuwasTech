@@ -7,14 +7,15 @@ import Divider from "./Divider";
 import { ReactNativeModal1 } from "./ReactNativeModal";
 import ButtonSheet from "./ButtonSheet";
 
-const ProgressReportTable = ({ tableDatas, setTableDatas,quarter}) => {
- 
-  let quarterType=quarter!==undefined && quarter
+const ProgressReportTable = ({ tableDatas, setTableDatas, quarter }) => {
+  let quarterType = quarter !== undefined && quarter;
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [items, setItems] = useState([]);
   const [moadalVisiable, setModalVisiable] = useState(false);
   const [showTotal, setShowTotal] = useState(false);
+  const [isModalEdited, setIsModalEdited] = useState([]);
+
   useEffect(() => {
     // Perform filtering based on the search term
     const filteredResults = tableDatas.filter((item) => {
@@ -28,6 +29,7 @@ const ProgressReportTable = ({ tableDatas, setTableDatas,quarter}) => {
 
     setFilteredData(filteredResults);
   }, [searchTerm, tableDatas]);
+
   return (
     <View
       style={{
@@ -103,7 +105,10 @@ const ProgressReportTable = ({ tableDatas, setTableDatas,quarter}) => {
               <View
                 key={index}
                 style={{
-                  backgroundColor: "#efeef7",
+                  // backgroundColor: "#efeef7",
+                  backgroundColor: isModalEdited.includes(index)
+                    ? "#b8b4d9"
+                    : "#efeef7",
                   flexDirection: "row",
                   alignItems: "center",
                   paddingVertical: 10,
@@ -130,7 +135,8 @@ const ProgressReportTable = ({ tableDatas, setTableDatas,quarter}) => {
                     size={30}
                     color={colors.tableHeaderColor}
                     onPress={() => {
-                      setItems({ item, id: index ,quarterType,}), setModalVisiable(true);
+                      setItems({ item, id: index, quarterType }),
+                        setModalVisiable(true);
                     }}
                   />
                 </View>
@@ -180,7 +186,9 @@ const ProgressReportTable = ({ tableDatas, setTableDatas,quarter}) => {
         isModalVisible={moadalVisiable}
         setModalVisible={setModalVisiable}
         item={items}
-        quarterType={quarterType} 
+        quarterType={quarterType}
+        setIsModalEdited={setIsModalEdited}
+        isModalEdited={isModalEdited}
       />
       <ButtonSheet isVisible={showTotal} onClose={setShowTotal} />
     </View>

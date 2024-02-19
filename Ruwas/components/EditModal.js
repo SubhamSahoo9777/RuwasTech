@@ -12,14 +12,16 @@ import {
   CustomComments,
   ModifiedTextInput1,
   ModifiedTextInput2,
+  ModifiedTextInput3,
 } from "./AllReusableComponets";
 import { SubmitButton } from "../components/AllButtons";
 import colors from "./colors";
 import { height, width } from "./AllPackages";
 import masterData from "../DataBaseHandle/masterData";
 import { useDispatch, useSelector } from "react-redux";
+import AutoSelectDrop from "./AutoSelectDrop";
 import ShowValueTextInput from "./ShowValueTextInput";
-export const ReactNativeModal1 = ({
+export const EditModal = ({
   isModalVisible,
   setModalVisible,
   item,
@@ -27,149 +29,83 @@ export const ReactNativeModal1 = ({
   setIsModalEdited,
   isModalEdited,
 }) => {
-  const unitData = (item !== undefined && item.item) || {};
-  console.log(unitData);
-  const data = useSelector((state) => state.UserReducer);
-  const stateUpdater = useSelector((state) => state.TotalCalculationreducer);
-  const id = data.hasOwnProperty("sanitationid")
-    ? data.sanitationid
-    : data.workplanid;
+  const unitData = (item !== undefined && item) || {};
+  //   const id = data.hasOwnProperty("sanitationid")
+  //     ? data.sanitationid
+  //     : data.workplanid;
   const Dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true);
   const [text, setText] = useState("");
-  const [quaterAchieved, setQuaterAchieved] = useState(
-    unitData["quarterOneAchieved"]
-  );
-  const [quaterExpenditure, SetQuaterExpenditure] = useState(
-    unitData["quarterOneExpenditure"]
-  );
+  const [quaterAchieved, setQuaterAchieved] = useState("");
+  const [quaterExpenditure, SetQuaterExpenditure] = useState("");
 
-  useEffect(() => {
-    if (quarterType == 1) {
-      Dispatch({ type: "quater", values: { qc1: quaterAchieved } });
-      Dispatch({ type: "quater", values: { qe1: quaterExpenditure } });
-    } else if (quarterType == 2) {
-      Dispatch({
-        type: "quater",
-        values: {
-          qc2: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc1)}`,
-        },
-      });
-      Dispatch({
-        type: "quater",
-        values: {
-          qe2: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe1)}`,
-        },
-      });
-    } else if (quarterType == 3) {
-      Dispatch({
-        type: "quater",
-        values: {
-          qc3: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc2)}`,
-        },
-      });
-      Dispatch({
-        type: "quater",
-        values: {
-          qe3: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe2)}`,
-        },
-      });
-    } else if (quarterType == 4) {
-      Dispatch({
-        type: "quater",
-        values: {
-          qc4: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc3)}`,
-        },
-      });
-      Dispatch({
-        type: "quater",
-        values: {
-          qe4: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe3)}`,
-        },
-      });
-    }
-  }, [quaterAchieved, quaterExpenditure]);
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
-  const validation = () => {
-    if (parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)) {
-      setQuaterAchieved("");
-      return alert(
-        "Performance In Quarter Achieved Should Not Be Greater Than Approved Annual WorkPlan Target"
-      );
-    } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
-      SetQuaterExpenditure("");
-      return alert(
-        "Expenditure Quarter Should Not Be Greater Than Annual Budget"
-      );
-    } else {
-      Dispatch({ type: "quater", values: { totalAnuallBudget: item.funds } });
-      alert("Data Saved");
-      setIsModalEdited([...isModalEdited, item.id]);
-      setModalVisible(false);
-    }
-  };
-
+  const [x, setX] = useState("");
   useEffect(() => {
-    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "1") {
-      let x =
-        ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
-          parseInt(unitData["approvedAnnualTarget"])) *
-        100;
+    setX(unitData.modelActivity);
+    setQuaterAchieved(unitData.quarterAchieved);
+    SetQuaterExpenditure(unitData.quarterExpenditure);
+    setComments(unitData.quarterComment);
+  }, [unitData]);
+  //   const validation = () => {
+  //     if (parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)) {
+  //       setQuaterAchieved("");
+  //       return alert(
+  //         "Performance In Quarter Achieved Should Not Be Greater Than Approved Annual WorkPlan Target"
+  //       );
+  //     } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
+  //       SetQuaterExpenditure("");
+  //       return alert(
+  //         "Expenditure Quarter Should Not Be Greater Than Annual Budget"
+  //       );
+  //     } else {
+  //       Dispatch({ type: "quater", values: { totalAnuallBudget: item.funds } });
+  //       alert("Data Saved");
+  //       setIsModalEdited([...isModalEdited, item.id]);
+  //       setModalVisible(false);
+  //     }
+  //   };
 
-      setWorkplan(x);
-    }
-    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "2") {
-      let x =
-        ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
-          parseInt(unitData["approvedAnnualTarget"])) *
-        100;
+  //   useEffect(() => {
+  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "1") {
+  //       let x =
+  //         ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+  //           parseInt(unitData["approvedAnnualTarget"])) *
+  //         100;
 
-      setWorkplan(x);
-    }
-    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "3") {
-      let x =
-        ((parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)) /
-          parseInt(unitData["approvedAnnualTarget"])) *
-        100;
+  //       setWorkplan(x);
+  //     }
+  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "2") {
+  //       let x =
+  //         ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+  //           parseInt(unitData["approvedAnnualTarget"])) *
+  //         100;
 
-      setWorkplan(x);
-    }
-    if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "4") {
-      let x =
-        ((parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)) /
-          parseInt(unitData["approvedAnnualTarget"])) *
-        100;
+  //       setWorkplan(x);
+  //     }
+  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "3") {
+  //       let x =
+  //         ((parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)) /
+  //           parseInt(unitData["approvedAnnualTarget"])) *
+  //         100;
 
-      setWorkplan(x);
-    }
-  }, [workplan, stateUpdater, unitData, quaterAchieved]);
+  //       setWorkplan(x);
+  //     }
+  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "4") {
+  //       let x =
+  //         ((parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)) /
+  //           parseInt(unitData["approvedAnnualTarget"])) *
+  //         100;
+
+  //       setWorkplan(x);
+  //     }
+  //   }, [workplan, stateUpdater, unitData, quaterAchieved]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   const onSaveHandle = () => {
     validation();
-    Dispatch({
-      type: "modalUpdate",
-      object: {
-        ...unitData,
-        workplanid: id,
-        Sno: unitData["Sno"],l        quarteSelected: quarterType,
-        quarterAchieved: quaterAchieved,
-        quarterExpenditure: quaterExpenditure,
-        quarterComment: comment,
-        modelActivity: unitData.modelActivity,
-        id: `${unitData.id}${
-          quarterType == "1"
-            ? "a"
-            : quarterType == "2"
-            ? "b"
-            : quarterType == "3"
-            ? "c"
-            : "d"
-        }`,
-      },
-    });
   };
   return (
     <Modal
@@ -225,17 +161,11 @@ export const ReactNativeModal1 = ({
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
             </View>
-            {/* <ModifiedTextInput2
-              //Modal Activity
-              header={"Model Activity"}
-              value={`${unitData["modelActivity"]}`}
-              editable={false}
-              CustomStyle={{ backgroundColor: "#e8f1fc" }}
-            /> */}
             <ShowValueTextInput
               label={unitData["modelActivity"]}
               title={"Model Activity"}
             />
+
             <ModifiedTextInput2
               //Approved Annual Workplan Target
               header={"Approved Annual Workplan Target"}
@@ -243,7 +173,7 @@ export const ReactNativeModal1 = ({
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-            <ModifiedTextInput1
+            <ModifiedTextInput3
               //Performance in Quarter Achieved
               setInput={setQuaterAchieved}
               title={"Performance in Quarter Achieved"}
@@ -253,31 +183,20 @@ export const ReactNativeModal1 = ({
             />
             <ModifiedTextInput2
               //"Cumulative to Date Achieved
-              // dependentValue={quaterAchieved}
               header={"Cumulative to Date Achieved"}
-              value={
-                quarterType == 1
-                  ? parseInt(stateUpdater.qc1)
-                  : quarterType == 2
-                  ? parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)
-                  : quarterType == 3
-                  ? parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)
-                  : quarterType == 4
-                  ? parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)
-                  : "0"
-              }
+              value={unitData.quaterAchieved || "0"}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             <ModifiedTextInput2
               // Workplan %
               header={`Workplan (%)`}
-              value={`${workplan} %`}
+              value={"0" || `${workplan} %`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
 
-            <ModifiedTextInput1
+            <ModifiedTextInput3
               //Expenditure (Quarter) (Ugx)
               title={"Expenditure (Quarter)(Ugx)"}
               header={"Expenditure (Quarter)(Ugx)"}
@@ -289,17 +208,7 @@ export const ReactNativeModal1 = ({
               //Cumulative Expenditure(Ugx)
               setInput={setText}
               header={`Cumulative Expenditure(Ugx)`}
-              value={
-                quarterType == 1
-                  ? parseInt(stateUpdater.qe1)
-                  : quarterType == 2
-                  ? parseInt(stateUpdater.qe1) + parseInt(quaterExpenditure)
-                  : quarterType == 3
-                  ? parseInt(stateUpdater.qe2) + parseInt(quaterExpenditure)
-                  : quarterType == 4
-                  ? parseInt(stateUpdater.qe3) + parseInt(quaterExpenditure)
-                  : "0"
-              }
+              value={unitData.quarterExpenditure}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -312,10 +221,9 @@ export const ReactNativeModal1 = ({
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             {/* //cmt */}
-            <ModifiedTextInput1
+            <ModifiedTextInput3
               //Expenditure (Quarter) (Ugx)
               title={"Comments"}
-              header={"Comments"}
               value={comment}
               setInput={setComments}
             />

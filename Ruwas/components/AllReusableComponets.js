@@ -184,7 +184,7 @@ export const AttachFile = (props) => {
 };
 export const ModifiedTextInput1 = (props) => {
   const { title, setInput, header, value = "0", keyboardType } = props;
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [text, setText] = useState("");
   return (
     <View
@@ -200,6 +200,60 @@ export const ModifiedTextInput1 = (props) => {
           setShow(true);
         }}
         value={`${parseInt(value) || text}`}
+        placeholder={show ? "" : title}
+        cursorColor={"#000"}
+        onBlur={() => setShow(false)}
+        placeholderTextColor={colors.commonTextPlaceHolderColor}
+        keyboardType={keyboardType || "default"}
+        onChangeText={(text) => {
+          setInput(text);
+          setText(text);
+        }}
+        style={{
+          minHeight: 50,
+          color: colors.commonTextPlaceHolderColor,
+          fontSize: 12,
+          opacity: 0.8,
+        }}
+      />
+      {value || show || text ? (
+        <Text
+          style={{
+            position: "absolute",
+            top: -15,
+            backgroundColor: colors.commonTextLabelBackColor,
+            paddingHorizontal: 10,
+            borderRadius: 20,
+            left: 15,
+            fontWeight: "500",
+            color: colors.commonTextLabelTextColor,
+            fontSize: 13,
+          }}
+        >
+          {header || "Attachments"}
+        </Text>
+      ) : null}
+    </View>
+  );
+};
+export const ModifiedTextInput3 = (props) => {
+  const { title, setInput, header, value = "0", keyboardType } = props;
+  const [show, setShow] = useState(true);
+  const [text, setText] = useState("");
+  return (
+    <View
+      style={{
+        marginTop: 20,
+        borderWidth: 1.2,
+        borderRadius: 10,
+        paddingLeft: 10,
+      }}
+    >
+      <TextInput
+        onFocus={() => {
+          setShow(true);
+        }}
+        value={value || text}
         placeholder={show ? "" : title}
         cursorColor={"#000"}
         onBlur={() => setShow(false)}

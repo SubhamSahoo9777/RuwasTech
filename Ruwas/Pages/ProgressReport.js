@@ -17,6 +17,7 @@ import {
   updateMasterDataUniqueKey,
   updateMasterDataUniqueKey1,
   updateMasterDataUniqueKey3,
+  updateWorkplanModalActivity,
 } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
 import AutoSelectDrop from "../components/AutoSelectDrop";
@@ -24,7 +25,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { GpsSet } from "../CustomComponents/GpsCordinates";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
-  console.log(alltableData);
   const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
@@ -139,13 +139,9 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
       // -----------------------------------final result submit--------------------
       setLoading(true);
+      updateInRealDatabase();
       LocationCheak();
-      setTimeout(() => {
-        setFinalSuccessModal(true);
-        setLoading(false);
-        clearRedux();
-        navigation.navigate("Dashboard");
-      }, 2000);
+
       // -------------------------------------------------------
     } else {
       if (!quarter) {
@@ -206,6 +202,12 @@ const ProgressReport = memo(({ navigation, route }) => {
             },
           ],
         });
+        setLoading(false);
+        setFinalSuccessModal(true);
+        setTimeout(() => {
+          clearRedux();
+          navigation.navigate("Dashboard");
+        }, 2000);
       } catch (error) {
         Alert.alert("Sorry something went wrong");
       }
@@ -213,7 +215,10 @@ const ProgressReport = memo(({ navigation, route }) => {
       Alert.alert("Error", "Please Grand Location Permission.");
     }
   };
-
+  const updateInRealDatabase = () => {
+    // updateWorkplanModalActivity(alltableData[0]);
+    // console.log(alltableData, "hi");
+  };
   return (
     <>
       <View

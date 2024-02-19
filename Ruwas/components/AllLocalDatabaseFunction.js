@@ -83,11 +83,78 @@ export const retrieveData = (tableName) => {
   });
 };
 
+export const updateWorkplanModalActivity = (objectToUpdate) => {
+  const {
+    Sno,
+    modelActivity,
+    quarteSelected,
+    quarterAchieved,
+    quarterExpenditure,
+    quarterComment,
+    ...rest
+  } = objectToUpdate;
+
+  let quarterFieldToUpdate = "";
+  switch (quarteSelected) {
+    case "1":
+      quarterFieldToUpdate = {
+        quarterOneAchieved: quarterAchieved,
+        quarterOneExpenditure: quarterExpenditure,
+        quarterOneComment: quarterComment,
+      };
+      break;
+    case "2":
+      quarterFieldToUpdate = {
+        quarterTwoAchieved: quarterAchieved,
+        quarterTwoExpenditure: quarterExpenditure,
+        quarterTwoComment: quarterComment,
+      };
+      break;
+    case "3":
+      quarterFieldToUpdate = {
+        quarterThreeAchieved: quarterAchieved,
+        quarterThreeExpenditure: quarterExpenditure,
+        quarterThreeComment: quarterComment,
+      };
+      break;
+    case "4":
+      quarterFieldToUpdate = {
+        quarterFourAchieved: quarterAchieved,
+        quarterFourExpenditure: quarterExpenditure,
+        quarterFourComment: quarterComment,
+      };
+      break;
+    default:
+      console.error("Invalid quarter selected:", quarteSelected);
+      return;
+  }
+
+  const fieldsToUpdate = { ...quarterFieldToUpdate, ...rest };
+
+  LocalDb.transaction(
+    (tx) => {
+      tx.executeSql(
+        `UPDATE workplanModalActivity SET ${Object.keys(fieldsToUpdate)
+          .map((key) => `${key} = ?`)
+          .join(", ")} WHERE Sno = ? AND modelActivity = ?`,
+        [...Object.values(fieldsToUpdate), Sno, modelActivity],
+        (_, result) => {
+          console.log("Data updated successfully");
+        },
+        (_, error) => {
+          console.error("Error updating data:", error);
+        }
+      );
+    },
+    (error) => console.error("Transaction error:", error)
+  );
+};
+
 export const retrieveDataById = (tableName, id) => {
   return new Promise((resolve, reject) => {
     const retrieveDataSQL = `SELECT * FROM ${tableName} WHERE id = ?`; // Assuming the primary key column is named 'id'
 
-    LocalDb.transaction(
+    LocalLocalDb.transaction(
       (tx) => {
         tx.executeSql(
           retrieveDataSQL,
@@ -108,7 +175,7 @@ export const doesTableExist = (tableName) => {
   return new Promise((resolve, reject) => {
     const checkTableSQL = `SELECT name FROM sqlite_master WHERE type='table' AND name=?`;
 
-    LocalDb.transaction(
+    LocalLocalDb.transaction(
       (tx) => {
         tx.executeSql(
           checkTableSQL,
@@ -130,7 +197,7 @@ export const doesTableExist = (tableName) => {
 
 export const deletetable = (tableName) => {
   return new Promise((resolve, reject) => {
-    LocalDb.transaction((tx) => {
+    LocalLocalDb.transaction((tx) => {
       tx.executeSql(
         `DROP TABLE IF EXISTS ${tableName};`,
         [],
@@ -282,14 +349,18 @@ export const updateMasterDataUniqueKey = async (
 };
 
 const numberToWordMap = {
-  "1": "One",
-  "2": "Two",
-  "3": "Three",
-  "4": "Four"
+  1: "One",
+  2: "Two",
+  3: "Three",
+  4: "Four",
   // Add more mappings as needed
 };
 
-export const updateMasterDataUniqueKey1 = async (tableName, tableRow, uniqueKeys) => {
+export const updateMasterDataUniqueKey1 = async (
+  tableName,
+  tableRow,
+  uniqueKeys
+) => {
   // Function to convert quarterSelected values to words
   const convertQuarterToWord = (value) => {
     return numberToWordMap[value] || value;
@@ -368,7 +439,11 @@ export const updateMasterDataUniqueKey1 = async (tableName, tableRow, uniqueKeys
     );
   });
 };
-export const updateMasterDataUniqueKey2 = async (tableName, tableRow, uniqueKeys) => {
+export const updateMasterDataUniqueKey2 = async (
+  tableName,
+  tableRow,
+  uniqueKeys
+) => {
   const updatedRows = []; // Array to collect updated rows
 
   // Function to convert quarterSelected values to words
@@ -420,7 +495,9 @@ export const updateMasterDataUniqueKey2 = async (tableName, tableRow, uniqueKeys
             (_, result) => {
               if (result.rowsAffected > 0) {
                 // Retrieve updated row from the database and push it to the array
-                tx.executeSql(`SELECT * FROM ${tableName} WHERE ${uniqueKeyConditions}`, uniqueKeys.map((key) => row[key]),
+                tx.executeSql(
+                  `SELECT * FROM ${tableName} WHERE ${uniqueKeyConditions}`,
+                  uniqueKeys.map((key) => row[key]),
                   (_, resultSet) => {
                     if (resultSet.rows.length > 0) {
                       updatedRows.push(resultSet.rows.item(0)); // Add the updated row to the array
@@ -446,7 +523,11 @@ export const updateMasterDataUniqueKey2 = async (tableName, tableRow, uniqueKeys
     );
   });
 };
-export const updateMasterDataUniqueKey3 = async (tableName, tableRow, uniqueKeys) => {
+export const updateMasterDataUniqueKey3 = async (
+  tableName,
+  tableRow,
+  uniqueKeys
+) => {
   const updatedRows = []; // Array to collect updated rows
 
   // Function to convert quarterSelected values to words
@@ -498,16 +579,26 @@ export const updateMasterDataUniqueKey3 = async (tableName, tableRow, uniqueKeys
             (_, result) => {
               if (result.rowsAffected > 0) {
                 // Retrieve updated row from the database and push it to the array
-                tx.executeSql(`SELECT * FROM ${tableName} WHERE ${uniqueKeyConditions}`, uniqueKeys.map((key) => row[key]),
+                tx.executeSql(
+                  `SELECT * FROM ${tableName} WHERE ${uniqueKeyConditions}`,
+                  uniqueKeys.map((key) => row[key]),
                   (_, resultSet) => {
                     if (resultSet.rows.length > 0) {
                       updatedRows.push(resultSet.rows.item(0)); // Add the updated row to the array
-                      console.log(`Row updated for ${uniqueKeys.map((key) => `${key}: ${row[key]}`).join(", ")}`);
+                      console.log(
+                        `Row updated for ${uniqueKeys
+                          .map((key) => `${key}: ${row[key]}`)
+                          .join(", ")}`
+                      );
                     }
                   }
                 );
               } else {
-                console.log(`No rows updated for ${uniqueKeys.map((key) => `${key}: ${row[key]}`).join(", ")}`);
+                console.log(
+                  `No rows updated for ${uniqueKeys
+                    .map((key) => `${key}: ${row[key]}`)
+                    .join(", ")}`
+                );
               }
             },
             (_, error) => {
@@ -554,10 +645,12 @@ export const insertDataArray2 = (dataObject) => {
         () => {
           rowsInserted++;
           if (rowsInserted === totalRows) {
-            console.log(`${rowsInserted} Data inserted successfully to ${tableName} table`);
+            console.log(
+              `${rowsInserted} Data inserted successfully to ${tableName} table`
+            );
           }
         },
-        (error) => console.error("Error inserting data:", error),
+        (error) => console.error("Error inserting data:", error)
       );
     });
   });
@@ -598,7 +691,10 @@ export const updateSyncStatus = (userId, newSyncStatus, rowId) => {
         tx.executeSql(
           updateSyncStatusSQL,
           [newSyncStatus, userId, rowId],
-          (_, result) => resolve(`Sync status updated successfully for USERID: ${userId}, id: ${rowId}`),
+          (_, result) =>
+            resolve(
+              `Sync status updated successfully for USERID: ${userId}, id: ${rowId}`
+            ),
           (error) => reject(`Error updating sync status: ${error.message}`)
         );
       },

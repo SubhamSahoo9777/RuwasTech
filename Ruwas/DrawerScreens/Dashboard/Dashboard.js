@@ -18,16 +18,19 @@ const Dashboard = ({ navigation }) => {
   const [filteredSanitation, setFilteredSanitation] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
 
- const Dispatch=useDispatch()
+  const Dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const waterWorkPlanSql = await retrieveData("waterWorkPlan");
         const userDetais = await retrieveData("userDetais");
-        let userId=userDetais[0].userid
-        let dist=userDetais[0].districtid
-        Dispatch({type:"userDetails",userDetails:{"userId":userId,"districtId":dist}})
-       
+        let userId = userDetais[0].userid;
+        let dist = userDetais[0].districtid;
+        Dispatch({
+          type: "userDetails",
+          userDetails: { userId: userId, districtId: dist },
+        });
+
         setWaterWorkPlan(waterWorkPlanSql);
         let x = waterWorkPlanSql.filter(
           (item) => item.districtid === userDetais[0].districtid

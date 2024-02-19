@@ -9,6 +9,7 @@ import {
   Modal,
   FlatList,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,19 +24,8 @@ import { LoaderModal } from "../components/AllModals";
 import { GpsSet } from "../CustomComponents/GpsCordinates";
 import colors from "../components/colors";
 import VectorIcon from "../components/VectorIcon";
-// [
-//   ...Object.entries(
-//
-//   ),
-//   [
-//     "modalActivityData",
-//     ,
-//   ],
-//   [
-//     "filesAttached",
-//     JSON.parse(selectedItem.USERSAVEDATA).filesAttached,
-//   ],
-// ]
+import Divider from "../components/Divider";
+import { EditModal } from "../components/EditModal";
 
 const SyncData = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -43,6 +33,11 @@ const SyncData = ({ navigation }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isPreviewModalVisible, setPreviewModalVisible] = useState(false);
   const [show, setShow] = useState(false);
+  // isModalVisible={isModalVisible}
+  //     setModalVisible={setModalVisible}
+  //     item={item}
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [item, setItem] = useState(false);
   const fetchDataFromUserSavedData = async () => {
     try {
       setLoading(true);
@@ -53,9 +48,11 @@ const SyncData = ({ navigation }) => {
         return;
       }
       const allUserDataFromDB = await retrieveData("UserSavedData");
+
       const filteredUserData = allUserDataFromDB.filter(
         (user) => user.USERID === userId
       );
+      console.log(filteredUserData, "filted user data");
       setUserData(filteredUserData);
     } catch (error) {
       setLoading(false);
@@ -125,7 +122,8 @@ const SyncData = ({ navigation }) => {
   };
   const handleItemSubmit = async (item) => {
     const userData = JSON.parse(item.USERSAVEDATA);
-    const basicDetails = userData.BasicDetails; // Accessing BasicDetails object
+    const basicDetails = userData.BasicDetails;
+    console.log(basicDetails, "hi");
     const requestBody = {
       BasicDetails: {
         districtid: basicDetails.districtid,
@@ -234,7 +232,7 @@ const SyncData = ({ navigation }) => {
     ? JSON.parse(selectedItem.USERSAVEDATA).BasicDetails
     : null;
   const fileInformation = selectedItem
-    ? JSON.parse(selectedItem.USERSAVEDATA).modalActivityData
+    ? JSON.parse(selectedItem.USERSAVEDATA).filesAttached
     : null;
   const modalactivityInformation = selectedItem
     ? JSON.parse(selectedItem.USERSAVEDATA).modalActivityData
@@ -304,6 +302,17 @@ const SyncData = ({ navigation }) => {
                 >
                   <Text style={styles.addButtonLabel}>Add Data</Text>
                 </TouchableOpacity>
+                <LoaderModal
+                  show={show}
+                  setShow={setShow}
+                  title="Data synced"
+                  icon={
+                    <RotatingImage
+                      source={require("../assets/synchronize.png")}
+                      style={{ height: 50, width: 50 }}
+                    />
+                  }
+                />
               </View>
             )}
           </View>
@@ -318,6 +327,7 @@ const SyncData = ({ navigation }) => {
         >
           <View style={styles.modalContainer}>
             <View style={{ flex: 1 }}>
+              {/* header */}
               <View
                 style={{
                   backgroundColor: colors.tableHeaderColor,
@@ -346,75 +356,255 @@ const SyncData = ({ navigation }) => {
                   Preview Data
                 </Text>
               </View>
-              <View style={{ backgroundColor: "#e1f9fa" }}>
+              {/* body */}
+              <View
+                style={{
+                  backgroundColor: "#e1f9fa",
+                  marginTop: 10,
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+              >
                 <View
-                  style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}
+                  style={{
+                    flexDirection: "row",
+                    marginBottom: 10,
+                    alignItems: "center",
+                  }}
                 >
-                  <Text>Latitude</Text>
-                  <Text>1233</Text>
+                  <VectorIcon
+                    type="AntDesign"
+                    name="user"
+                    size={24}
+                    color={colors.tableHeaderColor}
+                  />
+                  <Text
+                    style={{
+                      color: colors.tableHeaderColor,
+                      fontWeight: "700",
+                      marginLeft: 5,
+                    }}
+                  >
+                    User Information
+                  </Text>
                 </View>
                 <View
                   style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}
                 >
-                  <Text>Longitude</Text>
-                  <Text>1233</Text>
+                  <Text
+                    style={{ fontSize: 14, fontWeight: "500", width: "45%" }}
+                  >
+                    Latitude
+                  </Text>
+                  <Text>: {userInformation["latitude"]}</Text>
                 </View>
                 <View
                   style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}
                 >
-                  <Text>Type</Text>
-                  <Text>water</Text>
+                  <Text
+                    style={{ fontSize: 14, fontWeight: "500", width: "45%" }}
+                  >
+                    Longitude
+                  </Text>
+                  <Text>: {userInformation["logitude"]}</Text>
                 </View>
                 <View
                   style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}
                 >
-                  <Text>Work Plan Id</Text>
-                  <Text>33</Text>
+                  <Text
+                    style={{ fontSize: 14, fontWeight: "500", width: "45%" }}
+                  >
+                    Type
+                  </Text>
+                  <Text>: {userInformation["type"]}</Text>
                 </View>
                 <View
                   style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}
                 >
-                  <Text>District</Text>
-                  <Text>Odisha</Text>
+                  <Text
+                    style={{ fontSize: 14, fontWeight: "500", width: "45%" }}
+                  >
+                    Work Plan Id
+                  </Text>
+                  <Text>: {userInformation["workplanid"]}</Text>
                 </View>
                 <View
                   style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}
                 >
-                  <Text>User Id</Text>
-                  <Text>331</Text>
+                  <Text
+                    style={{ fontSize: 14, fontWeight: "500", width: "45%" }}
+                  >
+                    User Id
+                  </Text>
+                  <Text>: {userInformation["userId"]}</Text>
                 </View>
               </View>
               {/* moadlActivity details */}
-              <ScrollView>
-                {modalactivityInformation.map((activity, index) => (
-                  <View key={index}>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{}}>SL.No.</Text>
-                      <Text style={{}}>{activity["Sno"]}</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{}}>Modal Active</Text>
-                      <Text style={{}}>{activity["Sno"]}</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{}}>Quarter</Text>
-                      <Text style={{}}>{activity["Sno"]}</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{}}>Performance In A Quarter Archieved</Text>
-                      <Text style={{}}>{activity["Sno"]}</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{}}>Expenditure In Quarter</Text>
-                      <Text style={{}}>{activity["Sno"]}</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{}}>Comments</Text>
-                      <Text style={{}}>{activity["Sno"]}</Text>
-                    </View>
+              <View style={{ flex: 1 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    backgroundColor: colors.tableHeaderColor,
+                    borderRadius: 5,
+                    padding: 10,
+                    marginTop: 10,
+                  }}
+                >
+                  <VectorIcon
+                    type="FontAwesome"
+                    name="hand-o-right"
+                    size={24}
+                    color="#fff"
+                  />
+                  <Text style={{ color: "#fff", marginLeft: 10, fontSize: 16 }}>
+                    Activities
+                  </Text>
+                </View>
+                <ScrollView>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginTop: 10,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    <VectorIcon
+                      type="AntDesign"
+                      name="piechart"
+                      size={20}
+                      color={colors.tableHeaderColor}
+                    />
+                    <Text
+                      style={{
+                        color: colors.tableHeaderColor,
+                        fontWeight: "500",
+                        marginLeft: 10,
+                      }}
+                    >
+                      Modal Activity
+                    </Text>
                   </View>
-                ))}
-              </ScrollView>
+                  {modalactivityInformation.map((activity, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        backgroundColor: "#e1f9fa",
+                        marginTop: 10,
+                        padding: 10,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "30%" }}>SL.No.</Text>
+                        <Text style={{ width: "70%" }}>
+                          : {activity["Sno"]}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "30%" }}>Modal Active</Text>
+                        <Text style={{ width: "70%" }}>
+                          : {activity["modelActivity"]}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "30%" }}>Quarter</Text>
+                        <Text style={{ width: "70%" }}>
+                          : {activity["quarteSelected"]}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "30%" }}>
+                          Performance In A Quarter Archieved
+                        </Text>
+                        <Text style={{ width: "70%" }}>
+                          : {activity["quarterAchieved"]}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "30%" }}>Work Plan Id</Text>
+                        <Text style={{ width: "70%" }}>
+                          {activity["workplanid"]}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "30%" }}>
+                          Expenditure In Quarter
+                        </Text>
+                        <Text style={{ width: "70%" }}>
+                          : {activity["quarterExpenditure"]}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "30%" }}>Comments</Text>
+                        <Text style={{ width: "70%" }}>
+                          : {activity["quarterComment"]}
+                        </Text>
+                      </View>
+                      {/* -----------------------------------------------------------------------------edit button */}
+                      <Pressable
+                        onPress={() => {
+                          setItem(activity), setModalVisible(true);
+                        }}
+                        style={{ position: "absolute", top: 5, right: 10 }}
+                      >
+                        <VectorIcon
+                          type="FontAwesome5"
+                          name="edit"
+                          size={24}
+                          color={colors.tableHeaderColor}
+                        />
+                      </Pressable>
+                    </View>
+                  ))}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      marginTop: 10,
+                      paddingLeft: 10,
+                    }}
+                  >
+                    <VectorIcon
+                      type="AntDesign"
+                      name="tag"
+                      size={20}
+                      color={colors.tableHeaderColor}
+                    />
+                    <Text
+                      style={{
+                        color: colors.tableHeaderColor,
+                        fontWeight: "500",
+                        marginLeft: 10,
+                      }}
+                    >
+                      Files Attached
+                    </Text>
+                  </View>
+                  {fileInformation.map((activity, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        backgroundColor: "#e1f9fa",
+                        marginTop: 10,
+                        padding: 10,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "50%" }}>File {index} </Text>
+                        <Text style={{ width: "50%" }}>
+                          : {activity["file"]}
+                        </Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ width: "50%" }}>File Description</Text>
+                        <Text style={{ width: "50%" }}>
+                          : {activity["title"]}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+                </ScrollView>
+              </View>
             </View>
 
             {/* <FlatList
@@ -455,7 +645,7 @@ const SyncData = ({ navigation }) => {
                   )}
                 </View>
               )}
-            /> */}
+            />  */}
             <TouchableOpacity
               style={styles.closeButton}
               onPress={handleClosePreviewModal}
@@ -465,16 +655,11 @@ const SyncData = ({ navigation }) => {
           </View>
         </Modal>
       )}
-      <LoaderModal
-        show={show}
-        setShow={setShow}
-        title="Data synced"
-        icon={
-          <RotatingImage
-            source={require("../assets/synchronize.png")}
-            style={{ height: 50, width: 50 }}
-          />
-        }
+
+      <EditModal
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+        item={item}
       />
     </View>
   );
@@ -487,7 +672,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.tableHeaderColor,
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
@@ -495,6 +680,7 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 16,
     marginBottom: 8,
+    color: "#fff",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -572,7 +758,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#3498db",
     padding: 10,
     borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "50%",
     alignSelf: "center",
+    margin: 10,
   },
   closeButtonText: {
     color: "#fff",
