@@ -702,3 +702,27 @@ export const updateSyncStatus = (userId, newSyncStatus, rowId) => {
     );
   });
 };
+
+export const deleteRowById = (tableName, rowId) => {
+  return new Promise((resolve, reject) => {
+    const deleteRowSQL = `DELETE FROM ${tableName} WHERE id = ?`;
+
+    LocalDb.transaction(
+      (tx) => {
+        tx.executeSql(
+          deleteRowSQL,
+          [rowId],
+          (_, result) => {
+            if (result.rowsAffected > 0) {
+              resolve(`Row with ID ${rowId} deleted successfully from ${tableName}`);
+            } else {
+              reject(`No rows deleted from ${tableName} with ID ${rowId}`);
+            }
+          },
+          (error) => reject(`Error deleting row from ${tableName}: ${error.message}`)
+        );
+      },
+      (error) => reject(`Transaction error: ${error.message}`)
+    );
+  });
+};

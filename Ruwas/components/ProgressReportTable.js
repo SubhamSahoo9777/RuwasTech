@@ -151,10 +151,10 @@ const ProgressReportTable = ({ tableDatas, setTableDatas, quarter }) => {
             borderBottomLeftRadius: 9,
             borderBottomRightRadius: 9,
             justifyContent: "space-between",
-            flexDirection: "row",
+            flexDirection: "row-reverse",
           }}
         >
-          <View
+          {/* <View
             style={{
               marginVertical: 10,
               marginLeft: 10,
@@ -175,10 +175,11 @@ const ProgressReportTable = ({ tableDatas, setTableDatas, quarter }) => {
             >
               Total Result
             </Text>
-          </View>
-
+          </View> */}
           <View style={{ marginVertical: 10, marginRight: 10 }}>
-            <Text style={{ color: "#fff" }}>0/{filteredData.length}</Text>
+            <Text style={{ color: "#fff" }}>
+              No. of Data Edited {isModalEdited.length}/{filteredData.length}
+            </Text>
           </View>
         </View>
       </View>

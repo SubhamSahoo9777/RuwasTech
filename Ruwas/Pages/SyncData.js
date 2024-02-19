@@ -10,12 +10,14 @@ import {
   FlatList,
   ActivityIndicator,
   Pressable,
+  Image,
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
+  deleteRowById,
   retrieveData,
   updateSyncStatus,
 } from "../components/AllLocalDatabaseFunction";
@@ -52,7 +54,6 @@ const SyncData = ({ navigation }) => {
       const filteredUserData = allUserDataFromDB.filter(
         (user) => user.USERID === userId
       );
-      console.log(filteredUserData, "filted user data");
       setUserData(filteredUserData);
     } catch (error) {
       setLoading(false);
@@ -80,7 +81,6 @@ const SyncData = ({ navigation }) => {
     fetchLocation();
   }, []);
   const handlesubmit = async (formData, item) => {
-    console.log(item);
     const netInfo = await NetInfo.fetch();
     const isConnected = netInfo.isConnected;
     if (isConnected == false) {
@@ -116,14 +116,13 @@ const SyncData = ({ navigation }) => {
       } catch (error) {
         setLoading(false);
 
-        console.error("Error:", error);
+        console.log("Error:", error);
       }
     }
   };
   const handleItemSubmit = async (item) => {
     const userData = JSON.parse(item.USERSAVEDATA);
     const basicDetails = userData.BasicDetails;
-    console.log(basicDetails, "hi");
     const requestBody = {
       BasicDetails: {
         districtid: basicDetails.districtid,
@@ -218,6 +217,33 @@ const SyncData = ({ navigation }) => {
 
   //   handlesubmit(formData, item);
   // };
+  const handledeletebyid = async (item) => {
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this item?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => deleteItem(item),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const deleteItem = async (item) => {
+    try {
+      await deleteRowById("UserSavedData", item?.id);
+      fetchDataFromUserSavedData();
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
 
   const handlePreview = (item) => {
     setSelectedItem(item);
@@ -237,8 +263,6 @@ const SyncData = ({ navigation }) => {
   const modalactivityInformation = selectedItem
     ? JSON.parse(selectedItem.USERSAVEDATA).modalActivityData
     : null;
-
-  console.log(modalactivityInformation);
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -251,8 +275,8 @@ const SyncData = ({ navigation }) => {
         ) : (
           <View style={{ marginTop: 20, width: "100%" }}>
             {userData && userData.length > 0 ? (
-              userData.map((item, index) => (
-                <TouchableOpacity
+              userData.reverse().map((item, index) => (
+                <View
                   key={index}
                   style={styles.card}
                   onPress={() => handlePreview(item)}
@@ -273,23 +297,74 @@ const SyncData = ({ navigation }) => {
                       JSON.parse(item.USERSAVEDATA).BasicDetails.type}
                   </Text>
                   <View style={styles.buttonContainer}>
-                    <TouchableOpacity
+                    <View
                       style={[
                         styles.button,
-                        {
-                          backgroundColor:
-                            JSON.parse(item.SYNC) == true ? "#ccc" : "#3498db",
-                        },
+                        // {
+                        //   backgroundColor:
+                        //     JSON.parse(item.SYNC) == true ? "#ccc" : "#3498db",
+                        // },
                       ]}
-                      onPress={() => handleItemSubmit(item)}
-                      disabled={JSON.parse(item.SYNC) == true}
+                      // onPress={() => handleItemSubmit(item)}
+                      // disabled={JSON.parse(item.SYNC) == true}
                     >
-                      <Text style={styles.buttonText}>
+                      {JSON.parse(item.SYNC) == true ? (
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
+                          <Text style={{ color: "#4dff4d", marginRight: 10 }}>
+                            Synced
+                          </Text>
+                          <VectorIcon
+                            type="AntDesign"
+                            name="checkcircle"
+                            size={20}
+                            color="#4dff4d"
+                          />
+                        </View>
+                      ) : (
+                        <Pressable onPress={() => handleItemSubmit(item)}>
+                          <VectorIcon
+                            type="AntDesign"
+                            name="cloudupload"
+                            size={40}
+                            color="#33ff33"
+                          />
+                        </Pressable>
+                      )}
+                      {/* <Text style={styles.buttonText}>
                         {JSON.parse(item.SYNC) == true ? "Synced" : "Sync Now"}
-                      </Text>
-                    </TouchableOpacity>
+                      </Text> */}
+                    </View>
+                    {JSON.parse(item.SYNC) == false ? (
+                      <TouchableOpacity
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        onPress={() => handledeletebyid(item)}
+                      >
+                        <VectorIcon
+                          type="MaterialCommunityIcons"
+                          name="delete-sweep"
+                          size={35}
+                          color="#ff3300"
+                        />
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
-                </TouchableOpacity>
+                  <Pressable
+                    onPress={() => handlePreview(item)}
+                    style={{ position: "absolute", top: 15, right: 20 }}
+                  >
+                    <VectorIcon
+                      type="Entypo"
+                      name="info-with-circle"
+                      size={30}
+                      color="#e6ffe6"
+                    />
+                  </Pressable>
+                </View>
               ))
             ) : (
               <View style={styles.noDataContainer}>
@@ -541,9 +616,10 @@ const SyncData = ({ navigation }) => {
                         </Text>
                       </View>
                       {/* -----------------------------------------------------------------------------edit button */}
-                      <Pressable
+                      {/* <Pressable
                         onPress={() => {
-                          setItem(activity), setModalVisible(true);
+                          setItem(activity), 
+                          setModalVisible(true);
                         }}
                         style={{ position: "absolute", top: 5, right: 10 }}
                       >
@@ -553,7 +629,7 @@ const SyncData = ({ navigation }) => {
                           size={24}
                           color={colors.tableHeaderColor}
                         />
-                      </Pressable>
+                      </Pressable> */}
                     </View>
                   ))}
                   <View
@@ -674,7 +750,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.tableHeaderColor,
     borderRadius: 8,
-    padding: 16,
+    padding: 10,
     marginBottom: 16,
   },
   cardText: {
@@ -687,8 +763,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   button: {
-    backgroundColor: "#3498db",
-    padding: 10,
+    // backgroundColor: "#3498db",
+    padding: 5,
     borderRadius: 5,
   },
   buttonText: {

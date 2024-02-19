@@ -28,7 +28,6 @@ export const ReactNativeModal1 = ({
   isModalEdited,
 }) => {
   const unitData = (item !== undefined && item.item) || {};
-  console.log(unitData);
   const data = useSelector((state) => state.UserReducer);
   const stateUpdater = useSelector((state) => state.TotalCalculationreducer);
   const id = data.hasOwnProperty("sanitationid")
@@ -154,7 +153,8 @@ export const ReactNativeModal1 = ({
       object: {
         ...unitData,
         workplanid: id,
-        Sno: unitData["Sno"],l        quarteSelected: quarterType,
+        Sno: unitData["Sno"],
+        quarteSelected: quarterType,
         quarterAchieved: quaterAchieved,
         quarterExpenditure: quaterExpenditure,
         quarterComment: comment,

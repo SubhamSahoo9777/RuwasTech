@@ -231,6 +231,13 @@ export const ModifiedTextInput1 = (props) => {
           }}
         >
           {header || "Attachments"}
+          {"  "}
+          <VectorIcon
+            type="Entypo"
+            name="edit"
+            size={10}
+            color={colors.tableHeaderColor}
+          />
         </Text>
       ) : null}
     </View>

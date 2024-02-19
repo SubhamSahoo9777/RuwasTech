@@ -30,14 +30,15 @@ export const EditModal = ({
   isModalEdited,
 }) => {
   const unitData = (item !== undefined && item) || {};
+  console.log(unitData);
   //   const id = data.hasOwnProperty("sanitationid")
   //     ? data.sanitationid
   //     : data.workplanid;
   const Dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true);
   const [text, setText] = useState("");
-  const [quaterAchieved, setQuaterAchieved] = useState("");
-  const [quaterExpenditure, SetQuaterExpenditure] = useState("");
+  const [quaterAchieved, setQuaterAchieved] = useState("0");
+  const [quaterExpenditure, SetQuaterExpenditure] = useState("0");
 
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
@@ -48,59 +49,59 @@ export const EditModal = ({
     SetQuaterExpenditure(unitData.quarterExpenditure);
     setComments(unitData.quarterComment);
   }, [unitData]);
-  //   const validation = () => {
-  //     if (parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)) {
-  //       setQuaterAchieved("");
-  //       return alert(
-  //         "Performance In Quarter Achieved Should Not Be Greater Than Approved Annual WorkPlan Target"
-  //       );
-  //     } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
-  //       SetQuaterExpenditure("");
-  //       return alert(
-  //         "Expenditure Quarter Should Not Be Greater Than Annual Budget"
-  //       );
-  //     } else {
-  //       Dispatch({ type: "quater", values: { totalAnuallBudget: item.funds } });
-  //       alert("Data Saved");
-  //       setIsModalEdited([...isModalEdited, item.id]);
-  //       setModalVisible(false);
-  //     }
-  //   };
+  // const validation = () => {
+  //   if (parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)) {
+  //     setQuaterAchieved("");
+  //     return alert(
+  //       "Performance In Quarter Achieved Should Not Be Greater Than Approved Annual WorkPlan Target"
+  //     );
+  //   } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
+  //     SetQuaterExpenditure("");
+  //     return alert(
+  //       "Expenditure Quarter Should Not Be Greater Than Annual Budget"
+  //     );
+  //   } else {
+  //     Dispatch({ type: "quater", values: { totalAnuallBudget: item.funds } });
+  //     alert("Data Saved");
+  //     setIsModalEdited([...isModalEdited, item.id]);
+  //     setModalVisible(false);
+  //   }
+  // };
 
-  //   useEffect(() => {
-  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "1") {
-  //       let x =
-  //         ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
-  //           parseInt(unitData["approvedAnnualTarget"])) *
-  //         100;
+  // useEffect(() => {
+  //   if (parseInt(unitData["approvedAnnualTarget"]) > 0 && unitData.id?.endsWith("a")) {
+  //     let x =
+  //       ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+  //         parseInt(unitData["approvedAnnualTarget"])) *
+  //       100;
 
-  //       setWorkplan(x);
-  //     }
-  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "2") {
-  //       let x =
-  //         ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
-  //           parseInt(unitData["approvedAnnualTarget"])) *
-  //         100;
+  //     setWorkplan(x);
+  //   }
+  //   if (parseInt(unitData["approvedAnnualTarget"]) > 0 && unitData.id?.endsWith("b")) {
+  //     let x =
+  //       ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+  //         parseInt(unitData["approvedAnnualTarget"])) *
+  //       100;
 
-  //       setWorkplan(x);
-  //     }
-  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "3") {
-  //       let x =
-  //         ((parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)) /
-  //           parseInt(unitData["approvedAnnualTarget"])) *
-  //         100;
+  //     setWorkplan(x);
+  //   }
+  //   if (parseInt(unitData["approvedAnnualTarget"]) > 0 && unitData.id?.endsWith("c")) {
+  //     let x =
+  //       ((parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)) /
+  //         parseInt(unitData["approvedAnnualTarget"])) *
+  //       100;
 
-  //       setWorkplan(x);
-  //     }
-  //     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "4") {
-  //       let x =
-  //         ((parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)) /
-  //           parseInt(unitData["approvedAnnualTarget"])) *
-  //         100;
+  //     setWorkplan(x);
+  //   }
+  //   if (parseInt(unitData["approvedAnnualTarget"]) > 0 && unitData.id?.endsWith("d")) {
+  //     let x =
+  //       ((parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)) /
+  //         parseInt(unitData["approvedAnnualTarget"])) *
+  //       100;
 
-  //       setWorkplan(x);
-  //     }
-  //   }, [workplan, stateUpdater, unitData, quaterAchieved]);
+  //     setWorkplan(x);
+  //   }
+  // }, [workplan, stateUpdater, unitData, quaterAchieved]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -149,11 +150,11 @@ export const EditModal = ({
                 header={"Quarter Target"}
                 // value={`${unitData["quarterOne"]}`}
                 value={
-                  quarterType === "1"
+                  unitData.id?.endsWith("a")
                     ? `${unitData["quarterOne"]}`
-                    : quarterType === "2"
+                    : unitData.id?.endsWith("b")
                     ? `${unitData["quarterTwo"]}`
-                    : quarterType === "3"
+                    : unitData.id?.endsWith("c")
                     ? `${unitData["quarterFour"]}`
                     : `${unitData["quarterOne"]}`
                 }
@@ -184,7 +185,7 @@ export const EditModal = ({
             <ModifiedTextInput2
               //"Cumulative to Date Achieved
               header={"Cumulative to Date Achieved"}
-              value={unitData.quaterAchieved || "0"}
+              value={quaterAchieved}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -208,7 +209,7 @@ export const EditModal = ({
               //Cumulative Expenditure(Ugx)
               setInput={setText}
               header={`Cumulative Expenditure(Ugx)`}
-              value={unitData.quarterExpenditure}
+              value={quaterExpenditure}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />

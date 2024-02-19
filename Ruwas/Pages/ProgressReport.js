@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GpsSet } from "../CustomComponents/GpsCordinates";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
+
   const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
@@ -240,24 +241,41 @@ const ProgressReport = memo(({ navigation, route }) => {
               backgroundColor: colors.tableHeaderColor,
               padding: 16,
               borderRadius: 10,
-              marginBottom: 10,
             }}
           >
             <View style={{ flexDirection: "row", width: "40%" }}>
               <Text style={{ color: "#fff", fontSize: 15 }}>Work Plan Id</Text>
               <Text style={{ color: "#fff", fontSize: 15 }}>
                 {" "}
-                : {allDetails["workplanid"] || "0"}
+                :{" "}
+                {reportType == "water"
+                  ? allDetails["workplanid"]
+                  : allDetails["sanitationid"] || "0"}
               </Text>
             </View>
-            <View style={{ flexDirection: "row", width: "60%" }}>
+            {/* <View style={{ flexDirection: "row", width: "60%" }}>
               <Text style={{ color: "#fff", fontSize: 15 }}>Planed Budget</Text>
               <Text style={{ color: "#fff", fontSize: 15 }}>
                 {" "}
                 : {allDetails.totalapprovedbudget || "0"}
               </Text>
-            </View>
+            </View> */}
           </View>
+          <Text
+            style={{
+              backgroundColor: colors.tableHeaderColor,
+              color: "#fff",
+              paddingVertical: 15,
+              paddingLeft: 10,
+              borderRadius: 10,
+              marginTop: 10,
+              marginBottom: 10,
+            }}
+          >
+            {"Planed Budget :"}
+            {"  "}
+            {allDetails.totalapprovedbudget || "0"}
+          </Text>
           <AutoSelectDrop label={apiYear} title={"financial Year"} />
           <AutoSelectDrop label={apiDistricts} title={"Local Government"} />
           <AutoSelectDrop label={apiRwsrc} title={"RWSRC"} />
@@ -280,7 +298,17 @@ const ProgressReport = memo(({ navigation, route }) => {
               marginTop: 10,
             }}
           >
-            {"Funds Received (UGX)"}
+            {"Funds Received (UGX) :"}
+            {"  "}
+            {quarter == "1"
+              ? allDetails.quarteronefunds
+              : quarter == "2"
+              ? allDetails.quartertwofunds
+              : quarter == "3"
+              ? allDetails.quarterthreefunds
+              : quarter == "4"
+              ? allDetails.quarterfourfunds
+              : null}
           </Text>
           <Text
             style={{
