@@ -322,7 +322,7 @@ export const ModifiedTextInput2 = (props) => {
       ]}
     >
       <TextInput
-        value={`${parseInt(value) + parseInt(dependentValue)}`}
+        value={`${parseFloat(value) + parseFloat(dependentValue)}`}
         multiline={true}
         onFocus={() => {
           setShow(true);

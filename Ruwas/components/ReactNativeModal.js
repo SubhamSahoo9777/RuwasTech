@@ -91,15 +91,31 @@ export const ReactNativeModal1 = ({
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
-    if (parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)) {
+    if (
+      parseInt(quaterAchieved) >
+      (quarterType === "1"
+        ? parseInt(unitData["quarterOne"])
+        : quarterType === "2"
+        ? parseInt(unitData["quarterTwo"])
+        : quarterType === "3"
+        ? parseInt(unitData["quarterFour"])
+        : parseInt(unitData["quarterOne"]))
+    ) {
       setQuaterAchieved("");
       return alert(
-        "Performance In Quarter Achieved Should Not Be Greater Than Approved Annual WorkPlan Target"
+        "Performance in quarter achieved should not be greater than Quarter Target"
+      );
+    } else if (
+      parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)
+    ) {
+      setQuaterAchieved("");
+      return alert(
+        "Performance in quarter achieved should not be greater than approved annual workPlan target"
       );
     } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
       SetQuaterExpenditure("");
       return alert(
-        "Expenditure Quarter Should Not Be Greater Than Annual Budget"
+        "Expenditure quarter should not be greater than annual budget"
       );
     } else {
       Dispatch({ type: "quater", values: { totalAnuallBudget: item.funds } });
@@ -112,7 +128,7 @@ export const ReactNativeModal1 = ({
   useEffect(() => {
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "1") {
       let x =
-        ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+        (parseInt(quaterAchieved) /
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
@@ -179,6 +195,10 @@ export const ReactNativeModal1 = ({
       animationOutTiming={1}
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
+      onModalShow={() => {
+        setQuaterAchieved("0");
+        SetQuaterExpenditure("0");
+      }}
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
@@ -225,13 +245,7 @@ export const ReactNativeModal1 = ({
                 CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
               />
             </View>
-            {/* <ModifiedTextInput2
-              //Modal Activity
-              header={"Model Activity"}
-              value={`${unitData["modelActivity"]}`}
-              editable={false}
-              CustomStyle={{ backgroundColor: "#e8f1fc" }}
-            /> */}
+
             <ShowValueTextInput
               label={unitData["modelActivity"]}
               title={"Model Activity"}
