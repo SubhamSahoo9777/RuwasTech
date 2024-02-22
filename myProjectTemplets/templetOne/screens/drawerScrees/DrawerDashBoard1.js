@@ -1,3 +1,4 @@
+import { useTheme } from "react-native-paper";
 import { CustomDropDown } from "../../allProjectComponents/AllReusableComponets";
 import {
   BackHandler,
@@ -45,10 +46,12 @@ const DrawerDashBoard1 = () => {
     );
     return true;
   };
-
+const {colors}=useTheme()
+// console.log(colors);
   return (
-    <View style={{ flex: 1, backgroundColor: "#d0e0fb" }}>
-      <StatusBar backgroundColor="#0D47a4" barStyle="dark-content" />
+    <View style={{ flex: 1, padding: 16,backgroundColor:colors.screen.global }}>
+      <StatusBar backgroundColor={colors.statusbar.dashBoardColor} barStyle="dark-content" />
+      <CustomDropDown />
     </View>
   );
 };

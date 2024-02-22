@@ -15,7 +15,7 @@ import {
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import AwesomeAlert from "react-native-awesome-alerts";
+import * as Animatable from "react-native-animatable";
 import {
   deleteRowById,
   retrieveData,
@@ -278,7 +278,20 @@ const SyncData = ({ navigation }) => {
               userData.reverse().map((item, index) => (
                 <View
                   key={index}
-                  style={styles.card}
+                  style={{
+                    backgroundColor: "#fff",
+                    borderRadius: 10,
+                    padding: 15,
+                    marginBottom: 10,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                  }}
                   onPress={() => handlePreview(item)}
                 >
                   <Text style={styles.cardText}>
@@ -312,29 +325,37 @@ const SyncData = ({ navigation }) => {
                         <View
                           style={{ flexDirection: "row", alignItems: "center" }}
                         >
-                          <Text style={{ color: "#4dff4d", marginRight: 10 }}>
+                          <Text style={{ color: "green", marginRight: 10 }}>
                             Synced
                           </Text>
                           <VectorIcon
                             type="AntDesign"
                             name="checkcircle"
                             size={20}
-                            color="#4dff4d"
+                            color="green"
                           />
                         </View>
                       ) : (
                         <Pressable onPress={() => handleItemSubmit(item)}>
-                          <VectorIcon
-                            type="AntDesign"
-                            name="cloudupload"
-                            size={40}
-                            color="#33ff33"
-                          />
+                          {/* jello */}
+                          <Animatable.View
+                            animation="pulse"
+                            easing="ease-out"
+                            iterationCount="infinite"
+                            style={{ textAlign: "center" }}
+                          >
+                            <VectorIcon
+                              type="MaterialCommunityIcons"
+                              name="database-sync"
+                              size={30}
+                              color={colors.tableHeaderColor}
+                            />
+                          </Animatable.View>
                         </Pressable>
                       )}
                       {/* <Text style={styles.buttonText}>
-                        {JSON.parse(item.SYNC) == true ? "Synced" : "Sync Now"}
-                      </Text> */}
+                      {JSON.parse(item.SYNC) == true ? "Synced" : "Sync Now"}
+                    </Text> */}
                     </View>
                     {JSON.parse(item.SYNC) == false ? (
                       <TouchableOpacity
@@ -344,12 +365,19 @@ const SyncData = ({ navigation }) => {
                         }}
                         onPress={() => handledeletebyid(item)}
                       >
-                        <VectorIcon
-                          type="MaterialCommunityIcons"
-                          name="delete-sweep"
-                          size={35}
-                          color="#ff3300"
-                        />
+                        <Animatable.View
+                          animation="jello"
+                          easing="ease-out"
+                          iterationCount={2}
+                          style={{ textAlign: "center" }}
+                        >
+                          <VectorIcon
+                            type="MaterialCommunityIcons"
+                            name="delete-sweep"
+                            size={35}
+                            color="#ff4d4d"
+                          />
+                        </Animatable.View>
                       </TouchableOpacity>
                     ) : null}
                   </View>
@@ -361,7 +389,7 @@ const SyncData = ({ navigation }) => {
                       type="Entypo"
                       name="info-with-circle"
                       size={30}
-                      color="#e6ffe6"
+                      color={colors.tableHeaderColor}
                     />
                   </Pressable>
                 </View>
@@ -666,7 +694,7 @@ const SyncData = ({ navigation }) => {
                       }}
                     >
                       <View style={{ flexDirection: "row" }}>
-                        <Text style={{ width: "50%" }}>File {index} </Text>
+                        <Text style={{ width: "50%" }}>File {index + 1} </Text>
                         <Text style={{ width: "50%" }}>
                           : {activity["file"]}
                         </Text>
@@ -748,15 +776,17 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    backgroundColor: colors.tableHeaderColor,
+    backgroundColor: "#fff",
     borderRadius: 8,
     padding: 10,
     marginBottom: 16,
+    elevation: 1,
   },
   cardText: {
     fontSize: 16,
     marginBottom: 8,
-    color: "#fff",
+    color: colors.tableHeaderColor,
+    fontWeight: "500",
   },
   buttonContainer: {
     flexDirection: "row",

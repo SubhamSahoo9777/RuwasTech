@@ -31,7 +31,7 @@ export default function AppNavigator() {
           ...TransitionPresets.ModalFadeTransition,
         }}
       >
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Splash"
           component={Splash}
           options={{ headerShown: false }}
@@ -45,7 +45,7 @@ export default function AppNavigator() {
           name="LogIn"
           component={LogIn}
           options={{ headerShown: false }}
-        />
+        /> */}
 
         <Stack.Screen
           name="NavigateDecider"

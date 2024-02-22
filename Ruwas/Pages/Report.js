@@ -63,20 +63,24 @@ const Report = ({ navigation, route }) => {
           </View>
 
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>QuaterOne Funds</Text>
+            <Text style={{ width: "55%", color: "#fff" }}>
+              Quater One Funds
+            </Text>
             <Text style={{ width: "45%", color: "#fff" }}>
               : {allDetails["quarteronefunds"] || "0"}
             </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>QuaterTwo Funds</Text>
+            <Text style={{ width: "55%", color: "#fff" }}>
+              Quater Two Funds
+            </Text>
             <Text style={{ width: "45%", color: "#fff" }}>
               : {allDetails["quartertwofunds"] || "0"}
             </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ width: "55%", color: "#fff" }}>
-              QuaterThree Funds
+              Quater Three Funds
             </Text>
             <Text style={{ width: "45%", color: "#fff" }}>
               : {allDetails["quarterthreefunds"] || "0"}
@@ -84,7 +88,7 @@ const Report = ({ navigation, route }) => {
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ width: "55%", color: "#fff" }}>
-              QuaterFour Funds
+              Quater Four Funds
             </Text>
             <Text style={{ width: "45%", color: "#fff" }}>
               : {allDetails["quarterfourfunds"] || "0"}
