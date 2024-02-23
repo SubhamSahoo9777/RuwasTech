@@ -185,7 +185,7 @@ export const AttachFile = (props) => {
 export const ModifiedTextInput1 = (props) => {
   const { title, setInput, header, value = "0", keyboardType } = props;
   const [show, setShow] = useState(true);
-  const [text, setText] = useState("");
+  const [text, setText] = useState(value);
   return (
     <View
       style={{
@@ -199,7 +199,7 @@ export const ModifiedTextInput1 = (props) => {
         onFocus={() => {
           setShow(true);
         }}
-        value={`${parseInt(value) || text}`}
+        value={value || text}
         placeholder={show ? "" : title}
         cursorColor={"#000"}
         onBlur={() => setShow(false)}

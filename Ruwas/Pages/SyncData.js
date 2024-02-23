@@ -147,73 +147,7 @@ const SyncData = ({ navigation }) => {
     handlesubmit(formData, item);
   };
 
-  //rajesh // const handleItemSubmit = async (item) => {
-  //   const userData = JSON.parse(item.USERSAVEDATA);
-  //   console.log(userData);
-  //   setLoading(true);
-  //   const requestBody = {
-  //     BasicDetails: {
-  //       logitude: userData.BasicDetails.logitude,
-  //       latitude: userData.BasicDetails.latitude,
-  //       type: userData.BasicDetails.type,
-  //       userId: userData.BasicDetails.userId,
-  //       districtid: userData.BasicDetails.districtId,
-  //       workplanid: userData.BasicDetails.workplanid,
-  //     },
-  //     modalActivityData: userData.alltableData,
-  //     filesAttached: userData.addedFiles,
-  //   };
-  //   console.log(requestBody);
-  //   const formData = new FormData();
-
-  //   formData.append("BasicDetails", JSON.stringify(requestBody.BasicDetails));
-  //   formData.append(
-  //     "modalActivityData",
-  //     JSON.stringify(requestBody.modalActivityData)
-  //   );
-  //   formData.append("filesAttached", JSON.stringify(requestBody.filesAttached));
-
-  //   handlesubmit(formData, item);
-  // };
-  //hi//   const handlesubmit = async (formData, item) => {
-  //     const netInfo = await NetInfo.fetch();
-  //     const isConnected = netInfo.isConnected;
-  //     if (!isConnected) {
-  //      alert("No Network Connection. Please connect to a network and try again.")
-  //     } else {
-  //       setShow(true)
-
-  //       setLoading(true); // Set loading to true when starting sync
-  //       updateSyncStatus(item.USERID, "true", item.id);
-  // alert("Data synced")
-  //       fetchDataFromUserSavedData();
-  //       setLoading(false);
-  //       setShow(false)
-  //     }
-  //   };
-
-  // const handleItemSubmit = async (item) => {
-  //   const userData = JSON.parse(item.USERSAVEDATA);
-  //   const requestBody = {
-  //     BasicDetails: {
-  //       districtid: userData.districtid,
-  //       latitude: userData.latitude,
-  //       longitude: userData.longitude,
-  //       type: userData.type,
-  //       userId: userData.userId,
-  //       workplanid: userData.workplanid,
-  //     },
-  //     modalActivityData: userData.modalActivityData,
-  //     filesAttached: userData.filesAttached,
-  //   };
-
-  //   const formData = new FormData();
-  //   formData.append("BasicDetails", JSON.stringify(requestBody.BasicDetails));
-  //   formData.append(
-  //     "modalActivityData",
-  //     JSON.stringify(requestBody.modalActivityData)
-  //   );
-  //   formData.append("filesAttached", JSON.stringify(requestBody.filesAttached));
+ 
 
   //   handlesubmit(formData, item);
   // };

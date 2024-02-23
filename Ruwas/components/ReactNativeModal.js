@@ -28,8 +28,17 @@ export const ReactNativeModal1 = ({
   isModalEdited,
 }) => {
   const unitData = (item !== undefined && item.item) || {};
+  console.log(unitData.Sno);
+  console.log(unitData.id);
   const data = useSelector((state) => state.UserReducer);
+  // console.log(data);
+
   const stateUpdater = useSelector((state) => state.TotalCalculationreducer);
+  const filteredCumulativeData = stateUpdater.filter(
+    (item) => item.Sno == unitData.Sno && item.id == unitData.id
+  );
+  console.log(filteredCumulativeData[0]);
+  console.log(stateUpdater);
   const id = data.hasOwnProperty("sanitationid")
     ? data.sanitationid
     : data.workplanid;
@@ -43,51 +52,92 @@ export const ReactNativeModal1 = ({
     unitData["quarterOneExpenditure"]
   );
 
-  useEffect(() => {
+  const valueSendToRedux = () => {
     if (quarterType == 1) {
-      Dispatch({ type: "quater", values: { qc1: quaterAchieved } });
-      Dispatch({ type: "quater", values: { qe1: quaterExpenditure } });
+      Dispatch({
+        type: "quater",
+        values: { qc1: quaterAchieved, Sno: unitData.Sno, id: unitData.id,q1:quaterAchieved,e1:quaterExpenditure,c1:comment },
+      });
+      Dispatch({
+        type: "quater",
+        values: {
+          qe1: quaterExpenditure,
+          Sno: unitData.Sno,
+          id: unitData.id,
+        },
+      });
     } else if (quarterType == 2) {
       Dispatch({
         type: "quater",
         values: {
-          qc2: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc1)}`,
+          qc2: `${
+            parseInt(quaterAchieved) +
+            parseInt(filteredCumulativeData[0]?.qc1 || 0)
+          }`,
+          Sno: unitData.Sno,
+          id: unitData.id,q2:quaterAchieved,e2:quaterExpenditure,c2:comment
         },
       });
       Dispatch({
         type: "quater",
         values: {
-          qe2: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe1)}`,
+          qe2: `${
+            parseInt(quaterExpenditure) +
+            parseInt(filteredCumulativeData[0]?.qe1 || 0)
+          }`,
+          Sno: unitData.Sno,
+          id: unitData.id,
         },
       });
     } else if (quarterType == 3) {
       Dispatch({
         type: "quater",
         values: {
-          qc3: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc2)}`,
+          qc3: `${
+            parseInt(quaterAchieved) +
+            parseInt(filteredCumulativeData[0]?.qc2 || 0)
+          }`,
+          Sno: unitData.Sno,
+          id: unitData.id,q3:quaterAchieved,e3:quaterExpenditure,c3:comment
         },
       });
       Dispatch({
         type: "quater",
         values: {
-          qe3: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe2)}`,
+          qe3: `${
+            parseInt(quaterExpenditure) +
+            parseInt(filteredCumulativeData[0]?.qe2 || 0)
+          }`,
+          Sno: unitData.Sno,
+          id: unitData.id,
         },
       });
     } else if (quarterType == 4) {
       Dispatch({
         type: "quater",
         values: {
-          qc4: `${parseInt(quaterAchieved) + parseInt(stateUpdater.qc3)}`,
+          qc4: `${
+            parseInt(quaterAchieved) +
+            parseInt(filteredCumulativeData[0]?.qc3 || 0)
+          }`,
+          Sno: unitData.Sno,
+          id: unitData.id,q4:quaterAchieved,e4:quaterExpenditure,c4:comment
         },
       });
       Dispatch({
         type: "quater",
         values: {
-          qe4: `${parseInt(quaterExpenditure) + parseInt(stateUpdater.qe3)}`,
+          qe4: `${
+            parseInt(quaterExpenditure) +
+            parseInt(filteredCumulativeData[0]?.qe3 || 0)
+          }`,
+          Sno: unitData.Sno,
+          id: unitData.id,
         },
       });
     }
-  }, [quaterAchieved, quaterExpenditure]);
+  };
+
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
@@ -118,7 +168,6 @@ export const ReactNativeModal1 = ({
         "Expenditure quarter should not be greater than annual budget"
       );
     } else {
-      Dispatch({ type: "quater", values: { totalAnuallBudget: item.funds } });
       alert("Data Saved");
       setIsModalEdited([...isModalEdited, item.id]);
       setModalVisible(false);
@@ -136,7 +185,8 @@ export const ReactNativeModal1 = ({
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "2") {
       let x =
-        ((parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)) /
+        ((parseInt(filteredCumulativeData[0]?.qc1 || "0") +
+          parseInt(quaterAchieved)) /
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
@@ -144,7 +194,8 @@ export const ReactNativeModal1 = ({
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "3") {
       let x =
-        ((parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)) /
+        ((parseInt(filteredCumulativeData[0]?.qc2 || "0") +
+          parseInt(quaterAchieved)) /
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
@@ -152,17 +203,19 @@ export const ReactNativeModal1 = ({
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "4") {
       let x =
-        ((parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)) /
+        ((parseInt(filteredCumulativeData[0]?.qc3 || "0") +
+          parseInt(quaterAchieved)) /
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
       setWorkplan(x);
     }
-  }, [workplan, stateUpdater, unitData, quaterAchieved]);
+  }, [workplan, filteredCumulativeData, unitData, quaterAchieved]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   const onSaveHandle = () => {
+    valueSendToRedux();
     validation();
     Dispatch({
       type: "modalUpdate",
@@ -187,6 +240,21 @@ export const ReactNativeModal1 = ({
       },
     });
   };
+  useEffect(() => {
+    if (quarterType == 1) {
+      if (quaterAchieved !== filteredCumulativeData[0]?.qc1)
+        SetQuaterExpenditure("0");
+    } else if (quarterType == 2) {
+      if (quaterAchieved !== filteredCumulativeData[0]?.qc2)
+        SetQuaterExpenditure("0");
+    } else if (quarterType == 3) {
+      if (quaterAchieved !== filteredCumulativeData[0]?.qc3)
+        SetQuaterExpenditure("0");
+    } else if (quarterType == 4) {
+      if (quaterAchieved !== filteredCumulativeData[0]?.qc4)
+        SetQuaterExpenditure("0");
+    }
+  }, [quaterAchieved]);
   return (
     <Modal
       animationOut={"fadeOut"}
@@ -196,8 +264,23 @@ export const ReactNativeModal1 = ({
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
       onModalShow={() => {
-        setQuaterAchieved("0");
-        SetQuaterExpenditure("0");
+        if (quarterType == 1) {
+          setQuaterAchieved(filteredCumulativeData[0]?.q1 || "0");
+          SetQuaterExpenditure(filteredCumulativeData[0]?.e1 || "0");
+          setComments(filteredCumulativeData[0]?.c1 || "");
+        } else if (quarterType == 2) {
+          setQuaterAchieved(filteredCumulativeData[0]?.q2 || "0");
+          SetQuaterExpenditure(filteredCumulativeData[0]?.e2 || "0");
+          setComments(filteredCumulativeData[0]?.c2 || "");
+        } else if (quarterType == 3) {
+          setQuaterAchieved(filteredCumulativeData[0]?.q3 || "0");
+          SetQuaterExpenditure(filteredCumulativeData[0]?.e3 || "0");
+          setComments(filteredCumulativeData[0]?.c3 || "");
+        } else if (quarterType == 4) {
+          setQuaterAchieved(filteredCumulativeData[0]?.q4 || "0");
+          SetQuaterExpenditure(filteredCumulativeData[0]?.e4 || "0");
+          setComments(filteredCumulativeData[0]?.c4 || "");
+        }
       }}
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -265,19 +348,23 @@ export const ReactNativeModal1 = ({
               value={quaterAchieved}
               keyboardType="numeric"
             />
+
             <ModifiedTextInput2
               //"Cumulative to Date Achieved
               // dependentValue={quaterAchieved}
               header={"Cumulative to Date Achieved"}
               value={
                 quarterType == 1
-                  ? parseInt(stateUpdater.qc1)
+                  ? parseInt(quaterAchieved || "0")
                   : quarterType == 2
-                  ? parseInt(stateUpdater.qc1) + parseInt(quaterAchieved)
+                  ? parseInt(filteredCumulativeData[0]?.qc1 || "0") +
+                    parseInt(quaterAchieved)
                   : quarterType == 3
-                  ? parseInt(stateUpdater.qc2) + parseInt(quaterAchieved)
+                  ? parseInt(filteredCumulativeData[0]?.qc2 || "0") +
+                    parseInt(quaterAchieved)
                   : quarterType == 4
-                  ? parseInt(stateUpdater.qc3) + parseInt(quaterAchieved)
+                  ? parseInt(filteredCumulativeData[0]?.qc3 || "0") +
+                    parseInt(quaterAchieved)
                   : "0"
               }
               editable={false}
@@ -305,13 +392,16 @@ export const ReactNativeModal1 = ({
               header={`Cumulative Expenditure(Ugx)`}
               value={
                 quarterType == 1
-                  ? parseInt(stateUpdater.qe1)
+                  ? parseInt(quaterExpenditure || "0")
                   : quarterType == 2
-                  ? parseInt(stateUpdater.qe1) + parseInt(quaterExpenditure)
+                  ? parseInt(filteredCumulativeData[0]?.qe1 || "0") +
+                    parseInt(quaterExpenditure)
                   : quarterType == 3
-                  ? parseInt(stateUpdater.qe2) + parseInt(quaterExpenditure)
+                  ? parseInt(filteredCumulativeData[0]?.qe2 || "0") +
+                    parseInt(quaterExpenditure)
                   : quarterType == 4
-                  ? parseInt(stateUpdater.qe3) + parseInt(quaterExpenditure)
+                  ? parseInt(filteredCumulativeData[0]?.qe3 || "0") +
+                    parseInt(quaterExpenditure)
                   : "0"
               }
               editable={false}

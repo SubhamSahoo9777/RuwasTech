@@ -1,31 +1,78 @@
-const quarterOparetion={
-    qc1:"0",
-    qc2:"0",
-    qc3:"0",
-    qc4:"0",
-    qe1:"0",
-    qe2:"0",
-    qe3:"0",
-    qe4:"0",
-    totalAnuallBudget:"0",
-    totalExpenditure:"0",
-    totalCumulativeExpenditure:"0"
-}
-export const TotalCalculationreducer=(state=quarterOparetion,action)=>{
-switch (action.type){
-case "quater":
-   return(
-       {
-        ...state,
-        ...action.values,
-        totalAnuallBudget:"0",
-    totalExpenditure:state.qe4 ||state.qe3||state.qe2||state.qe1,
-    totalCumulativeExpenditure:state.qc4 ||state.qc3||state.qc2||state.qc1
+const quarterOperation = [
+  {
+    qc1: "0",
+    qc2: "0",
+    qc3: "0",
+    qc4: "0",
+    qe1: "0",
+    qe2: "0",
+    qe3: "0",
+    qe4: "0",
+    Sno: "0",
+    id: "0",
+    q1: "0",
+    q2: "0",
+    q3: "0",
+    q4: "0",
+    e1: "0",
+    e2: "0",
+    e3: "0",
+    e4: "0",
+    c1: " ",
+    c2: " ",
+    c3: " ",
+    c4: " ",
+  },
+];
 
-    }
-    ) 
-    default:
+export const TotalCalculationreducer = (state = quarterOperation, action) => {
+  switch (action.type) {
+    case "quater":
+      if (action.values.Sno === undefined || action.values.id === undefined) {
+        // If Sno or id is undefined, return current state without any modifications
         return state;
-}
+      }
 
-}
+      const updatedState = state.map((item) => {
+        if (item.Sno === action.values.Sno && item.id === action.values.id) {
+          return {
+            qc1: "0",
+            qc2: "0",
+            qc3: "0",
+            qc4: "0",
+            qe1: "0",
+            qe2: "0",
+            qe3: "0",
+            qe4: "0",
+            q1: "0",
+            q2: "0",
+            q3: "0",
+            q4: "0",
+            e1: "0",
+            e2: "0",
+            e3: "0",
+            e4: "0",
+            c1: " ",
+            c2: " ",
+            c3: " ",
+            c4: " ",
+            ...item,
+            ...action.values,
+          };
+        }
+        return item;
+      });
+
+      const foundIndex = state.findIndex(
+        (item) => item.Sno === action.values.Sno && item.id === action.values.id
+      );
+      if (foundIndex === -1) {
+        updatedState.push(action.values);
+      }
+
+      return updatedState;
+
+    default:
+      return state;
+  }
+};
