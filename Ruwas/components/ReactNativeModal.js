@@ -19,6 +19,7 @@ import { height, width } from "./AllPackages";
 import masterData from "../DataBaseHandle/masterData";
 import { useDispatch, useSelector } from "react-redux";
 import ShowValueTextInput from "./ShowValueTextInput";
+import ModalPopup from "./ModalPopup";
 export const ReactNativeModal1 = ({
   isModalVisible,
   setModalVisible,
@@ -28,17 +29,13 @@ export const ReactNativeModal1 = ({
   isModalEdited,
 }) => {
   const unitData = (item !== undefined && item.item) || {};
-  console.log(unitData.Sno);
-  console.log(unitData.id);
+
   const data = useSelector((state) => state.UserReducer);
-  // console.log(data);
 
   const stateUpdater = useSelector((state) => state.TotalCalculationreducer);
   const filteredCumulativeData = stateUpdater.filter(
     (item) => item.Sno == unitData.Sno && item.id == unitData.id
   );
-  console.log(filteredCumulativeData[0]);
-  console.log(stateUpdater);
   const id = data.hasOwnProperty("sanitationid")
     ? data.sanitationid
     : data.workplanid;
@@ -56,7 +53,14 @@ export const ReactNativeModal1 = ({
     if (quarterType == 1) {
       Dispatch({
         type: "quater",
-        values: { qc1: quaterAchieved, Sno: unitData.Sno, id: unitData.id,q1:quaterAchieved,e1:quaterExpenditure,c1:comment },
+        values: {
+          qc1: quaterAchieved,
+          Sno: unitData.Sno,
+          id: unitData.id,
+          q1: quaterAchieved,
+          e1: quaterExpenditure,
+          c1: comment,
+        },
       });
       Dispatch({
         type: "quater",
@@ -75,7 +79,10 @@ export const ReactNativeModal1 = ({
             parseInt(filteredCumulativeData[0]?.qc1 || 0)
           }`,
           Sno: unitData.Sno,
-          id: unitData.id,q2:quaterAchieved,e2:quaterExpenditure,c2:comment
+          id: unitData.id,
+          q2: quaterAchieved,
+          e2: quaterExpenditure,
+          c2: comment,
         },
       });
       Dispatch({
@@ -98,7 +105,10 @@ export const ReactNativeModal1 = ({
             parseInt(filteredCumulativeData[0]?.qc2 || 0)
           }`,
           Sno: unitData.Sno,
-          id: unitData.id,q3:quaterAchieved,e3:quaterExpenditure,c3:comment
+          id: unitData.id,
+          q3: quaterAchieved,
+          e3: quaterExpenditure,
+          c3: comment,
         },
       });
       Dispatch({
@@ -121,7 +131,10 @@ export const ReactNativeModal1 = ({
             parseInt(filteredCumulativeData[0]?.qc3 || 0)
           }`,
           Sno: unitData.Sno,
-          id: unitData.id,q4:quaterAchieved,e4:quaterExpenditure,c4:comment
+          id: unitData.id,
+          q4: quaterAchieved,
+          e4: quaterExpenditure,
+          c4: comment,
         },
       });
       Dispatch({
@@ -141,7 +154,40 @@ export const ReactNativeModal1 = ({
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
-    if (
+    if (isNaN(quaterAchieved)) {
+      return alert("Please enter the Performance in quater achieved");
+    } else if (isNaN(quaterExpenditure)) {
+      return alert("Please enter expenditure");
+    } else if (comment == "") {
+      return alert("Please add comment");
+    } else if (
+      quarterType == 2 &&
+      parseInt(filteredCumulativeData[0]?.qe1 || "0") +
+        parseInt(quaterExpenditure) >
+        parseInt(unitData["funds"])
+    ) {
+      return alert(
+        "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx) "
+      );
+    } else if (
+      quarterType == 3 &&
+      parseInt(filteredCumulativeData[0]?.qe2 || "0") +
+        parseInt(quaterExpenditure) >
+        parseInt(unitData["funds"])
+    ) {
+      return alert(
+        "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx) "
+      );
+    } else if (
+      quarterType == 4 &&
+      parseInt(filteredCumulativeData[0]?.qe3 || "0") +
+        parseInt(quaterExpenditure) >
+        parseInt(unitData["funds"])
+    ) {
+      return alert(
+        "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx) "
+      );
+    } else if (
       parseInt(quaterAchieved) >
       (quarterType === "1"
         ? parseInt(unitData["quarterOne"])
@@ -168,7 +214,7 @@ export const ReactNativeModal1 = ({
         "Expenditure quarter should not be greater than annual budget"
       );
     } else {
-      alert("Data Saved");
+      alert("Data successfully saved");
       setIsModalEdited([...isModalEdited, item.id]);
       setModalVisible(false);
     }
@@ -181,7 +227,7 @@ export const ReactNativeModal1 = ({
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
-      setWorkplan(x);
+      setWorkplan(x || "0");
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "2") {
       let x =
@@ -190,7 +236,7 @@ export const ReactNativeModal1 = ({
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
-      setWorkplan(x);
+      setWorkplan(x || "0");
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "3") {
       let x =
@@ -199,7 +245,7 @@ export const ReactNativeModal1 = ({
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
-      setWorkplan(x);
+      setWorkplan(x || "0");
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "4") {
       let x =
@@ -208,7 +254,7 @@ export const ReactNativeModal1 = ({
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
-      setWorkplan(x);
+      setWorkplan(x || "0");
     }
   }, [workplan, filteredCumulativeData, unitData, quaterAchieved]);
   const toggleModal = () => {
@@ -267,23 +313,29 @@ export const ReactNativeModal1 = ({
         if (quarterType == 1) {
           setQuaterAchieved(filteredCumulativeData[0]?.q1 || "0");
           SetQuaterExpenditure(filteredCumulativeData[0]?.e1 || "0");
-          setComments(filteredCumulativeData[0]?.c1 || "");
+          setComments(filteredCumulativeData[0]?.c1 || " ");
         } else if (quarterType == 2) {
           setQuaterAchieved(filteredCumulativeData[0]?.q2 || "0");
           SetQuaterExpenditure(filteredCumulativeData[0]?.e2 || "0");
-          setComments(filteredCumulativeData[0]?.c2 || "");
+          setComments(filteredCumulativeData[0]?.c2 || " ");
         } else if (quarterType == 3) {
           setQuaterAchieved(filteredCumulativeData[0]?.q3 || "0");
           SetQuaterExpenditure(filteredCumulativeData[0]?.e3 || "0");
-          setComments(filteredCumulativeData[0]?.c3 || "");
+          setComments(filteredCumulativeData[0]?.c3 || " ");
         } else if (quarterType == 4) {
           setQuaterAchieved(filteredCumulativeData[0]?.q4 || "0");
           SetQuaterExpenditure(filteredCumulativeData[0]?.e4 || "0");
-          setComments(filteredCumulativeData[0]?.c4 || "");
+          setComments(filteredCumulativeData[0]?.c4 || " ");
         }
       }}
     >
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <View
           style={{
             backgroundColor: colors.commonTextLabelBackColor,
@@ -304,12 +356,10 @@ export const ReactNativeModal1 = ({
                 alignItems: "center",
               }}
             >
-              <ModifiedTextInput2
-                //no
-                header={"No"}
-                value={`${unitData["Sno"]}`}
-                editable={false}
-                CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
+              <ShowValueTextInput
+                label={unitData["Sno"]}
+                title={"Model No ."}
+                sty={{ width: "50%", marginTop: 20, minHeight: 52 }}
               />
               <ModifiedTextInput2
                 //Quarter Target
@@ -332,6 +382,7 @@ export const ReactNativeModal1 = ({
             <ShowValueTextInput
               label={unitData["modelActivity"]}
               title={"Model Activity"}
+              sty={{ padding: 10 }}
             />
             <ModifiedTextInput2
               //Approved Annual Workplan Target
@@ -355,17 +406,25 @@ export const ReactNativeModal1 = ({
               header={"Cumulative to Date Achieved"}
               value={
                 quarterType == 1
-                  ? parseInt(quaterAchieved || "0")
+                  ? isNaN(quaterAchieved)
+                    ? parseInt("0")
+                    : parseInt(quaterAchieved || "0")
                   : quarterType == 2
-                  ? parseInt(filteredCumulativeData[0]?.qc1 || "0") +
-                    parseInt(quaterAchieved)
+                  ? isNaN(quaterAchieved)
+                    ? parseInt(filteredCumulativeData[0]?.qc1 || "0")
+                    : parseInt(filteredCumulativeData[0]?.qc1 || "0") +
+                      parseInt(quaterAchieved || "0")
                   : quarterType == 3
-                  ? parseInt(filteredCumulativeData[0]?.qc2 || "0") +
-                    parseInt(quaterAchieved)
+                  ? isNaN(quaterAchieved)
+                    ? parseInt(filteredCumulativeData[0]?.qc2 || "0")
+                    : parseInt(filteredCumulativeData[0]?.qc2 || "0") +
+                      parseInt(quaterAchieved || "0")
                   : quarterType == 4
-                  ? parseInt(filteredCumulativeData[0]?.qc3 || "0") +
-                    parseInt(quaterAchieved)
-                  : "0"
+                  ? isNaN(quaterAchieved)
+                    ? parseInt(filteredCumulativeData[0]?.qc3 || "0")
+                    : parseInt(filteredCumulativeData[0]?.qc3 || "0") +
+                      parseInt(quaterAchieved || "0")
+                  : parseInt("0")
               }
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
@@ -373,7 +432,7 @@ export const ReactNativeModal1 = ({
             <ModifiedTextInput2
               // Workplan %
               header={`Workplan (%)`}
-              value={`${workplan} %`}
+              value={`${workplan}`}
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
@@ -392,17 +451,25 @@ export const ReactNativeModal1 = ({
               header={`Cumulative Expenditure(Ugx)`}
               value={
                 quarterType == 1
-                  ? parseInt(quaterExpenditure || "0")
+                  ? isNaN(quaterExpenditure)
+                    ? parseInt("0")
+                    : parseInt(quaterExpenditure || "0")
                   : quarterType == 2
-                  ? parseInt(filteredCumulativeData[0]?.qe1 || "0") +
-                    parseInt(quaterExpenditure)
+                  ? isNaN(quaterExpenditure)
+                    ? parseInt(filteredCumulativeData[0]?.qe1 || "0")
+                    : parseInt(filteredCumulativeData[0]?.qe1 || "0") +
+                      parseInt(quaterExpenditure || "0")
                   : quarterType == 3
-                  ? parseInt(filteredCumulativeData[0]?.qe2 || "0") +
-                    parseInt(quaterExpenditure)
+                  ? isNaN(quaterExpenditure)
+                    ? parseInt(filteredCumulativeData[0]?.qe2 || "0")
+                    : parseInt(filteredCumulativeData[0]?.qe2 || "0") +
+                      parseInt(quaterExpenditure || "0")
                   : quarterType == 4
-                  ? parseInt(filteredCumulativeData[0]?.qe3 || "0") +
-                    parseInt(quaterExpenditure)
-                  : "0"
+                  ? isNaN(quaterExpenditure)
+                    ? parseInt(filteredCumulativeData[0]?.qe3 || "0")
+                    : parseInt(filteredCumulativeData[0]?.qe3 || "0") +
+                      parseInt(quaterExpenditure || "0")
+                  : parseInt("0")
               }
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
@@ -417,23 +484,26 @@ export const ReactNativeModal1 = ({
             />
             {/* //cmt */}
             <ModifiedTextInput1
-              //Expenditure (Quarter) (Ugx)
               title={"Comments"}
               header={"Comments"}
               value={comment}
               setInput={setComments}
             />
           </ScrollView>
-          <SubmitButton
-            onPress={onSaveHandle}
-            title={"Save"}
-            buttonStyle={{
-              position: "absolute",
-              bottom: 10,
-              alignSelf: "center",
-              width: "100%",
-            }}
-          />
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <ModalPopup />
+            <View>
+              <SubmitButton
+                onPress={onSaveHandle}
+                title={"Save"}
+                buttonStyle={{
+                  width: "100%",
+                }}
+              />
+            </View>
+          </View>
           {/* -------------------------------------------logo */}
           <View style={{ position: "absolute", top: -22, right: -20 }}>
             <VectorIcon
@@ -443,6 +513,39 @@ export const ReactNativeModal1 = ({
               color="#fff"
               onPress={toggleModal}
             />
+          </View>
+          <View
+            style={{
+              position: "absolute",
+              top: -35,
+              left: 0,
+              flexDirection: "row",
+              paddingLeft: 10,
+            }}
+          >
+            <VectorIcon
+              type="FontAwesome"
+              name="hand-o-right"
+              size={20}
+              color="#fff"
+              onPress={toggleModal}
+            />
+            <Text
+              style={{
+                color: "#fff",
+                marginLeft: 15,
+                fontSize: 16,
+                fontWeight: "500",
+              }}
+            >
+              {quarterType === "1"
+                ? "Quarter One Details"
+                : quarterType === "2"
+                ? "Quarter Two Details"
+                : quarterType === "3"
+                ? "Quarter Three Details"
+                : "Quarter Four Details"}
+            </Text>
           </View>
         </View>
       </View>

@@ -7,6 +7,8 @@ const Report = ({ navigation, route }) => {
   const Dispatch = useDispatch();
   let allDetails = route.params.data.item;
   let reportType = route.params.data.type;
+  let dateParts = allDetails["date"].split(/[\/ ]/);
+  convertedDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
 
   let userinfo =
     reportType == "water"
@@ -63,35 +65,15 @@ const Report = ({ navigation, route }) => {
           </View>
 
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>
-              Quater One Funds
-            </Text>
+            <Text style={{ width: "55%", color: "#fff" }}>Date</Text>
             <Text style={{ width: "45%", color: "#fff" }}>
-              : {allDetails["quarteronefunds"] || "0"}
+              : {convertedDate || "00/00/0000"}
             </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>
-              Quater Two Funds
-            </Text>
+            <Text style={{ width: "55%", color: "#fff" }}>Status</Text>
             <Text style={{ width: "45%", color: "#fff" }}>
-              : {allDetails["quartertwofunds"] || "0"}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>
-              Quater Three Funds
-            </Text>
-            <Text style={{ width: "45%", color: "#fff" }}>
-              : {allDetails["quarterthreefunds"] || "0"}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>
-              Quater Four Funds
-            </Text>
-            <Text style={{ width: "45%", color: "#fff" }}>
-              : {allDetails["quarterfourfunds"] || "0"}
+              : {allDetails["status"] || "0"}
             </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -100,24 +82,6 @@ const Report = ({ navigation, route }) => {
             </Text>
             <Text style={{ width: "45%", color: "#fff" }}>
               : {allDetails["totalapprovedbudget"] || "0"}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>Title</Text>
-            <Text style={{ width: "45%", color: "#fff" }}>
-              : {allDetails["tittle"] || "0"}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>Date</Text>
-            <Text style={{ width: "45%", color: "#fff" }}>
-              : {allDetails["date"].slice(0, 9) || "0"}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ width: "55%", color: "#fff" }}>Status</Text>
-            <Text style={{ width: "45%", color: "#fff" }}>
-              : {allDetails["status"] || "0"}
             </Text>
           </View>
         </View>

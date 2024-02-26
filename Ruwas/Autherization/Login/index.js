@@ -5,7 +5,7 @@ import {
   Text,
   Image,
   ImageBackground,
-  Alert
+  Alert,
 } from "react-native";
 import { Hoshi } from "react-native-textinput-effects";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -64,8 +64,8 @@ const Login = ({ navigation }) => {
   const isValidEmail = (username) => {
     // Regular expression for basic email validation
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return emailPattern.test(username)
-  }
+    return emailPattern.test(username);
+  };
   const handleLogin = async () => {
     const netInfo = await NetInfo.fetch();
     const isConnected = netInfo.isConnected;
@@ -80,8 +80,8 @@ const Login = ({ navigation }) => {
       if (username !== "" && password !== "") {
         if (!isValidEmail(username)) {
           setLoading(false);
-        Alert.alert("Please enter a valid email address")
-            
+          Alert.alert("Please enter a valid email address");
+
           return;
         }
         try {
@@ -94,7 +94,7 @@ const Login = ({ navigation }) => {
             setLoading(false);
             let token1 = await response[0]?.token;
             await AsyncStorage.setItem("token", JSON.stringify(token1));
-            await AsyncStorage.setItem("userdata",JSON.stringify(response[0]));
+            await AsyncStorage.setItem("userdata", JSON.stringify(response[0]));
 
             let token2 = await AsyncStorage.getItem("token");
             if (token2 !== "") {
@@ -106,7 +106,7 @@ const Login = ({ navigation }) => {
               await createTable(temp1);
               let temp2 = { ...temp1, table: response };
               insertDataArray(temp2);
-                         Alert.alert("User Logged In Successfully");
+              Alert.alert("User Logged In Successfully");
 
               navigation.navigate("PinGeneration");
             }
@@ -126,7 +126,7 @@ const Login = ({ navigation }) => {
           setLoading(false);
           Alert.alert("Error", error.message);
         }
-      }else{
+      } else {
         if (!username) {
           alert("Please Enter Email");
 
@@ -140,8 +140,6 @@ const Login = ({ navigation }) => {
         }
         return true;
       }
-    
-      
     }
   };
   // const handleLogin = async () => {
@@ -281,7 +279,6 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     createtablesaveddata();
   }, []);
-
 
   const authFunction = async (username, password) => {
     try {

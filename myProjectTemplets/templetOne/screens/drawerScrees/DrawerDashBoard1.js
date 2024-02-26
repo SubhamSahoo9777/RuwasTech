@@ -10,6 +10,7 @@ import {
   React,
   StatusBar,
 } from "../../allProjectComponents/allPackages";
+import ModalPopup from "../../components/ModalPopup";
 
 const DrawerDashBoard1 = () => {
   useEffect(() => {
@@ -51,7 +52,8 @@ const {colors}=useTheme()
   return (
     <View style={{ flex: 1, padding: 16,backgroundColor:colors.screen.global }}>
       <StatusBar backgroundColor={colors.statusbar.dashBoardColor} barStyle="dark-content" />
-      <CustomDropDown />
+      {/* <CustomDropDown /> */}
+      <ModalPopup/>
     </View>
   );
 };

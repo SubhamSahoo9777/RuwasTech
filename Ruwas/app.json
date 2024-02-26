@@ -1,6 +1,5 @@
 {
   "expo": {
-
     "name": "RUWAS",
     "slug": "ruwas",
     "version": "1.0.0",
@@ -40,7 +39,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "bb7f893a-a882-4629-80ce-8a5d826936cb"
+        "projectId": "56071e76-80d8-4307-a8a5-1e5f1c7ea5f9"
       }
     }
   }

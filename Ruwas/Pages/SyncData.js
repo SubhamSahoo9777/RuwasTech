@@ -147,8 +147,6 @@ const SyncData = ({ navigation }) => {
     handlesubmit(formData, item);
   };
 
- 
-
   //   handlesubmit(formData, item);
   // };
   const handledeletebyid = async (item) => {
@@ -229,7 +227,7 @@ const SyncData = ({ navigation }) => {
                   onPress={() => handlePreview(item)}
                 >
                   <Text style={styles.cardText}>
-                    District Id:{" "}
+                    District:{" "}
                     {item.USERSAVEDATA &&
                       JSON.parse(item.USERSAVEDATA).BasicDetails.districtid}
                   </Text>
@@ -242,6 +240,11 @@ const SyncData = ({ navigation }) => {
                     Type:{" "}
                     {item.USERSAVEDATA &&
                       JSON.parse(item.USERSAVEDATA).BasicDetails.type}
+                  </Text>
+                  <Text style={styles.cardText}>
+                    Financial Year:{" "}
+                    {item.USERSAVEDATA &&
+                      JSON.parse(item.USERSAVEDATA).BasicDetails.year}
                   </Text>
                   <View style={styles.buttonContainer}>
                     <View
@@ -433,7 +436,8 @@ const SyncData = ({ navigation }) => {
                   >
                     Latitude
                   </Text>
-                  <Text>: {userInformation["latitude"]}</Text>
+                  <Text>: {latitude}</Text>
+                  {/* <Text>: {userInformation["latitude"]}</Text> */}
                 </View>
                 <View
                   style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}
@@ -443,7 +447,8 @@ const SyncData = ({ navigation }) => {
                   >
                     Longitude
                   </Text>
-                  <Text>: {userInformation["logitude"]}</Text>
+                  <Text>: {longitude}</Text>
+                  {/* <Text>: {userInformation["logitude"]}</Text> */}
                 </View>
                 <View
                   style={{ flexDirection: "row", backgroundColor: "#e1f9fa" }}

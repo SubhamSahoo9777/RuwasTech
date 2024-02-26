@@ -3,21 +3,24 @@ import React from "react";
 import colors from "./colors";
 import VectorIcon from "./VectorIcon";
 
-const ShowValueTextInput = ({ label = "label", title = "title" }) => {
+const ShowValueTextInput = ({ label = "label", title = "title", sty }) => {
   return (
     <View
-      style={{
-        height: 50,
-        borderWidth: 1.2,
-        borderRadius: 10,
-        borderColor: colors.commonTextBorderColor,
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexDirection: "row",
-        paddingHorizontal: 10,
-        marginTop: 15,
-        backgroundColor: colors.commonTextLabelBackColor,
-      }}
+      style={[
+        {
+          minHeight: 50,
+          borderWidth: 1.2,
+          borderRadius: 10,
+          borderColor: colors.commonTextBorderColor,
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexDirection: "row",
+          paddingHorizontal: 10,
+          marginTop: 15,
+          backgroundColor: "#e8f1fc",
+        },
+        sty,
+      ]}
     >
       <View style={{ flexDirection: "row" }}>
         {/* <VectorIcon
@@ -44,7 +47,7 @@ const ShowValueTextInput = ({ label = "label", title = "title" }) => {
           backgroundColor: colors.dropLabelBackColor,
           fontSize: 13,
           paddingHorizontal: 10,
-          fontWeight: "700",
+          fontWeight: "500",
           color: colors.dropLabelTextColor,
         }}
       >

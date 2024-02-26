@@ -30,7 +30,7 @@ export const LightScheme = {
     headerLogoColor: "#fff",
   },
   screen: {
-    global: "",
+    global: "#fff",
     login: "red",
   },
   icon: {},

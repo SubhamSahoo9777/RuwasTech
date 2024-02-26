@@ -114,7 +114,10 @@ export const AttachFile = (props) => {
       if (isPickingDocument) return; // If document picking is already in progress, return early
 
       setIsPickingDocument(true); // Set the flag to indicate document picking is in progress
-      const result = await DocumentPicker.getDocumentAsync({});
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ["application/pdf", "image/*", "application/msword"],
+        multiple: false,
+      });
 
       if (result.canceled === true) {
         setShow(true);

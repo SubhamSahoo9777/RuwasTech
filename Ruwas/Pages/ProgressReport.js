@@ -6,23 +6,26 @@ import colors from "../components/colors";
 import { CustomDropDown, AttachFile } from "../components/AllReusableComponets";
 import CommonTextInput from "../components/CommonTextInput";
 import { SubmitButton } from "../components/AllButtons";
-import { Vibration, View, ScrollView, Text, Alert } from "react-native";
+import {
+  Vibration,
+  View,
+  ScrollView,
+  Text,
+  Alert,
+  BackHandler,
+} from "react-native";
 import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
+import { convertLatLonToEastingNorthing } from "../components/GeoUtils";
 import {
-  createTable,
   insertDataArray,
-  insertDataArray2,
   retrieveData,
-  updateMasterDataUniqueKey,
-  updateMasterDataUniqueKey1,
-  updateMasterDataUniqueKey3,
-  updateWorkplanModalActivity,
 } from "../components/AllLocalDatabaseFunction";
 import { SuccessModal } from "../components/AllModals";
 import AutoSelectDrop from "../components/AutoSelectDrop";
 import { useDispatch, useSelector } from "react-redux";
 import { GpsSet } from "../CustomComponents/GpsCordinates";
+import { useFocusEffect } from "@react-navigation/native";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
 
@@ -45,6 +48,7 @@ const ProgressReport = memo(({ navigation, route }) => {
   const [apiRwsrc, setApiRwsrc] = useState([]);
   const [apiDistricts, setApiDistricts] = useState([]);
   const [apiQuater, setApiQuater] = useState([]);
+  const [place, setPlace] = useState("");
   const [addedFiles, setAddedFiles] = useState([
     {
       title: "",
@@ -140,7 +144,6 @@ const ProgressReport = memo(({ navigation, route }) => {
       }
       // -----------------------------------final result submit--------------------
       setLoading(true);
-      updateInRealDatabase();
       LocationCheak();
 
       // -------------------------------------------------------
@@ -163,6 +166,8 @@ const ProgressReport = memo(({ navigation, route }) => {
   const [latitude, setLatitude] = useState("");
   const fetchLocation = async () => {
     const { latitude, longitude } = await GpsSet();
+    const excatPlace = convertLatLonToEastingNorthing(latitude, longitude);
+    setPlace(excatPlace);
     setLongitude(latitude);
 
     setLatitude(longitude);
@@ -174,6 +179,14 @@ const ProgressReport = memo(({ navigation, route }) => {
     fetchLocation();
   }, []);
   const LocationCheak = async () => {
+    const allUserSavedData = await retrieveData("UserSavedData");
+    const existedUser = allUserSavedData.filter(
+      (item) =>
+        JSON.parse(item.USERSAVEDATA).BasicDetails.workplanid ==
+          allDetails.workplanid &&
+        JSON.parse(item.USERSAVEDATA).BasicDetails.type == userifomation.type
+    );
+    console.log(place, "pppp");
     try {
       const requestBody = {
         BasicDetails: {
@@ -181,11 +194,12 @@ const ProgressReport = memo(({ navigation, route }) => {
           logitude: longitude,
           type: userifomation.type,
           userId: userifomation.userId,
-          districtid: userifomation.districtId,
+          districtid: apiDistricts,
           workplanid:
             reportType == "water"
               ? allDetails.workplanid
               : allDetails.sanitationid,
+          year: apiYear,
         },
         modalActivityData: alltableData,
         filesAttached: addedFiles.slice(1),
@@ -215,10 +229,24 @@ const ProgressReport = memo(({ navigation, route }) => {
     } catch (error) {
       Alert.alert("Error", "Please Grand Location Permission.");
     }
+    // } else {
+    // }
   };
-  const updateInRealDatabase = () => {
-    // updateWorkplanModalActivity(alltableData[0]);
-    // console.log(alltableData, "hi");
+  useFocusEffect(
+    React.useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress
+      );
+
+      return () => {
+        backHandler.remove();
+      };
+    }, [])
+  );
+  const handleBackPress = () => {
+    clearRedux();
+    Dispatch({ type: "CLEAR_STATE" });
   };
   return (
     <>
@@ -253,13 +281,6 @@ const ProgressReport = memo(({ navigation, route }) => {
                   : allDetails["sanitationid"] || "0"}
               </Text>
             </View>
-            {/* <View style={{ flexDirection: "row", width: "60%" }}>
-              <Text style={{ color: "#fff", fontSize: 15 }}>Planed Budget</Text>
-              <Text style={{ color: "#fff", fontSize: 15 }}>
-                {" "}
-                : {allDetails.totalapprovedbudget || "0"}
-              </Text>
-            </View> */}
           </View>
           <Text
             style={{
@@ -272,7 +293,7 @@ const ProgressReport = memo(({ navigation, route }) => {
               marginBottom: 10,
             }}
           >
-            {"Planed Budget :"}
+            {"Total Approved Budget :"}
             {"  "}
             {allDetails.totalapprovedbudget || "0"}
           </Text>
@@ -469,29 +490,29 @@ const ProgressReport = memo(({ navigation, route }) => {
           show={show}
           setShow={setShow}
           type="info"
-          title="Can't Fetch Data From Your Local DataBase"
-          content="Need To ReStart The App"
+          title="Can't fetch data from your local dataBase"
+          content="Need to reStart the app"
         />
         <SuccessModal
           show={addErrorModal}
           setShow={setAddErrorModal}
           type="warning"
-          title="You Have Not Selected Any File"
+          title="You have not selected any file"
           content="Please Select At least One File And File Description"
         />
         <SuccessModal
           show={addModal}
           setShow={setAddModal}
           type="warning"
-          title="Please Press On The Add Button"
-          content="By Pressing On Attach Button You Can Able To Add Selected Files"
+          title="Please press on the add button"
+          content="By pressing on attach button you can able to add selected files"
         />
         <SuccessModal
           show={finalSuccessModal}
           setShow={setFinalSuccessModal}
           type="success"
-          title="You Have Successfully Filled The Data"
-          content="Thanks For Your Cooperate "
+          title="You have successfully saved the data"
+          content=""
         />
       </View>
       {loading && <LottieFileLoader />}

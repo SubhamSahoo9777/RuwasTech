@@ -52,7 +52,11 @@ const Dashboard = ({ navigation }) => {
 
     fetchData();
   }, []);
-
+  useEffect(() => {
+    Dispatch({
+      type: "CLEAR_STATE",
+    });
+  }, []);
   const toggleTap = () => {
     setTap(!tap);
   };
