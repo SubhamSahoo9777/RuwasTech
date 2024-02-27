@@ -12,7 +12,7 @@ export const AnimatedLogoImage = ({
   easing = "linear",
   iterationCount = "infinite",
   duration = 2000,
-  content="My Name Is  Subham",
+  content = "My Name Is  Subham",
   source = (
     <VectorIcon type="AntDesign" name="rightcircle" size={24} color="#fff" />
   ),
@@ -92,6 +92,36 @@ export const RotationAnimation = ({
           {source}
         </Animatable.View>
       </TouchableOpacity>
+    </View>
+  );
+};
+export const TextAnimation = ({ text = "RUWAS", imageLogoStyle }) => {
+  return (
+    <View style={{}}>
+      <Animatable.View
+        style={[
+          {
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 10,
+          },
+          imageLogoStyle,
+        ]}
+      >
+        {[...text].map((letter, index) => (
+          <Animatable.Text
+            key={index}
+            animation={index == 0 ? "slideInLeft" : "slideInRight"}
+            iterationCount={1}
+            duration={2000 + index * 300}
+            easing={"ease"}
+            style={{ color: "#fff", fontSize: 25 }}
+          >
+            {letter}
+          </Animatable.Text>
+        ))}
+      </Animatable.View>
     </View>
   );
 };

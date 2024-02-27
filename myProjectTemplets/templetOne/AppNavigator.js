@@ -12,6 +12,8 @@ import Splash from "./screens/stackScreens/Splash";
 import Profile from "./screens/stackScreens/Profile";
 import Settings from "./screens/stackScreens/Settings";
 import { useTheme } from "react-native-paper";
+import PinGeneration from "./screens/stackScreens/PinGeneration";
+import ConformPin from "./screens/stackScreens/ConformPin";
 
 const Stack = createStackNavigator();
 
@@ -31,7 +33,17 @@ export default function AppNavigator() {
           ...TransitionPresets.ModalFadeTransition,
         }}
       >
-        {/* <Stack.Screen
+        <Stack.Screen
+          name="PinGeneration"
+          component={PinGeneration}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ConformPin"
+          component={ConformPin}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Splash"
           component={Splash}
           options={{ headerShown: false }}
@@ -45,7 +57,7 @@ export default function AppNavigator() {
           name="LogIn"
           component={LogIn}
           options={{ headerShown: false }}
-        /> */}
+        />
 
         <Stack.Screen
           name="NavigateDecider"

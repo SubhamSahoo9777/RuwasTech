@@ -46,6 +46,7 @@ export const CustomTextInput = ({
           marginBottom: 10,
           borderRadius: 5,
           color: theme.textColor,
+          marginTop: 5,
         },
         style,
       ]}
@@ -53,11 +54,25 @@ export const CustomTextInput = ({
     />
   );
 };
-export const TextInputOne = () => {
+export const TextInputOne = ({
+  placeholder,
+  title,
+  placeholderTextColor,
+  style,
+  style1,
+  onChangeText,
+  value,
+}) => {
   return (
-    <View style={{ marginTop: 10 }}>
-      <Text style={{ color: "#fff", marginLeft: 5 }}>Title</Text>
-      <CustomTextInput style={{ marginTop: 5 }} />
+    <View style={[{ marginTop: 10 }, style1]}>
+      <Text style={{ color: "#fff", marginLeft: 5 }}>{title}</Text>
+      <CustomTextInput
+        placeholder={placeholder}
+        placeholderTextColor={placeholderTextColor}
+        style={style}
+        onChangeText={onChangeText}
+        value={value}
+      />
     </View>
   );
 };

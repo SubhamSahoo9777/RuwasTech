@@ -3,14 +3,17 @@ import {
   React,
   useState,
   View,
+  LinearGradient,
+  Image,
   Text,
-  SafeAreaView,
 } from "../../allProjectComponents/allPackages";
-import { CustomTextInput } from "../../allProjectComponents/masterTextInput";
+import { TextInputOne } from "../../allProjectComponents/masterTextInput";
 import { CustomButton } from "../../allProjectComponents/AllButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { customStyle } from "../../components/allStyles";
 import { CommonModal } from "../../allProjectComponents/masterModals";
+import ImageView from "../../allProjectComponents/imageView";
+import { TextAnimation } from "../../allProjectComponents/AnimatedLogoImage";
 const loginStyle = customStyle.login;
 const LogIn = ({ navigation }) => {
   const theme = useTheme();
@@ -34,6 +37,7 @@ const LogIn = ({ navigation }) => {
       SetShowErrorApiModal(true);
     }
   };
+  const checkAuthenticateUser = async () => {};
   return (
     <View
       style={[
@@ -41,34 +45,69 @@ const LogIn = ({ navigation }) => {
         { backgroundColor: theme.colors.screen.login },
       ]}
     >
-      <SafeAreaView style={[loginStyle.container]}>
-        <Text style={loginStyle.title}>Login !</Text>
-        <CustomTextInput
-          placeholderTextColor="#ebe1c5"
-          style={loginStyle.input}
-          placeholder="Username"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-        />
-        <CustomTextInput
-          placeholderTextColor="#ebe1c5"
-          style={loginStyle.input}
-          placeholder="Password"
-          secureTextEntry
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-        />
-        <CustomButton title="LogIn" onPress={handleLogin} />
-        <Text style={{ color: "#fff", marginTop: 15 }}>
-          New User ?{"   "}
-          <Text
-            style={{ color: "yellow" }}
-            onPress={() => navigation.navigate("SignUp")}
+      <ImageView imageSource={require("../../assets/waterBackground.jpg")}>
+        <LinearGradient
+          colors={[
+            "rgba(32, 24, 127, 1)",
+            "rgba(32, 24, 127, 0.5)",
+            "rgba(32, 24, 127, 0.3)",
+            "rgba(32, 24, 127, 0.1)",
+          ]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            flex: 1,
+            padding: 20,
+            justifyContent: "center",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 20,
+            }}
           >
-            SignUp
-          </Text>
-        </Text>
-      </SafeAreaView>
+            <Image
+              source={require("../../assets/logo.png")}
+              style={{ height: 100, width: 100 }}
+            />
+            <TextAnimation />
+            <Text style={{ color: "#fff" }}>
+              {" "}
+              Ministry of Water & Environment
+            </Text>
+          </View>
+          <TextInputOne
+            placeholder={"Email"}
+            title="Enter Email"
+            placeholderTextColor={"rgba(255, 255, 255, 0.7)"}
+            onChangeText={(text) => setUsername(text)}
+            value={username}
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+          />
+          <TextInputOne
+            placeholder={"Password"}
+            title="Enter Password"
+            placeholderTextColor={"rgba(255, 255, 255, 0.7)"}
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            secureTextEntry={true}
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+          />
+          <CustomButton
+            title="LogIn"
+            onPress={handleLogin}
+            buttonStyle={{
+              paddingVertical: 11,
+              borderRadius: 5,
+              marginTop: 10,
+            }}
+            textStyle={{ fontSize: 16 }}
+          />
+        </LinearGradient>
+      </ImageView>
+
       <CommonModal
         show={showNullPasswordMoadal}
         setShow={setShowNullPasswordMoadal}
