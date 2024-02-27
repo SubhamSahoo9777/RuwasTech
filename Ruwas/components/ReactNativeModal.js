@@ -347,7 +347,7 @@ export const ReactNativeModal1 = ({
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 70 }}
+            contentContainerStyle={{ paddingBottom: 40 }}
           >
             <View
               style={{
@@ -493,14 +493,14 @@ export const ReactNativeModal1 = ({
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <ModalPopup />
-            <View>
+            <View style={{ width: "20%" }}>
+              <ModalPopup />
+            </View>
+            <View style={{ width: "80%" }}>
               <SubmitButton
                 onPress={onSaveHandle}
                 title={"Save"}
-                buttonStyle={{
-                  width: "100%",
-                }}
+                textStyle={{fontSize:15}}
               />
             </View>
           </View>

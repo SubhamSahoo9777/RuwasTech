@@ -2,17 +2,20 @@ import { View } from "react-native";
 import React from "react";
 import { CustomButton } from "./AllButtons";
 import VectorIcon from "./VectorIcon";
+import { useTheme } from "react-native-paper";
 
 const CustomDrawerContent = ({ navigation }) => {
   const navigateAndCloseDrawer = (screen) => {
     navigation.closeDrawer();
     navigation.navigate(screen);
   };
+  const theme = useTheme().colors.drawer;
+  console.log(theme.bodyColor);
   const defaultButton = {
     navigationName: "DrawerDashBoard",
     buttonTitle: "DashBoard",
     buttonStyle: { backgroundColor: "transparent" },
-    textStyle: { width: "94%", paddingLeft: 10, color: "green" },
+    textStyle: { width: "94%", paddingLeft: 10, color: "#fff" },
     icon: (
       <VectorIcon
         type="MaterialIcons"
@@ -32,7 +35,7 @@ const CustomDrawerContent = ({ navigation }) => {
           type="MaterialIcons"
           name="dashboard-customize"
           size={24}
-          color="green"
+          color="#fff"
         />
       ),
     },
@@ -45,7 +48,7 @@ const CustomDrawerContent = ({ navigation }) => {
           type="Ionicons"
           name="settings-sharp"
           size={24}
-          color="green"
+          color="#fff"
         />
       ),
     },
@@ -53,7 +56,7 @@ const CustomDrawerContent = ({ navigation }) => {
   return (
     <View
       style={{
-        backgroundColor: "#e7f0fd",
+        backgroundColor: theme.bodyColor,
         flex: 1,
         justifyContent: "space-between",
       }}

@@ -35,19 +35,22 @@ export const CustomDropDown = ({
             {
               borderRadius: 10,
               position: "absolute",
-              backgroundColor: theme.colors.dropDown.focusLabelLabelBackground,
+              backgroundColor: theme.colors.dropDown.focusLabelBackgroundColor,
               fontWeight: "700",
               color: theme.colors.dropDown.focusLabelTextColor,
               left: 22,
               top: 3,
               zIndex: 999,
               paddingHorizontal: 8,
-              fontSize: 13,
+              fontSize: 16,
             },
-            isFocus && { color: theme.colors.dropDown.focusLabelTextColor },
+            isFocus && {
+              color: theme.colors.dropDown.focusLabelTextColor,
+              backgroundColor: theme.colors.dropDown.focusLabelBackgroundColor,
+            },
           ]}
         >
-          {title || "choose title"} <Text style={{ color: "red" }}>*</Text>
+          {title || "Choose title"} <Text style={{ color: "red" }}>*</Text>
         </Text>
       );
     }
@@ -60,19 +63,27 @@ export const CustomDropDown = ({
         style={[
           {
             height: 50,
-            borderColor:colors.dropBorderColor,
+            borderColor: theme.colors.dropDown.borderColor,
             borderWidth: 1.5,
             borderRadius: 8,
             paddingHorizontal: 8,
             backgroundColor: theme.colors.dropDown.focusBodyBackgroundColor,
           },
-          isFocus && { borderColor: theme.colors.dropDown.focusBorderColor },
+          isFocus && {
+            borderColor: theme.colors.dropDown.focusBorderColor,
+          },
         ]}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
+        placeholderStyle={{
+          fontSize: 12,
+          color: theme.colors.dropDown.bodyTextColor,
+        }}
+        selectedTextStyle={{
+          fontSize: 12,
+          color: theme.colors.dropDown.bodyTextColor,
+        }}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        iconColor={colors.dropArrowColor}
+        iconColor={theme.colors.dropDown.rightIconColor}
         data={dropData ? dropData : data1}
         search
         maxHeight={300}
@@ -96,8 +107,8 @@ export const CustomDropDown = ({
               style={styles.icon}
               color={
                 isFocus
-                  ? colors.dropFocusedIconColor
-                  : (isWrong && "red") || colors.dropIconColor
+                  ? theme.colors.dropDown.focusLeftIconColor
+                  : theme.colors.dropDown.leftIconColor
               }
               name="Safety"
               size={18}
@@ -139,7 +150,7 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 12,
-    color: colors.dropPlaceHolderTextColor,
+    color: "#fff",
   },
   selectedTextStyle: {
     fontSize: 12,

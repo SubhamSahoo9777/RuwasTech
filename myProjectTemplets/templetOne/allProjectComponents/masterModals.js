@@ -7,9 +7,9 @@ export const CommonModal = ({
   show = false,
   setShow,
   title = "Account Created Successfully",
-  content = "Anything hat happening in our day to dat life is mysterious",
+  content = "",
   type = "delete",
-  onOk,
+  onOk = () => {},
   onCancel,
   containerStyle,
   contentTextStyle,
@@ -22,7 +22,7 @@ export const CommonModal = ({
       onShow={() =>
         setTimeout(() => {
           setDelay(true);
-        }, 700)
+        }, 500)
       }
       animationType="slide"
       transparent={true}
@@ -128,7 +128,7 @@ export const CommonModal = ({
                   marginLeft: 10,
                 }}
                 onPress={() => {
-                  setDelay(false), setShow(!show);
+                  setDelay(false), onOk();
                 }}
               >
                 <Text

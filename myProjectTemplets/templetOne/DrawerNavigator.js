@@ -17,7 +17,7 @@ function DrawerNavigator() {
           drawerStyle: {
             backgroundColor: "#f7ffff",
             width: "55%",
-            marginTop: 55,
+            marginTop: 0,
           },
           headerStyle: {
             backgroundColor: theme.colors.screenHeader.global,

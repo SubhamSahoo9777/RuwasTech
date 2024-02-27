@@ -1,5 +1,6 @@
 import React from "react";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput, View, Text } from "react-native";
+import { useTheme } from "react-native-paper";
 
 export const CustomTextInput = ({
   placeholder = "Enter text",
@@ -19,6 +20,8 @@ export const CustomTextInput = ({
   style,
   ...restProps
 }) => {
+  const theme = useTheme().colors.textInput;
+  console.log(theme.titleBackgroundColor, "song");
   return (
     <TextInput
       placeholder={placeholder}
@@ -35,18 +38,55 @@ export const CustomTextInput = ({
       onFocus={onFocus}
       placeholderTextColor={placeholderTextColor}
       cursorColor={cursorColor}
-      style={[styles.input, style]}
+      style={[
+        {
+          borderWidth: 1,
+          borderColor: theme.borderColor,
+          padding: 10,
+          marginBottom: 10,
+          borderRadius: 5,
+          color: theme.textColor,
+        },
+        style,
+      ]}
       {...restProps}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderColor: "gray",
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-  },
-});
+export const TextInputOne = () => {
+  return (
+    <View style={{ marginTop: 10 }}>
+      <Text style={{ color: "#fff", marginLeft: 5 }}>Title</Text>
+      <CustomTextInput style={{ marginTop: 5 }} />
+    </View>
+  );
+};
+export const TextInputTwo = () => {
+  const theme = useTheme().colors.textInput;
+  return (
+    <View
+      style={{
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: "#fff",
+        borderRadius: 5,
+      }}
+    >
+      <CustomTextInput
+        style={{ borderWidth: 0, padding: 10, marginBottom: 0 }}
+      />
+      <Text
+        style={{
+          color: theme.titleColor,
+          position: "absolute",
+          top: -10,
+          left: 5,
+          backgroundColor: theme.titleBackgroundColor,
+          paddingHorizontal: 5,
+        }}
+      >
+        Title
+      </Text>
+    </View>
+  );
+};

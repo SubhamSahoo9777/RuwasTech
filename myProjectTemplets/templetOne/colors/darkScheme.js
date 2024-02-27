@@ -22,7 +22,12 @@ export const DarkScheme = {
     focusBodyTextColor: "#fff",
   },
   dateTimePicker: {},
-  textInput: {},
+  textInput: {
+    borderColor: "#fff",
+    textColor: "#fff",
+    titleColor: "#fff",
+    titleBackgroundColor: "#121B22",
+  },
   screenHeader: {
     global: "#1f2c34",
     dashBoardColor: "#1f2c34",
@@ -37,5 +42,8 @@ export const DarkScheme = {
   statusbar: {
     global: "#1f2c34",
     dashBoardColor: "#1f2c34",
+  },
+  drawer: {
+    bodyColor: "#1f2c34",
   },
 };
