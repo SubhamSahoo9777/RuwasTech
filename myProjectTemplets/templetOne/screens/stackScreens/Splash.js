@@ -1,6 +1,9 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ImageView from "../../allProjectComponents/imageView";
+import { LinearGradient } from "expo-linear-gradient";
+import { TextAnimation } from "../../allProjectComponents/AnimatedLogoImage";
 
 const Splash = ({ navigation }) => {
   setTimeout(() => {
@@ -9,30 +12,31 @@ const Splash = ({ navigation }) => {
 
   const existingUserCheck = async () => {
     // Corrected function name
-    const storedUsername = await AsyncStorage.getItem("username");
-    const storedPassword = await AsyncStorage.getItem("password");
-    if (storedUsername !== null && storedPassword !== null) {
-      return navigation.navigate("LogIn");
+    const pin = await AsyncStorage.getItem("PIN");
+    if (pin !== null) {
+      return navigation.navigate("PinAccess");
     }
-    return navigation.navigate("SignUp");
+    return navigation.navigate("LogIn");
   };
 
   return (
-    <View style={{backgroundColor:"#4a5ac7" ,flex:1}}>
-      <Text style={{ color: "#fff", fontSize: 50, alignSelf: "center" }}>
-        Project Template
-      </Text>
-      <Text
+    <ImageView imageSource={require("../../assets/waterBackground.jpg")}>
+      <LinearGradient
+        colors={[
+          "rgba(32, 24, 127, 1)",
+          "rgba(32, 24, 127, 0.5)",
+          "rgba(32, 24, 127, 0.3)",
+          "rgba(32, 24, 127, 0.1)",
+        ]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={{
-          color: "#fff",
-          fontSize: 20,
-          alignSelf: "flex-end",
-          marginRight: 20,
+          flex: 1,
+          padding: 20,
+          justifyContent: "center",
         }}
-      >
-        By Subham
-      </Text>
-    </View>
+      ></LinearGradient>
+    </ImageView>
   );
 };
 

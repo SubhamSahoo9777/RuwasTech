@@ -16,9 +16,9 @@ import {
 } from "@expo/vector-icons";
 
 const VectorIcon = (props) => {
-  const { type, name, size, color, onPress } = props;
+  const { type, name, size, color, onPress, style } = props;
   return (
-    <View>
+    <View style={style}>
       {type === "FontAwesome5" ? (
         <FontAwesome5 name={name} size={size} color={color} onPress={onPress} />
       ) : type === "FontAwesome" ? (

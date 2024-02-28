@@ -225,3 +225,48 @@ export const CommonModal = ({
     </Modal>
   );
 };
+export const NormalModal = ({
+  showModal = { show: false, title: "This is a Modal", head: "Error" },
+  setShowModal,
+}) => {
+  return (
+    <Modal animationType="slide" transparent={true} visible={showModal.show}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{
+            width: "auto",
+            backgroundColor: "#fff",
+            padding: 16,
+            borderRadius: 10,
+            elevation: 10,
+          }}
+        >
+          <VectorIcon
+            type="MaterialIcons"
+            name="error"
+            size={30}
+            color="red"
+            style={{ alignSelf: "center" }}
+          />
+          <Text style={{ color: "red", marginTop: 10 }}>{showModal.title}</Text>
+          <Pressable
+            style={{
+              backgroundColor: "green",
+              padding: 5,
+              alignSelf: "center",
+              borderRadius: 4,
+              marginTop: 10,
+              paddingHorizontal: 10,
+              elevation: 10,
+            }}
+            onPress={() => {
+              setShowModal({ show: false });
+            }}
+          >
+            <Text style={{ color: "#fff" }}>Ok</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+};

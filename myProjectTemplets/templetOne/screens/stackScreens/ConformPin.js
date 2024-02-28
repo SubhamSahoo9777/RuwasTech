@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { width } from "../../allProjectComponents/allPackages";
-
-export default function ConformPin({ route }) {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+export default function ConformPin({ route, navigation }) {
   const [pin, setPin] = useState("");
   const { data } = route.params;
   console.log(data);
@@ -26,11 +26,27 @@ export default function ConformPin({ route }) {
       setPin(pin.slice(0, -1));
     }
   };
-
+  // ----------------------------------------------------------------------------------------------------------handeler............................
   const handleOkPress = () => {
-    pin == data ? console.log("success") : console.log("mismatch");
+    if (pin == data) {
+      storingPin();
+      console.log("successfull saved the pin");
+      return navigation.navigate("PinAccess");
+    } else {
+      setPin("");
+      return alert("Pin is not match");
+    }
   };
 
+  //.............................................................async stroage pin....................................................................................
+  const storingPin = async () => {
+    try {
+      await AsyncStorage.setItem("PIN", JSON.stringify(pin));
+    } catch (error) {
+      console.log("Error storing PIN:", error);
+    }
+  };
+  //...............................................................................................................................................
   const togglePinVisibility = () => {
     setPinVisible(!pinVisible);
   };
@@ -58,7 +74,7 @@ export default function ConformPin({ route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: "#fff" }}>Create Your 4 Digit Pin</Text>
+      <Text style={{ color: "#fff" }}>Conform Pin</Text>
       <View style={styles.pinDisplay}>{renderPinBoxes()}</View>
       <TouchableOpacity style={{ marginTop: 10 }} onPress={togglePinVisibility}>
         <Text style={{ color: "#fff" }}>See</Text>

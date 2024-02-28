@@ -8,11 +8,16 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { width } from "../../allProjectComponents/allPackages";
-
-export default function PinGeneration({ navigation }) {
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NormalModal } from "../../allProjectComponents/masterModals";
+export default function PinAcces({ navigation }) {
   const [pin, setPin] = useState("");
   const [pinVisible, setPinVisible] = useState(false);
-
+  const [showModal, setShowModal] = useState({
+    show: false,
+    title: "This is Modal;",
+    head: "Error",
+  });
   const handlePinPress = (digit) => {
     if (pin.length < 4) {
       setPin(pin + digit);
@@ -24,14 +29,51 @@ export default function PinGeneration({ navigation }) {
       setPin(pin.slice(0, -1));
     }
   };
-//.....................................................................................................................................................handler
-  const handleOkPress = () => {
-    pin.length == 4 ? navigation.navigate("ConformPin", { data: pin }) : null;
+  //.....................................................................................handler........................................
+  const handleOkPress = async () => {
+    try {
+      let asyncPin = await getAsyncPin();
+      asyncPin = JSON.parse(asyncPin);
+      if (asyncPin && asyncPin === pin) {
+        setPin("");
+        return navigation.navigate("NavigateDecider", { data: pin });
+      } else {
+        setPin("");
+
+        return setShowModal({
+          show: true,
+          title: "You have entered an invalid pin",
+          head: "Error !",
+        });
+      }
+    } catch (error) {
+      return setShowModal({
+        show: true,
+        title: "You have entered an invalid pin",
+        head: "Error !",
+      });
+    }
   };
-//.....................................................asyncStroge to save pin..................................................................................................
 
-
-//..............................................
+  //.....................................................................................check async data................................................
+  const getAsyncPin = async () => {
+    try {
+      const asyncPin = await AsyncStorage.getItem("PIN");
+      if (asyncPin !== null) {
+        return asyncPin;
+      } else {
+        setShowModal({ show: true, title: "Pin Mismatch", head: "Error 1" });
+        return null; // Returning null in case of mismatch
+      }
+    } catch (error) {
+      return setShowModal({
+        show: true,
+        title: "Error in receiving Pin",
+        head: "Error !",
+      });
+    }
+  };
+  // ..........................................................................
   const togglePinVisibility = () => {
     setPinVisible(!pinVisible);
   };
@@ -45,7 +87,10 @@ export default function PinGeneration({ navigation }) {
           key={i}
           style={[
             styles.pinBox,
-            { backgroundColor: pin.length > i ? "#fff" : "transparent" },
+            {
+              backgroundColor: pin.length > i ? "#fff" : "transparent",
+              borderColor: showModal.show ? "red" : "#fff",
+            },
           ]}
         >
           <Text style={{ color: pinVisible ? "#000" : "transparent" }}>
@@ -59,7 +104,7 @@ export default function PinGeneration({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: "#fff" }}>Create Your 4 Digit Pin</Text>
+      <Text style={{ color: "#fff" }}>Enter Your Pin</Text>
       <View style={styles.pinDisplay}>{renderPinBoxes()}</View>
       <TouchableOpacity style={{ marginTop: 10 }} onPress={togglePinVisibility}>
         <Text style={{ color: "#fff" }}>See</Text>
@@ -111,6 +156,7 @@ export default function PinGeneration({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+      <NormalModal showModal={showModal} setShowModal={setShowModal} />
     </SafeAreaView>
   );
 }
@@ -149,5 +195,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 10,
   },
 });

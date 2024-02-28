@@ -14,6 +14,7 @@ import Settings from "./screens/stackScreens/Settings";
 import { useTheme } from "react-native-paper";
 import PinGeneration from "./screens/stackScreens/PinGeneration";
 import ConformPin from "./screens/stackScreens/ConformPin";
+import PinAccess from "./screens/stackScreens/PinAccess";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,11 @@ export default function AppNavigator() {
         }}
       >
         <Stack.Screen
+          name="Splash"
+          component={Splash}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="PinGeneration"
           component={PinGeneration}
           options={{ headerShown: false }}
@@ -44,18 +50,19 @@ export default function AppNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Splash"
-          component={Splash}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
+          name="PinAccess"
+          component={PinAccess}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="LogIn"
           component={LogIn}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
           options={{ headerShown: false }}
         />
 
