@@ -154,9 +154,9 @@ export const ReactNativeModal1 = ({
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
-    if (isNaN(quaterAchieved)) {
+    if (quaterAchieved<=0 || isNaN(quaterAchieved)) {
       return alert("Please enter the Performance in quater achieved");
-    } else if (isNaN(quaterExpenditure)) {
+    } else if (quaterExpenditure<=0 || isNaN(quaterExpenditure)) {
       return alert("Please enter expenditure");
     } else if (comment == "") {
       return alert("Please add comment");

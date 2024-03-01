@@ -71,8 +71,8 @@ export const TotalCalculationreducer = (state = quarterOperation, action) => {
       }
 
       return updatedState;
-      case "CLEAR_STATE":
-        return quarterOperation;
+    case "CLEAR_STATE":
+      return quarterOperation;
     default:
       return state;
   }

@@ -186,7 +186,7 @@ export const AttachFile = (props) => {
   );
 };
 export const ModifiedTextInput1 = (props) => {
-  const { title, setInput, header, value = "0", keyboardType } = props;
+  const { title, setInput, header, value = "", keyboardType } = props;
   const [show, setShow] = useState(true);
   const [text, setText] = useState(value);
   return (
@@ -201,6 +201,8 @@ export const ModifiedTextInput1 = (props) => {
       <TextInput
         onFocus={() => {
           setShow(true);
+          setInput("");
+          setText("");
         }}
         value={value || text}
         placeholder={show ? "" : title}

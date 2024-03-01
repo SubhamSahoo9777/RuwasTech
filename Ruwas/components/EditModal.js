@@ -8,12 +8,7 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import VectorIcon from "./VectorIcon";
-import {
-  CustomComments,
-  ModifiedTextInput1,
-  ModifiedTextInput2,
-  ModifiedTextInput3,
-} from "./AllReusableComponets";
+import { ModifiedTextInput2, ModifiedTextInput3 } from "./AllReusableComponets";
 import { SubmitButton } from "../components/AllButtons";
 import colors from "./colors";
 import { height, width } from "./AllPackages";
@@ -25,9 +20,6 @@ export const EditModal = ({
   isModalVisible,
   setModalVisible,
   item,
-  quarterType,
-  setIsModalEdited,
-  isModalEdited,
 }) => {
   const unitData = (item !== undefined && item) || {};
   console.log(unitData);
@@ -231,7 +223,7 @@ export const EditModal = ({
           </ScrollView>
           <SubmitButton
             onPress={onSaveHandle}
-            title={"Save"}
+            title={"Update"}
             buttonStyle={{
               position: "absolute",
               bottom: 10,

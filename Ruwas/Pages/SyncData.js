@@ -583,10 +583,9 @@ const SyncData = ({ navigation }) => {
                         </Text>
                       </View>
                       {/* -----------------------------------------------------------------------------edit button */}
-                      {/* <Pressable
+                      <Pressable
                         onPress={() => {
-                          setItem(activity), 
-                          setModalVisible(true);
+                          setItem(activity), setModalVisible(true);
                         }}
                         style={{ position: "absolute", top: 5, right: 10 }}
                       >
@@ -596,7 +595,7 @@ const SyncData = ({ navigation }) => {
                           size={24}
                           color={colors.tableHeaderColor}
                         />
-                      </Pressable> */}
+                      </Pressable>
                     </View>
                   ))}
                   <View
