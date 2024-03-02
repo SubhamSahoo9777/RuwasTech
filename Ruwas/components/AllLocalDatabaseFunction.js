@@ -726,3 +726,27 @@ export const deleteRowById = (tableName, rowId) => {
     );
   });
 };
+export const updateRecord = (id, newValue) => {
+  LocalDb.transaction(
+    tx => {
+      tx.executeSql(
+        `UPDATE UserSavedData SET USERSAVEDATA = ? WHERE id = ?`,
+        [newValue, id],
+        (_, results) => {
+          console.log('Rows affected:', results.rowsAffected);
+          if (results.rowsAffected > 0) {
+            console.log('Update successful');
+          } else {
+            console.log('Update failed');
+          }
+        },
+        (_, error) => {
+          console.log('Error updating record:', error);
+        }
+      );
+    },
+    error => {
+      console.log('Transaction error:', error);
+    }
+  );
+};

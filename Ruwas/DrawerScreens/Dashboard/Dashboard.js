@@ -23,7 +23,6 @@ const Dashboard = ({ navigation }) => {
     const fetchData = async () => {
       try {
         const waterWorkPlanSql = await retrieveData("waterWorkPlan");
-        console.log(waterWorkPlanSql)
         const userDetais = await retrieveData("userDetais");
         let userId = userDetais[0].userid;
         let dist = userDetais[0].districtid;

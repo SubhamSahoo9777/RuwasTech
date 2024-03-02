@@ -12,17 +12,18 @@ import { ModifiedTextInput2, ModifiedTextInput3 } from "./AllReusableComponets";
 import { SubmitButton } from "../components/AllButtons";
 import colors from "./colors";
 import { height, width } from "./AllPackages";
-import masterData from "../DataBaseHandle/masterData";
 import { useDispatch, useSelector } from "react-redux";
-import AutoSelectDrop from "./AutoSelectDrop";
 import ShowValueTextInput from "./ShowValueTextInput";
+import { retrieveData, updateRecord } from "./AllLocalDatabaseFunction";
 export const EditModal = ({
   isModalVisible,
   setModalVisible,
   item,
+  databaseId,
+  func,
+  preView,
 }) => {
   const unitData = (item !== undefined && item) || {};
-  console.log(unitData);
   //   const id = data.hasOwnProperty("sanitationid")
   //     ? data.sanitationid
   //     : data.workplanid;
@@ -41,6 +42,36 @@ export const EditModal = ({
     SetQuaterExpenditure(unitData.quarterExpenditure);
     setComments(unitData.quarterComment);
   }, [unitData]);
+
+  const updateFunc = async () => {
+    const allUserDataFromDB = await retrieveData("UserSavedData");
+    let modalDates = JSON.parse(
+      allUserDataFromDB[0].USERSAVEDATA
+    ).modalActivityData;
+    let restData = allUserDataFromDB.filter((item) => item.id == databaseId)[0]
+      .USERSAVEDATA;
+    restData = JSON.parse(restData);
+
+    modalDates = modalDates.map((item, index) => {
+      if (item.id == unitData.id) {
+        return {
+          ...unitData,
+          quarterAchieved: quaterAchieved,
+          quarterExpenditure: quaterExpenditure,
+          quarterComment: comment,
+        };
+      }
+      return item;
+    });
+    const requestBody = {
+      ...restData,
+      modalActivityData: modalDates,
+    };
+    updateRecord(databaseId, JSON.stringify(requestBody));
+    func();
+    setModalVisible(false);
+  };
+
   // const validation = () => {
   //   if (parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)) {
   //     setQuaterAchieved("");
@@ -108,6 +139,9 @@ export const EditModal = ({
       animationOutTiming={1}
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
+      onModalHide={() => {
+        preView();
+      }}
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
@@ -130,13 +164,12 @@ export const EditModal = ({
                 alignItems: "center",
               }}
             >
-              <ModifiedTextInput2
-                //no
-                header={"No"}
-                value={`${unitData["Sno"]}`}
-                editable={false}
-                CustomStyle={{ width: "49%", backgroundColor: "#e8f1fc" }}
+              <ShowValueTextInput
+                label={unitData["Sno"]}
+                title={"Model No ."}
+                sty={{ width: "50%", marginTop: 20, minHeight: 52 }}
               />
+
               <ModifiedTextInput2
                 //Quarter Target
                 header={"Quarter Target"}
@@ -221,8 +254,9 @@ export const EditModal = ({
               setInput={setComments}
             />
           </ScrollView>
+          {/* .......................................................................updateButton......................... */}
           <SubmitButton
-            onPress={onSaveHandle}
+            onPress={updateFunc}
             title={"Update"}
             buttonStyle={{
               position: "absolute",
@@ -240,6 +274,39 @@ export const EditModal = ({
               color="#fff"
               onPress={toggleModal}
             />
+          </View>
+          <View
+            style={{
+              position: "absolute",
+              top: -35,
+              left: 0,
+              flexDirection: "row",
+              paddingLeft: 10,
+            }}
+          >
+            <VectorIcon
+              type="FontAwesome"
+              name="hand-o-right"
+              size={20}
+              color="#fff"
+              onPress={toggleModal}
+            />
+            <Text
+              style={{
+                color: "#fff",
+                marginLeft: 15,
+                fontSize: 16,
+                fontWeight: "500",
+              }}
+            >
+              {unitData.id?.endsWith("a")
+                ? "Quarter One Details"
+                : unitData.id?.endsWith("b")
+                ? "Quarter Two Details"
+                : unitData.id?.endsWith("c")
+                ? "Quarter Three Details"
+                : "Quarter Four Details"}
+            </Text>
           </View>
         </View>
       </View>

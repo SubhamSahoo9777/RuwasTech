@@ -186,7 +186,6 @@ const ProgressReport = memo(({ navigation, route }) => {
           allDetails.workplanid &&
         JSON.parse(item.USERSAVEDATA).BasicDetails.type == userifomation.type
     );
-    console.log(place, "pppp");
     try {
       const requestBody = {
         BasicDetails: {

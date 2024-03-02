@@ -39,6 +39,7 @@ const SyncData = ({ navigation }) => {
   //     setModalVisible={setModalVisible}
   //     item={item}
   const [isModalVisible, setModalVisible] = useState(false);
+  const [preView, setPreView] = useState(false);
   const [item, setItem] = useState(false);
   const fetchDataFromUserSavedData = async () => {
     try {
@@ -50,11 +51,12 @@ const SyncData = ({ navigation }) => {
         return;
       }
       const allUserDataFromDB = await retrieveData("UserSavedData");
-
+ 
       const filteredUserData = allUserDataFromDB.filter(
         (user) => user.USERID === userId
       );
       setUserData(filteredUserData);
+      
     } catch (error) {
       setLoading(false);
       alert("Error", "An error occurred while fetching data");
@@ -195,6 +197,10 @@ const SyncData = ({ navigation }) => {
   const modalactivityInformation = selectedItem
     ? JSON.parse(selectedItem.USERSAVEDATA).modalActivityData
     : null;
+  const databaseId=selectedItem?.id
+    // {console.log(databaseId,"subham")}
+
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -208,6 +214,7 @@ const SyncData = ({ navigation }) => {
           <View style={{ marginTop: 20, width: "100%" }}>
             {userData && userData.length > 0 ? (
               userData.reverse().map((item, index) => (
+               
                 <View
                   key={index}
                   style={{
@@ -224,8 +231,8 @@ const SyncData = ({ navigation }) => {
                     shadowRadius: 3.84,
                     elevation: 5,
                   }}
-                  onPress={() => handlePreview(item)}
                 >
+                
                   <Text style={styles.cardText}>
                     District:{" "}
                     {item.USERSAVEDATA &&
@@ -648,46 +655,6 @@ const SyncData = ({ navigation }) => {
                 </ScrollView>
               </View>
             </View>
-
-            {/* <FlatList
-              data={[
-                ...Object.entries(
-                  JSON.parse(selectedItem.USERSAVEDATA).BasicDetails
-                ),
-                [
-                  "modalActivityData",
-                  JSON.parse(selectedItem.USERSAVEDATA).modalActivityData,
-                ],
-                [
-                  "filesAttached",
-                  JSON.parse(selectedItem.USERSAVEDATA).filesAttached,
-                ],
-              ]}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.itemContainer}>
-                  <Text style={styles.keyText}>{item[0]}:</Text>
-                  {Array.isArray(item[1]) ? (
-                    <FlatList
-                      data={item[1]}
-                      keyExtractor={(subItem, subIndex) => subIndex.toString()}
-                      renderItem={({ item: subItem }) => (
-                        <View style={styles.subItemContainer}>
-                          {Object.entries(subItem).map(([key, value]) => (
-                            <View key={key} style={styles.subItem}>
-                              <Text style={styles.subKey}>{key}:</Text>
-                              <Text style={styles.subValue}>{value}</Text>
-                            </View>
-                          ))}
-                        </View>
-                      )}
-                    />
-                  ) : (
-                    <Text style={styles.value}>{item[1]}</Text>
-                  )}
-                </View>
-              )}
-            />  */}
             <TouchableOpacity
               style={styles.closeButton}
               onPress={handleClosePreviewModal}
@@ -702,6 +669,9 @@ const SyncData = ({ navigation }) => {
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         item={item}
+        databaseId={databaseId}
+        func={fetchDataFromUserSavedData}
+        preView={handleClosePreviewModal}
       />
     </View>
   );
