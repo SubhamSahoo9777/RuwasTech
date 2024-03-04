@@ -154,9 +154,9 @@ export const ReactNativeModal1 = ({
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
-    if (quaterAchieved<=0 || isNaN(quaterAchieved)) {
+    if (quaterAchieved <= 0 || isNaN(quaterAchieved)) {
       return alert("Please enter the Performance in quater achieved");
-    } else if (quaterExpenditure<=0 || isNaN(quaterExpenditure)) {
+    } else if (quaterExpenditure <= 0 || isNaN(quaterExpenditure)) {
       return alert("Please enter expenditure");
     } else if (comment == "") {
       return alert("Please add comment");
@@ -214,6 +214,28 @@ export const ReactNativeModal1 = ({
         "Expenditure quarter should not be greater than annual budget"
       );
     } else {
+      Dispatch({
+        type: "modalUpdate",
+        object: {
+          ...unitData,
+          workplanid: id,
+          Sno: unitData["Sno"],
+          quarteSelected: quarterType,
+          quarterAchieved: quaterAchieved,
+          quarterExpenditure: quaterExpenditure,
+          quarterComment: comment,
+          modelActivity: unitData.modelActivity,
+          id: `${unitData.id}${
+            quarterType == "1"
+              ? "a"
+              : quarterType == "2"
+              ? "b"
+              : quarterType == "3"
+              ? "c"
+              : "d"
+          }`,
+        },
+      });
       alert("Data successfully saved");
       setIsModalEdited([...isModalEdited, item.id]);
       setModalVisible(false);
@@ -226,8 +248,7 @@ export const ReactNativeModal1 = ({
         (parseInt(quaterAchieved) /
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
-
-      setWorkplan(x || "0");
+      return setWorkplan(x || "0");
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "2") {
       let x =
@@ -236,7 +257,7 @@ export const ReactNativeModal1 = ({
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
-      setWorkplan(x || "0");
+      return setWorkplan(x || "0");
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "3") {
       let x =
@@ -245,7 +266,7 @@ export const ReactNativeModal1 = ({
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
-      setWorkplan(x || "0");
+      return setWorkplan(x || "0");
     }
     if (parseInt(unitData["approvedAnnualTarget"]) > 0 && quarterType == "4") {
       let x =
@@ -254,37 +275,16 @@ export const ReactNativeModal1 = ({
           parseInt(unitData["approvedAnnualTarget"])) *
         100;
 
-      setWorkplan(x || "0");
+      return setWorkplan(x || "0");
     }
-  }, [workplan, filteredCumulativeData, unitData, quaterAchieved]);
+    setWorkplan("0");
+  }, [unitData, workplan, filteredCumulativeData, quaterAchieved]);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   const onSaveHandle = () => {
     valueSendToRedux();
     validation();
-    Dispatch({
-      type: "modalUpdate",
-      object: {
-        ...unitData,
-        workplanid: id,
-        Sno: unitData["Sno"],
-        quarteSelected: quarterType,
-        quarterAchieved: quaterAchieved,
-        quarterExpenditure: quaterExpenditure,
-        quarterComment: comment,
-        modelActivity: unitData.modelActivity,
-        id: `${unitData.id}${
-          quarterType == "1"
-            ? "a"
-            : quarterType == "2"
-            ? "b"
-            : quarterType == "3"
-            ? "c"
-            : "d"
-        }`,
-      },
-    });
   };
   useEffect(() => {
     if (quarterType == 1) {
@@ -500,7 +500,7 @@ export const ReactNativeModal1 = ({
               <SubmitButton
                 onPress={onSaveHandle}
                 title={"Save"}
-                textStyle={{fontSize:15}}
+                textStyle={{ fontSize: 15 }}
               />
             </View>
           </View>

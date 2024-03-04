@@ -35,6 +35,7 @@ const SyncData = ({ navigation }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isPreviewModalVisible, setPreviewModalVisible] = useState(false);
   const [show, setShow] = useState(false);
+  const [sync, setSync] = useState(false);
   // isModalVisible={isModalVisible}
   //     setModalVisible={setModalVisible}
   //     item={item}
@@ -51,12 +52,11 @@ const SyncData = ({ navigation }) => {
         return;
       }
       const allUserDataFromDB = await retrieveData("UserSavedData");
- 
+
       const filteredUserData = allUserDataFromDB.filter(
         (user) => user.USERID === userId
       );
       setUserData(filteredUserData);
-      
     } catch (error) {
       setLoading(false);
       alert("Error", "An error occurred while fetching data");
@@ -113,6 +113,7 @@ const SyncData = ({ navigation }) => {
         const data = await response.json();
         Alert.alert("Data", data);
         updateSyncStatus(item.USERID, "true", item.id);
+        setSync(true);
         fetchDataFromUserSavedData();
         setLoading(false);
       } catch (error) {
@@ -197,9 +198,7 @@ const SyncData = ({ navigation }) => {
   const modalactivityInformation = selectedItem
     ? JSON.parse(selectedItem.USERSAVEDATA).modalActivityData
     : null;
-  const databaseId=selectedItem?.id
-    // {console.log(databaseId,"subham")}
-
+  const databaseId = selectedItem?.id;
 
   return (
     <View style={styles.container}>
@@ -213,8 +212,8 @@ const SyncData = ({ navigation }) => {
         ) : (
           <View style={{ marginTop: 20, width: "100%" }}>
             {userData && userData.length > 0 ? (
-              userData.reverse().map((item, index) => (
-               
+              userData.sort((a,b)=>b.id-a.id).map((item, index) => (
+              // userData.reverse().map((item, index) => (
                 <View
                   key={index}
                   style={{
@@ -232,7 +231,6 @@ const SyncData = ({ navigation }) => {
                     elevation: 5,
                   }}
                 >
-                
                   <Text style={styles.cardText}>
                     District:{" "}
                     {item.USERSAVEDATA &&
@@ -371,6 +369,15 @@ const SyncData = ({ navigation }) => {
         <Modal
           isVisible={isPreviewModalVisible}
           onRequestClose={() => selectedItem && handleClosePreviewModal()}
+          onShow={()=>{
+            if (selectedItem.SYNC !== null) {
+              const syncStatus = JSON.parse(selectedItem.SYNC);
+              console.log(syncStatus, "kamiya");
+              setSync(syncStatus)
+            } else {
+              setSync(false)
+            }
+          }}
         >
           <View style={styles.modalContainer}>
             <View style={{ flex: 1 }}>
@@ -596,12 +603,14 @@ const SyncData = ({ navigation }) => {
                         }}
                         style={{ position: "absolute", top: 5, right: 10 }}
                       >
-                        <VectorIcon
-                          type="FontAwesome5"
-                          name="edit"
-                          size={24}
-                          color={colors.tableHeaderColor}
-                        />
+                        {sync == false ? (
+                          <VectorIcon
+                            type="FontAwesome5"
+                            name="edit"
+                            size={24}
+                            color={colors.tableHeaderColor}
+                          />
+                        ) : null}
                       </Pressable>
                     </View>
                   ))}

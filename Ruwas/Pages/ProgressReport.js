@@ -18,6 +18,7 @@ import ProgressReportTable from "../components/ProgressReportTable";
 import LottieFileLoader from "../components/LottieFileLoader";
 import { convertLatLonToEastingNorthing } from "../components/GeoUtils";
 import {
+  createTable,
   insertDataArray,
   retrieveData,
 } from "../components/AllLocalDatabaseFunction";
@@ -28,7 +29,7 @@ import { GpsSet } from "../CustomComponents/GpsCordinates";
 import { useFocusEffect } from "@react-navigation/native";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
-
+  console.log(alltableData, "jay sri Ram");
   const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
@@ -78,7 +79,7 @@ const ProgressReport = memo(({ navigation, route }) => {
             "workplanModalActivity"
           );
           let temp = workplanModalActivityDetails.filter(
-            (item) => item.workplanid === allDetails.workplanid
+            (item) => item.workplanid === allDetails.workplanid && item.approvedAnnualTarget!=="0"
           );
           setTableDetails(temp);
         } else {
@@ -87,7 +88,7 @@ const ProgressReport = memo(({ navigation, route }) => {
           );
 
           let temp = sanitationWorkPlanModalActivity.filter(
-            (item) => item.sanitationId === allDetails.sanitationid
+            (item) => item.sanitationId === allDetails.sanitationid && item.approvedAnnualTarget!=="0"
           );
 
           setTableDetails(temp);
@@ -132,6 +133,13 @@ const ProgressReport = memo(({ navigation, route }) => {
       setLoading(false);
     }
   }, [year, rwsrc, localGovt, quarter]);
+  const recordReminder = async () => {
+    let spmTemp = {
+      tableName: "recordReminder",
+      TEXT: ["mid"],
+    };
+    console.log(await createTable(spmTemp))
+  };
   const handleSubmit = () => {
     if (
       quarter &&
@@ -216,8 +224,10 @@ const ProgressReport = memo(({ navigation, route }) => {
             },
           ],
         });
+        recordReminder();
         setLoading(false);
         setFinalSuccessModal(true);
+
         setTimeout(() => {
           clearRedux();
           navigation.navigate("Dashboard");
@@ -503,7 +513,7 @@ const ProgressReport = memo(({ navigation, route }) => {
           show={addModal}
           setShow={setAddModal}
           type="warning"
-          title="Please press on the add button"
+          title="Please press on the Attach button"
           content="By pressing on attach button you can able to add selected files"
         />
         <SuccessModal
