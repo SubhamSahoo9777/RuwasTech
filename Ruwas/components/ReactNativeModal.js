@@ -20,6 +20,8 @@ import masterData from "../DataBaseHandle/masterData";
 import { useDispatch, useSelector } from "react-redux";
 import ShowValueTextInput from "./ShowValueTextInput";
 import ModalPopup from "./ModalPopup";
+import { retrieveData, retrieveDataById } from "./AllLocalDatabaseFunction";
+import { AlertModal } from "./AllModals";
 export const ReactNativeModal1 = ({
   isModalVisible,
   setModalVisible,
@@ -150,43 +152,72 @@ export const ReactNativeModal1 = ({
       });
     }
   };
-
+  const [isDisable, setIsDisable] = useState(false);
+  const [content, setContent] = useState({ show: false });
+  const isDataEntered = async () => {
+    const id = `${unitData.id}${
+      quarterType == "1"
+        ? "a"
+        : quarterType == "2"
+        ? "b"
+        : quarterType == "3"
+        ? "c"
+        : "d"
+    }`;
+    const result = await retrieveDataById("recordReminder", id);
+    if (result.length > 0) {
+      return true;
+    }
+    return false;
+  };
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
     if (quaterAchieved <= 0 || isNaN(quaterAchieved)) {
-      return alert("Please enter the Performance in quater achieved");
+      return setContent({
+        show: true,
+        msg: "Please enter the Performance in quater achieved",
+      });
     } else if (quaterExpenditure <= 0 || isNaN(quaterExpenditure)) {
-      return alert("Please enter expenditure");
+      return setContent({
+        show: true,
+        msg: "Please enter expenditure",
+      });
     } else if (comment == "") {
-      return alert("Please add comment");
+      return setContent({
+        show: true,
+        msg: "Please add comment",
+      });
     } else if (
       quarterType == 2 &&
       parseInt(filteredCumulativeData[0]?.qe1 || "0") +
         parseInt(quaterExpenditure) >
         parseInt(unitData["funds"])
     ) {
-      return alert(
-        "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx) "
-      );
+      return setContent({
+        show: true,
+        msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
+      });
     } else if (
       quarterType == 3 &&
       parseInt(filteredCumulativeData[0]?.qe2 || "0") +
         parseInt(quaterExpenditure) >
         parseInt(unitData["funds"])
     ) {
-      return alert(
-        "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx) "
-      );
+      return setContent({
+        show: true,
+        msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
+      });
     } else if (
       quarterType == 4 &&
       parseInt(filteredCumulativeData[0]?.qe3 || "0") +
         parseInt(quaterExpenditure) >
         parseInt(unitData["funds"])
     ) {
-      return alert(
-        "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx) "
-      );
+      return setContent({
+        show: true,
+        msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
+      });
     } else if (
       parseInt(quaterAchieved) >
       (quarterType === "1"
@@ -198,21 +229,24 @@ export const ReactNativeModal1 = ({
         : parseInt(unitData["quarterOne"]))
     ) {
       setQuaterAchieved("");
-      return alert(
-        "Performance in quarter achieved should not be greater than Quarter Target"
-      );
+      return setContent({
+        show: true,
+        msg: "Performance in quarter achieved should not be greater than Quarter Target",
+      });
     } else if (
       parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)
     ) {
       setQuaterAchieved("");
-      return alert(
-        "Performance in quarter achieved should not be greater than approved annual workPlan target"
-      );
+      return setContent({
+        show: true,
+        msg: "Performance in quarter achieved should not be greater than approved annual workPlan target",
+      });
     } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
       SetQuaterExpenditure("");
-      return alert(
-        "Expenditure quarter should not be greater than annual budget"
-      );
+      return setContent({
+        show: true,
+        msg: "Expenditure quarter should not be greater than annual budget",
+      });
     } else {
       Dispatch({
         type: "modalUpdate",
@@ -236,9 +270,13 @@ export const ReactNativeModal1 = ({
           }`,
         },
       });
-      alert("Data successfully saved");
       setIsModalEdited([...isModalEdited, item.id]);
-      setModalVisible(false);
+      return setContent({
+        show: true,
+        msg: "Data successfully saved !",
+        ok:toggleModal,
+        color:"green"
+      });
     }
   };
 
@@ -310,6 +348,13 @@ export const ReactNativeModal1 = ({
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
       onModalShow={() => {
+        isDataEntered()
+          .then((x) => {
+            setIsDisable(x);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
         if (quarterType == 1) {
           setQuaterAchieved(filteredCumulativeData[0]?.q1 || "0");
           SetQuaterExpenditure(filteredCumulativeData[0]?.e1 || "0");
@@ -497,11 +542,20 @@ export const ReactNativeModal1 = ({
               <ModalPopup />
             </View>
             <View style={{ width: "80%" }}>
-              <SubmitButton
-                onPress={onSaveHandle}
-                title={"Save"}
-                textStyle={{ fontSize: 15 }}
-              />
+              {isDisable ? (
+                <SubmitButton
+                  // onPress={onSaveHandle}
+                  title={"Save"}
+                  textStyle={{ fontSize: 15 }}
+                  buttonStyle={{ backgroundColor: "gray" }}
+                />
+              ) : (
+                <SubmitButton
+                  onPress={onSaveHandle}
+                  title={"Save"}
+                  textStyle={{ fontSize: 15 }}
+                />
+              )}
             </View>
           </View>
           {/* -------------------------------------------logo */}
@@ -547,6 +601,9 @@ export const ReactNativeModal1 = ({
                 : "Quarter Four Details"}
             </Text>
           </View>
+          {/* -------------------------------------------------------------modal */}
+          <AlertModal content={content} setContent={setContent} />
+          
         </View>
       </View>
     </Modal>

@@ -372,7 +372,6 @@ const SyncData = ({ navigation }) => {
           onShow={()=>{
             if (selectedItem.SYNC !== null) {
               const syncStatus = JSON.parse(selectedItem.SYNC);
-              console.log(syncStatus, "kamiya");
               setSync(syncStatus)
             } else {
               setSync(false)

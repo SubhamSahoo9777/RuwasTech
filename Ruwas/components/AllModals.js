@@ -11,23 +11,79 @@ import {
   Alert,
   TextInput,
   Modal,
+  Vibration,
 } from "react-native";
 import { colors, height, width, scale } from "./AllPackages";
-import VectorIcon from "../components/VectorIcon"
-export const SuccessModal = (
-  { 
-    show=false,
-    setShow,
-    title="Account Created Successfully",
-    content="Anything hat happening in our day to dat life is mysterious",
-    type="delete",
-    onOk,
-    onCancel,
-    containerStyle,
-    contentTextStyle,
-    buttonTitle
-  }
-  ) => {
+import VectorIcon from "../components/VectorIcon";
+import { SubmitButton } from "./AllButtons";
+export const AlertModal = ({ content, setContent }) => {
+  const { title, msg, show ,ok,color} = content;
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={show}
+      onRequestClose={() => {
+        setContent({ ...content, show: false });
+      }}
+      onShow={()=> Vibration.vibrate(500)}
+    >
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          padding: 50,
+          backgroundColor: "rgba(0,0,0,0.5)",
+        }}
+      >
+        <Animatable.View
+        animation={{
+          from: { rotateY: "0deg" },
+          to: { rotateY: "360deg" },
+        }}
+        easing="ease-out"
+        iterationCount={1}
+        duration={500}
+          style={{
+            minHeight: height * 0.15,
+            backgroundColor: "#fff",
+            width: "100%",
+            borderRadius: 10,
+            padding: 10,
+          }}
+        >
+          <Text style={{ textAlign: "center" }}>{msg}</Text>
+          <SubmitButton
+            title={"Ok"}
+            onPress={() =>{
+              if (typeof ok === 'function') {
+                ok();
+              }
+              setContent({ ...content, show: false })
+            }}
+            textStyle={{}}
+            buttonStyle={{minHeight:30,width:"40%",alignSelf:"center",backgroundColor:color || "#cc3300",borderRadius:5}}
+          />
+        </Animatable.View>
+      </View>
+    </Modal>
+  );
+};
+
+export const SuccessModal = ({
+  show = false,
+  setShow,
+  title = "Account Created Successfully",
+  content = "Anything hat happening in our day to dat life is mysterious",
+  type = "delete",
+  onOk,
+  onCancel,
+  containerStyle,
+  contentTextStyle,
+  buttonTitle,
+}) => {
   const [delay, setDelay] = useState(false);
 
   return (
@@ -63,18 +119,21 @@ export const SuccessModal = (
           easing="ease-out"
           iterationCount={1}
           duration={500}
-          style={[{
-            width: width * 0.8,
-            maxHeight: height * 0.5,
-            margin: 20,
-            backgroundColor: "white",
-            borderRadius: 20,
-            paddingHorizontal: 20,
-            paddingTop:35,
-            paddingBottom:15,
-            alignItems: "center",
-            shadowColor: "#000",
-          },containerStyle]}
+          style={[
+            {
+              width: width * 0.8,
+              maxHeight: height * 0.5,
+              margin: 20,
+              backgroundColor: "white",
+              borderRadius: 20,
+              paddingHorizontal: 20,
+              paddingTop: 35,
+              paddingBottom: 15,
+              alignItems: "center",
+              shadowColor: "#000",
+            },
+            containerStyle,
+          ]}
         >
           <Text
             style={{
@@ -87,121 +146,158 @@ export const SuccessModal = (
             {title}
           </Text>
           <ScrollView>
-          <Text style={[{ fontSize: 13.5, width:"auto", textAlign: "center" },contentTextStyle]}>
-             {content}
+            <Text
+              style={[
+                { fontSize: 13.5, width: "auto", textAlign: "center" },
+                contentTextStyle,
+              ]}
+            >
+              {content}
             </Text>
           </ScrollView>
-          <View style={{
-            flexDirection:"row",
-            justifyContent:"center",
-            alignItems:"center"
-          }}>
-          <Pressable
+          <View
             style={{
-              marginTop: 25,
-              borderRadius: 5,
-              width: "50%",
-              elevation: 10,
-              backgroundColor: colors.success,
-              paddingVertical: 5,
-            }}
-            onPress={() => {
-              setDelay(false), setShow(!show);
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Text
+            <Pressable
               style={{
-                color: "white",
-                fontWeight: "bold",
-                textAlign: "center",
+                marginTop: 25,
+                borderRadius: 5,
+                width: "50%",
+                elevation: 10,
+                backgroundColor: colors.success,
+                paddingVertical: 5,
+              }}
+              onPress={() => {
+                setDelay(false), setShow(!show);
               }}
             >
-             {type=="delete"?"Cancel": buttonTitle || "Ok"}
-            </Text>
-          </Pressable>
-         {type=="delete"? <Pressable
-            style={{
-              marginTop: 25,
-              borderRadius: 5,
-              width: "50%",
-              elevation: 10,
-              backgroundColor:"#ff471a",
-              paddingVertical: 5,
-              marginLeft:10
-            }}
-            onPress={() => {
-              setDelay(false), setShow(!show);
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              Delete
-            </Text>
-          </Pressable>:null}
-          
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                {type == "delete" ? "Cancel" : buttonTitle || "Ok"}
+              </Text>
+            </Pressable>
+            {type == "delete" ? (
+              <Pressable
+                style={{
+                  marginTop: 25,
+                  borderRadius: 5,
+                  width: "50%",
+                  elevation: 10,
+                  backgroundColor: "#ff471a",
+                  paddingVertical: 5,
+                  marginLeft: 10,
+                }}
+                onPress={() => {
+                  setDelay(false), setShow(!show);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  Delete
+                </Text>
+              </Pressable>
+            ) : null}
           </View>
-          
-          {delay ? 
-          (
+
+          {delay ? (
             <View
-            style={{
-                  height: 46,
-                  width: 46,
-                  position: "absolute",
-                  top: -25,
-                  backgroundColor:type === "delete" ? "#ff1a1a" : 
-                  type === "success" ? "#33cc33" :
-                  type === "warning" ? "#fff" :
-                  type === "info" ? "#ffff00" :
-                  "#00b300",
-                  
-                  borderRadius:100,
-                  justifyContent:"center",
-                  alignItems:"center"
-                }}>{
-                    type =="delete"?<VectorIcon type="AntDesign" name="delete" size={30} color="#fff" />:
-                    type =="warning"?<VectorIcon type="AntDesign" name="warning" size={30} color="red" />:
-                    type =="info"?<VectorIcon type="Ionicons" name="information-circle-outline" size={30} color="black" />:
-                    type =="success"?<VectorIcon type="Ionicons" name="checkmark-sharp" size={30} color="black" />:null
-                    
-                    }
+              style={{
+                height: 46,
+                width: 46,
+                position: "absolute",
+                top: -25,
+                backgroundColor:
+                  type === "delete"
+                    ? "#ff1a1a"
+                    : type === "success"
+                    ? "#33cc33"
+                    : type === "warning"
+                    ? "#fff"
+                    : type === "info"
+                    ? "#ffff00"
+                    : "#00b300",
+
+                borderRadius: 100,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {type == "delete" ? (
+                <VectorIcon
+                  type="AntDesign"
+                  name="delete"
+                  size={30}
+                  color="#fff"
+                />
+              ) : type == "warning" ? (
+                <VectorIcon
+                  type="AntDesign"
+                  name="warning"
+                  size={30}
+                  color="red"
+                />
+              ) : type == "info" ? (
+                <VectorIcon
+                  type="Ionicons"
+                  name="information-circle-outline"
+                  size={30}
+                  color="black"
+                />
+              ) : type == "success" ? (
+                <VectorIcon
+                  type="Ionicons"
+                  name="checkmark-sharp"
+                  size={30}
+                  color="black"
+                />
+              ) : null}
             </View>
-          ) 
-          :
-           (
+          ) : (
             <View
-            style={{
-                  height: 46,
-                  width: 46,
-                  position: "absolute",
-                  top: -25,
-                  backgroundColor:type === "delete" ? "#ff1a1a" : 
-                  type === "success" ? "#33cc33" :
-                  type === "warning" ? "#fff" :
-                  type === "info" ? "#ffff00" :
-                  "#00b300",
-                  borderRadius:100,
-                  justifyContent:"center",
-                  alignItems:"center"
-                }}>
-            </View>
-          )
-          }
+              style={{
+                height: 46,
+                width: 46,
+                position: "absolute",
+                top: -25,
+                backgroundColor:
+                  type === "delete"
+                    ? "#ff1a1a"
+                    : type === "success"
+                    ? "#33cc33"
+                    : type === "warning"
+                    ? "#fff"
+                    : type === "info"
+                    ? "#ffff00"
+                    : "#00b300",
+                borderRadius: 100,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></View>
+          )}
         </Animatable.View>
       </View>
     </Modal>
   );
 };
-export const LoaderModal = ({ show, setShow,icon,title }) => {
-
+export const LoaderModal = ({ show, setShow, icon, title }) => {
   return (
     <Modal
-      onShow={() =>{}}
+      onShow={() => {}}
       animationType="slide"
       transparent={true}
       visible={show}
@@ -211,10 +307,8 @@ export const LoaderModal = ({ show, setShow,icon,title }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-        {
-          icon && icon 
-        }
-        <Text style={{marginTop:20,}}>{title && title}</Text>
+          {icon && icon}
+          <Text style={{ marginTop: 20 }}>{title && title}</Text>
         </View>
       </View>
     </Modal>

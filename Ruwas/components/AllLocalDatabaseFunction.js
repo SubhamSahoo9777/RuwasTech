@@ -152,9 +152,9 @@ export const updateWorkplanModalActivity = (objectToUpdate) => {
 
 export const retrieveDataById = (tableName, id) => {
   return new Promise((resolve, reject) => {
-    const retrieveDataSQL = `SELECT * FROM ${tableName} WHERE id = ?`; // Assuming the primary key column is named 'id'
+    const retrieveDataSQL = `SELECT * FROM ${tableName} WHERE mid = ?`; // Assuming the primary key column is named 'id'
 
-    LocalLocalDb.transaction(
+    LocalDb.transaction(
       (tx) => {
         tx.executeSql(
           retrieveDataSQL,

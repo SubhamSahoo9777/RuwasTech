@@ -25,7 +25,6 @@ export const EditModal = ({
   preView,
 }) => {
   const unitData = item || {};
-  console.log(unitData,"subham");
   const Dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [quaterAchieved, setQuaterAchieved] = useState("0");

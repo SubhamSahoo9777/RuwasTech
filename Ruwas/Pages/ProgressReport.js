@@ -29,7 +29,6 @@ import { GpsSet } from "../CustomComponents/GpsCordinates";
 import { useFocusEffect } from "@react-navigation/native";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
-  console.log(alltableData, "jay sri Ram");
   const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
@@ -138,8 +137,11 @@ const ProgressReport = memo(({ navigation, route }) => {
       tableName: "recordReminder",
       TEXT: ["mid"],
     };
-    console.log(await createTable(spmTemp))
+    let tableIds=alltableData.map((item)=>({mid:item.id}))
+    let spmTemp2 = { ...spmTemp, table: tableIds };
+    insertDataArray(spmTemp2);
   };
+
   const handleSubmit = () => {
     if (
       quarter &&
@@ -488,8 +490,10 @@ const ProgressReport = memo(({ navigation, route }) => {
               );
             }
           })}
+          {/* .......................................................save button */}
           <SubmitButton
             onPress={handleSubmit}
+            // onPress={recordReminder}
             title={"Save"}
             textStyle={{ fontSize: 20 }}
           />

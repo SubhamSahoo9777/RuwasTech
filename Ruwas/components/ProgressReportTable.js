@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, Text, View } from "react-native";
+import { FlatList, Image, ScrollView, Text, View } from "react-native";
 import colors from "./colors";
 import VectorIcon from "./VectorIcon";
 import NormalSearch from "./NormalSearch";
@@ -7,7 +7,7 @@ import Divider from "./Divider";
 import { ReactNativeModal1 } from "./ReactNativeModal";
 import ButtonSheet from "./ButtonSheet";
 
-const ProgressReportTable = ({ tableDatas, setTableDatas, quarter }) => {
+const ProgressReportTable = ({ tableDatas, quarter }) => {
   let quarterType = quarter !== undefined && quarter;
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +15,7 @@ const ProgressReportTable = ({ tableDatas, setTableDatas, quarter }) => {
   const [moadalVisiable, setModalVisiable] = useState(false);
   const [showTotal, setShowTotal] = useState(false);
   const [isModalEdited, setIsModalEdited] = useState([]);
-
+console.log(tableDatas)
   useEffect(() => {
     // Perform filtering based on the search term
     const filteredResults = tableDatas.filter((item) => {
@@ -95,12 +95,20 @@ const ProgressReportTable = ({ tableDatas, setTableDatas, quarter }) => {
               Status
             </Text>
           </View>
-
-          <ScrollView
+          {
+            tableDatas.length==0?
+            <View style={{flex:1,justifyContent:"center",alignItems:'center',height:400}}>
+<Text>..oops !! No data found</Text>
+<Image source={require("../assets/browser.png")} style={{height:70,width:70,marginTop:10}}/>
+<Text style={{marginTop:10}}>No records found in this workplan id</Text>
+            </View>
+            :
+                    <ScrollView
             removeClippedSubviews={true}
             nestedScrollEnabled={true}
-            style={{ height: 400 }}
+            style={{ height: 400,}}
           >
+            
             {filteredData.map((item, index) => (
               <View
                 key={index}
@@ -143,6 +151,8 @@ const ProgressReportTable = ({ tableDatas, setTableDatas, quarter }) => {
               </View>
             ))}
           </ScrollView>
+            }
+
         </View>
         {/* Footer of table */}
         <View

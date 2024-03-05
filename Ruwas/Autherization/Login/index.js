@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect} from "react";
 import {
   View,
   TouchableOpacity,
@@ -22,10 +22,12 @@ import {
   retrieveData,
 } from "../../components/AllLocalDatabaseFunction";
 import NetInfo from "@react-native-community/netinfo";
+import { AlertModal } from "../../components/AllModals";
 const Login = ({ navigation }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [content, setContent] = React.useState({ show: false });
   useEffect(() => {
     const restoreUser = async () => {
       try {
@@ -46,7 +48,9 @@ const Login = ({ navigation }) => {
   React.useEffect(() => {
     TableCreations();
   }, []);
-
+const navigationFunc=()=>{
+  navigation.navigate("PinGeneration");
+}
   React.useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -106,9 +110,12 @@ const Login = ({ navigation }) => {
               await createTable(temp1);
               let temp2 = { ...temp1, table: response };
               insertDataArray(temp2);
-              Alert.alert("User Logged In Successfully");
-
-              navigation.navigate("PinGeneration");
+              setContent({
+                msg:"User Logged In Successfully",
+                show:true,
+                ok:navigationFunc,
+                color:"green"
+              })
             }
           } else {
             setLoading(false);
@@ -257,6 +264,12 @@ const Login = ({ navigation }) => {
       await createTable(temp5);
       let temp6 = { ...temp5, table: masterDistricts };
       insertDataArray(temp6);
+
+      let spmT = {
+        tableName: "recordReminder",
+        TEXT: ["mid"],
+      };
+      console.log(await createTable(spmT))
       setLoading(false);
     } catch (error) {
       alert("error fetching data");
@@ -386,6 +399,8 @@ const Login = ({ navigation }) => {
             messageStyle={{ color: "blue", fontWeight: "bold" }}
           />
         )}
+        <AlertModal content={content} setContent={setContent} />
+         
       </LinearGradient>
     </ImageBackground>
   );
