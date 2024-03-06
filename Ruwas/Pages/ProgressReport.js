@@ -29,6 +29,7 @@ import { GpsSet } from "../CustomComponents/GpsCordinates";
 import { useFocusEffect } from "@react-navigation/native";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
+  console.log(alltableData,"sktiman")
   const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
@@ -135,9 +136,9 @@ const ProgressReport = memo(({ navigation, route }) => {
   const recordReminder = async () => {
     let spmTemp = {
       tableName: "recordReminder",
-      TEXT: ["mid"],
+      TEXT: ["mid","quarterComment","quarterAchieved","quarterExpenditure"],
     };
-    let tableIds=alltableData.map((item)=>({mid:item.id}))
+    let tableIds=alltableData.map((item)=>({mid:item.id,quarterComment:item.quarterComment,quarterAchieved:item.quarterAchieved,quarterExpenditure:item.quarterExpenditure}))
     let spmTemp2 = { ...spmTemp, table: tableIds };
     insertDataArray(spmTemp2);
   };
@@ -257,7 +258,7 @@ const ProgressReport = memo(({ navigation, route }) => {
   );
   const handleBackPress = () => {
     clearRedux();
-    Dispatch({ type: "CLEAR_STATE" });
+    // Dispatch({ type: "CLEAR_STATE" });
   };
   return (
     <>

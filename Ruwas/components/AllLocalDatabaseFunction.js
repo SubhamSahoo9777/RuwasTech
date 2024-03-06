@@ -726,6 +726,29 @@ export const deleteRowById = (tableName, rowId) => {
     );
   });
 };
+export const deleteRowById1 = (tableName,culumnIdName, rowId) => {
+  return new Promise((resolve, reject) => {
+    const deleteRowSQL = `DELETE FROM ${tableName} WHERE ${culumnIdName} = ?`;
+
+    LocalDb.transaction(
+      (tx) => {
+        tx.executeSql(
+          deleteRowSQL,
+          [rowId],
+          (_, result) => {
+            if (result.rowsAffected > 0) {
+              resolve(`Row with ID ${rowId} deleted successfully from ${tableName}`);
+            } else {
+              reject(`No rows deleted from ${tableName} with ID ${rowId}`);
+            }
+          },
+          (error) => reject(`Error deleting row from ${tableName}: ${error.message}`)
+        );
+      },
+      (error) => reject(`Transaction error: ${error.message}`)
+    );
+  });
+};
 export const updateRecord = (id, newValue) => {
   LocalDb.transaction(
     tx => {

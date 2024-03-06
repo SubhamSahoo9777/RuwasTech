@@ -35,6 +35,7 @@ export const ReactNativeModal1 = ({
   const data = useSelector((state) => state.UserReducer);
 
   const stateUpdater = useSelector((state) => state.TotalCalculationreducer);
+
   const filteredCumulativeData = stateUpdater.filter(
     (item) => item.Sno == unitData.Sno && item.id == unitData.id
   );
@@ -153,7 +154,26 @@ export const ReactNativeModal1 = ({
     }
   };
   const [isDisable, setIsDisable] = useState(false);
+  const [disableData, setDisableData] = useState({});
   const [content, setContent] = useState({ show: false });
+  // const isDataEntered = async () => {
+  //   const id = `${unitData.id}${
+  //     quarterType == "1"
+  //       ? "a"
+  //       : quarterType == "2"
+  //       ? "b"
+  //       : quarterType == "3"
+  //       ? "c"
+  //       : "d"
+  //   }`;
+  //   const result = await retrieveDataById("recordReminder", id);
+  //   console.log(result, "raj");
+  //   if (result.length > 0) {
+  //     setDisableData(result[0]);
+  //     return true;
+  //   }
+  //   return false;
+  // };
   const isDataEntered = async () => {
     const id = `${unitData.id}${
       quarterType == "1"
@@ -165,11 +185,16 @@ export const ReactNativeModal1 = ({
         : "d"
     }`;
     const result = await retrieveDataById("recordReminder", id);
-    if (result.length > 0) {
+    console.log(result, "raj");
+    if (result && result.length > 0) {
+      setDisableData(result[0]);
       return true;
+    } else {
+      setDisableData({});
+      return false;
     }
-    return false;
   };
+  
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
@@ -274,8 +299,8 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Data successfully saved !",
-        ok:toggleModal,
-        color:"green"
+        ok: toggleModal,
+        color: "green",
       });
     }
   };
@@ -355,22 +380,30 @@ export const ReactNativeModal1 = ({
           .catch((err) => {
             console.error(err);
           });
-        if (quarterType == 1) {
-          setQuaterAchieved(filteredCumulativeData[0]?.q1 || "0");
-          SetQuaterExpenditure(filteredCumulativeData[0]?.e1 || "0");
-          setComments(filteredCumulativeData[0]?.c1 || " ");
-        } else if (quarterType == 2) {
-          setQuaterAchieved(filteredCumulativeData[0]?.q2 || "0");
-          SetQuaterExpenditure(filteredCumulativeData[0]?.e2 || "0");
-          setComments(filteredCumulativeData[0]?.c2 || " ");
-        } else if (quarterType == 3) {
-          setQuaterAchieved(filteredCumulativeData[0]?.q3 || "0");
-          SetQuaterExpenditure(filteredCumulativeData[0]?.e3 || "0");
-          setComments(filteredCumulativeData[0]?.c3 || " ");
-        } else if (quarterType == 4) {
-          setQuaterAchieved(filteredCumulativeData[0]?.q4 || "0");
-          SetQuaterExpenditure(filteredCumulativeData[0]?.e4 || "0");
-          setComments(filteredCumulativeData[0]?.c4 || " ");
+          console.log(isDisable)
+        if (isDisable) {
+          console.log(disableData.quarterAchieved,"hi")
+          setQuaterAchieved(disableData.quarterAchieved);
+          SetQuaterExpenditure(disableData.quarterExpenditure);
+          setComments(disableData.quarterComment);
+        } else {
+          if (quarterType == 1) {
+            setQuaterAchieved(filteredCumulativeData[0]?.q1 || "0");
+            SetQuaterExpenditure(filteredCumulativeData[0]?.e1 || "0");
+            setComments(filteredCumulativeData[0]?.c1 || " ");
+          } else if (quarterType == 2) {
+            setQuaterAchieved(filteredCumulativeData[0]?.q2 || "0");
+            SetQuaterExpenditure(filteredCumulativeData[0]?.e2 || "0");
+            setComments(filteredCumulativeData[0]?.c2 || " ");
+          } else if (quarterType == 3) {
+            setQuaterAchieved(filteredCumulativeData[0]?.q3 || "0");
+            SetQuaterExpenditure(filteredCumulativeData[0]?.e3 || "0");
+            setComments(filteredCumulativeData[0]?.c3 || " ");
+          } else if (quarterType == 4) {
+            setQuaterAchieved(filteredCumulativeData[0]?.q4 || "0");
+            SetQuaterExpenditure(filteredCumulativeData[0]?.e4 || "0");
+            setComments(filteredCumulativeData[0]?.c4 || " ");
+          }
         }
       }}
     >
@@ -538,16 +571,18 @@ export const ReactNativeModal1 = ({
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <View style={{ width: "20%" }}>
-              <ModalPopup />
-            </View>
-            <View style={{ width: "80%" }}>
+            {!isDisable && (
+              <View style={{ width: "20%" }}>
+                <ModalPopup />
+              </View>
+            )}
+            <View style={{ width: isDisable ? "100%" : "80%" }}>
               {isDisable ? (
                 <SubmitButton
                   // onPress={onSaveHandle}
                   title={"Save"}
                   textStyle={{ fontSize: 15 }}
-                  buttonStyle={{ backgroundColor: "gray" }}
+                  buttonStyle={{ backgroundColor: "hsl(245, 34%, 70%)" }}
                 />
               ) : (
                 <SubmitButton
@@ -603,7 +638,6 @@ export const ReactNativeModal1 = ({
           </View>
           {/* -------------------------------------------------------------modal */}
           <AlertModal content={content} setContent={setContent} />
-          
         </View>
       </View>
     </Modal>

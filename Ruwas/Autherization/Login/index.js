@@ -267,7 +267,7 @@ const navigationFunc=()=>{
 
       let spmT = {
         tableName: "recordReminder",
-        TEXT: ["mid"],
+        TEXT: ["mid","quarterComment","quarterAchieved","quarterExpenditure"],
       };
       console.log(await createTable(spmT))
       setLoading(false);

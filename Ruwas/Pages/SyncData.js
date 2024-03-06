@@ -18,6 +18,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import {
   deleteRowById,
+  deleteRowById1,
   retrieveData,
   updateSyncStatus,
 } from "../components/AllLocalDatabaseFunction";
@@ -150,9 +151,7 @@ const SyncData = ({ navigation }) => {
     handlesubmit(formData, item);
   };
 
-  //   handlesubmit(formData, item);
-  // };
-  const handledeletebyid = async (item) => {
+ const handledeletebyid = async (item) => {
     Alert.alert(
       "Confirm Deletion",
       "Are you sure you want to delete this item?",
@@ -172,6 +171,10 @@ const SyncData = ({ navigation }) => {
   };
 
   const deleteItem = async (item) => {
+    let allIds=JSON.parse(item.USERSAVEDATA).modalActivityData.map((item=>item.id))
+    allIds.forEach((ides)=>{
+      deleteRowOfRecordReminder( "mid",ides)
+    })
     try {
       await deleteRowById("UserSavedData", item?.id);
       fetchDataFromUserSavedData();
@@ -199,7 +202,9 @@ const SyncData = ({ navigation }) => {
     ? JSON.parse(selectedItem.USERSAVEDATA).modalActivityData
     : null;
   const databaseId = selectedItem?.id;
-
+const deleteRowOfRecordReminder=async(idName,id)=>{
+await deleteRowById1("recordReminder",idName,id)
+}
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

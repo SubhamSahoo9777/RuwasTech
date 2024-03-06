@@ -15,6 +15,7 @@ import { height, width } from "./AllPackages";
 import { useDispatch, useSelector } from "react-redux";
 import ShowValueTextInput from "./ShowValueTextInput";
 import { retrieveData, updateRecord } from "./AllLocalDatabaseFunction";
+import { AlertModal } from "./AllModals";
 
 export const EditModal = ({
   isModalVisible,
@@ -30,12 +31,18 @@ export const EditModal = ({
   const [quaterAchieved, setQuaterAchieved] = useState("0");
   const [quaterExpenditure, setQuarterExpenditure] = useState("0");
   const [comment, setComments] = useState("");
-
+  const [workPlan, setWorkplan] = useState("0");
+const [content,setContent]=useState({ show: false })
   useEffect(() => {
     setQuaterAchieved(unitData.quarterAchieved);
     setQuarterExpenditure(unitData.quarterExpenditure);
     setComments(unitData.quarterComment);
   }, [unitData]);
+
+  useEffect(() => {
+    let x=(parseFloat(quaterAchieved)/parseFloat(unitData["approvedAnnualTarget"]))*100
+    setWorkplan(isNaN(x)?"0":x)
+  }, [quaterAchieved,unitData]);
 
   const updateFunc = async () => {
     setLoading(true);
@@ -75,7 +82,57 @@ export const EditModal = ({
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+  const validation = () => {
+    // ---------------------------------------------validation for quaterAchieved
+    if (quaterAchieved==""||isNaN(quaterAchieved) || parseInt(quaterAchieved) < 0) {
+      return setContent({
+        show: true,
+        msg: "please enter a valid value for quaterAchieved",
+      });
+    }
+    if (
+      parseFloat(quaterAchieved) > parseFloat(unitData["approvedAnnualTarget"])
+    ) {
+      return setContent({
+        show: true,
+        msg: "Cumulative to Date Achieved should not be greater than Approve Annual workplan target",
+      });
+    }
+    if (
+      parseFloat(quaterAchieved) > (unitData.id?.endsWith("a")
+        ? `${unitData["quarterOne"]}`
+        : unitData.id?.endsWith("b")
+        ? `${unitData["quarterTwo"]}`
+        : unitData.id?.endsWith("c")
+        ? `${unitData["quarterFour"]}`
+        : `${unitData["quarterOne"]}`)
+    ) {
+      return setContent({
+        show: true,
+        msg: "Cumulative Expenditure(Ugx) should not exceed Quarter Target(Ugx)",
+      });
+    }
+ // ---------------------------------------------validation for quaterExpenditure
+ if (quaterExpenditure==""||isNaN(quaterExpenditure) || parseInt(quaterExpenditure) < 0) {
+  return setContent({
+    show: true,
+    msg: "please enter a valid value for quaterExpenditure",
+  });
+}
+if (parseInt(quaterExpenditure) > parseInt(unitData["funds"])) {
+  return setContent({
+    show: true,
+    msg: "Expenditure (Quarter)(Ugx) should not exceed Annual Budget(Ugx)",
+  });
+}
+// --------------------------------------------------final result after validation 
+updateFunc()
+  };
+  
+  const handleUpdate=()=>{
+    validation()
 
+  }
   return (
     <Modal
       animationOut={"fadeOut"}
@@ -160,7 +217,7 @@ export const EditModal = ({
               />
               <ModifiedTextInput2
                 header={`Workplan (%)`}
-                value={"0" || `${workplan} %`}
+                value={`${workPlan}`}
                 editable={false}
                 CustomStyle={{ backgroundColor: "#e8f1fc" }}
               />
@@ -190,10 +247,11 @@ export const EditModal = ({
                 title={"Comments"}
                 value={comment}
                 setInput={setComments}
+                header="Comments"
               />
             </ScrollView>
             <SubmitButton
-              onPress={updateFunc}
+              onPress={handleUpdate}
               title={"Update"}
               buttonStyle={{
                 position: "absolute",
@@ -245,6 +303,8 @@ export const EditModal = ({
               </Text>
             </View>
           </View>
+           {/* -------------------------------------------------------------modal */}
+           <AlertModal content={content} setContent={setContent} />
         </View>
       )}
     </Modal>
