@@ -17,7 +17,7 @@ import { colors, height, width, scale } from "./AllPackages";
 import VectorIcon from "../components/VectorIcon";
 import { SubmitButton } from "./AllButtons";
 export const AlertModal = ({ content, setContent }) => {
-  const { title, msg, show ,ok,color} = content;
+  const { title, msg, show, ok, color, vibration } = content;
 
   return (
     <Modal
@@ -27,7 +27,12 @@ export const AlertModal = ({ content, setContent }) => {
       onRequestClose={() => {
         setContent({ ...content, show: false });
       }}
-      onShow={()=> Vibration.vibrate(500)}
+      onShow={() => {
+        if (vibration && vibration==true) {
+
+          Vibration.vibrate(500);
+        }
+      }}
     >
       <View
         style={{
@@ -39,13 +44,13 @@ export const AlertModal = ({ content, setContent }) => {
         }}
       >
         <Animatable.View
-        animation={{
-          from: { rotateY: "0deg" },
-          to: { rotateY: "360deg" },
-        }}
-        easing="ease-out"
-        iterationCount={1}
-        duration={500}
+          animation={{
+            from: { rotateY: "0deg" },
+            to: { rotateY: "360deg" },
+          }}
+          easing="ease-out"
+          iterationCount={1}
+          duration={500}
           style={{
             minHeight: height * 0.15,
             backgroundColor: "#fff",
@@ -57,14 +62,20 @@ export const AlertModal = ({ content, setContent }) => {
           <Text style={{ textAlign: "center" }}>{msg}</Text>
           <SubmitButton
             title={"Ok"}
-            onPress={() =>{
-              if (typeof ok === 'function') {
+            onPress={() => {
+              if (typeof ok === "function") {
                 ok();
               }
-              setContent({ ...content, show: false })
+              setContent({ ...content, show: false });
             }}
             textStyle={{}}
-            buttonStyle={{minHeight:30,width:"40%",alignSelf:"center",backgroundColor:color || "#cc3300",borderRadius:5}}
+            buttonStyle={{
+              minHeight: 30,
+              width: "40%",
+              alignSelf: "center",
+              backgroundColor: color || "#cc3300",
+              borderRadius: 5,
+            }}
           />
         </Animatable.View>
       </View>

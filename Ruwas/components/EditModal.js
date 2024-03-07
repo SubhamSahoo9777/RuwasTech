@@ -88,6 +88,7 @@ const [content,setContent]=useState({ show: false })
       return setContent({
         show: true,
         msg: "please enter a valid value for quaterAchieved",
+        vibration:true
       });
     }
     if (
@@ -96,6 +97,7 @@ const [content,setContent]=useState({ show: false })
       return setContent({
         show: true,
         msg: "Cumulative to Date Achieved should not be greater than Approve Annual workplan target",
+        vibration:true
       });
     }
     if (
@@ -110,6 +112,7 @@ const [content,setContent]=useState({ show: false })
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Quarter Target(Ugx)",
+        vibration:true
       });
     }
  // ---------------------------------------------validation for quaterExpenditure
@@ -117,12 +120,14 @@ const [content,setContent]=useState({ show: false })
   return setContent({
     show: true,
     msg: "please enter a valid value for quaterExpenditure",
+    vibration:true
   });
 }
 if (parseInt(quaterExpenditure) > parseInt(unitData["funds"])) {
   return setContent({
     show: true,
     msg: "Expenditure (Quarter)(Ugx) should not exceed Annual Budget(Ugx)",
+    vibration:true
   });
 }
 // --------------------------------------------------final result after validation 

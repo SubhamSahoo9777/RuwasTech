@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { Avatar } from "react-native-elements";
 import MyCameraApp from "../CustomComponents/ImagePicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../components/colors";
-
+import VectorIcon from "../components/VectorIcon";
+import * as Animatable from 'react-native-animatable';
 const Profile = () => {
   const [file, setFile] = React.useState(null);
   const [userInfo, setUserInfo] = React.useState(null);
@@ -34,31 +35,56 @@ const Profile = () => {
   const renderUserInfo = () => {
     if (userInfo) {
       return (
-        <View style={styles.userInfoContainer}>
+        <Animatable.View 
+        animation="slideInUp"
+        easing="ease-out" iterationCount={1}
+        direction="alternate"
+        duration={1500}
+        style={styles.userInfoContainer}>
+          <Text style={styles.label}>Email</Text>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              marginTop: 5,
-              justifyContent: "center",
+              borderWidth: 0.5,
+              padding: 10,
+              borderRadius: 5,
             }}
           >
-            <Text style={styles.label}>Name</Text>
-            <Text style={styles.value}>: {userInfo.name}</Text>
+            <VectorIcon type="Zocial" name="email" size={24} color="#4d4791" />
+            <Text style={styles.value}>{userInfo.emailid}</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>: {userInfo.emailid}</Text>
+
+          <Text style={styles.label}>Mobile Number</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              borderWidth: 0.5,
+              padding: 10,
+              borderRadius: 5,
+            }}
+          >
+            <VectorIcon type="Ionicons" name="call" size={24} color="#4d4791" />
+            <Text style={styles.value}>{userInfo.mobileno}</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.label}>Mobile Number</Text>
-            <Text style={styles.value}>: {userInfo.mobileno}</Text>
+          <Text style={styles.label}>Department</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              borderWidth: 0.5,
+              padding: 10,
+              borderRadius: 5,
+            }}
+          >
+            <Image
+              source={require("../assets/employees.png")}
+              style={{ height: 24, width: 24 }}
+            />
+            <Text style={styles.value}>{userInfo.department}</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.label}>Department</Text>
-            <Text style={styles.value}>: {userInfo.department}</Text>
-          </View>
-        </View>
+        </Animatable.View>
       );
     } else {
       return null;
@@ -67,7 +93,28 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <MyCameraApp value={file} onDocumentChange={onFileChange} />
+      <Animatable.View
+      animation="slideInDown"
+      easing="ease-out" iterationCount={1}
+      direction="alternate"
+      duration={2000}
+        style={{
+          backgroundColor: "#f7fdfd",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50%",
+          borderBottomLeftRadius: 100,
+          borderBottomRightRadius: 100,
+          elevation:5
+        }}
+      >
+        <MyCameraApp value={file} onDocumentChange={onFileChange} />
+        <View>
+          <Text style={{ fontSize: 20, marginTop: 15, color: "#4d4791" }}>
+            {userInfo && userInfo["name"]}
+          </Text>
+        </View>
+      </Animatable.View>
       {renderUserInfo()}
     </View>
   );
@@ -76,13 +123,11 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    backgroundColor: "#f7fdfd",
-    paddingVertical: 50,
+    // alignItems: "center",
+    backgroundColor: "#ebfafa",
   },
   userInfoContainer: {
     marginTop: 30,
-    alignSelf: "center",
     paddingHorizontal: 20,
   },
   label: {
@@ -91,11 +136,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     width: "40%",
     color: colors.tableHeaderColor,
+    marginTop: 10,
   },
   value: {
     fontSize: 16,
     width: "60%",
     color: "#001a66",
+    marginLeft: 10,
   },
 });
 

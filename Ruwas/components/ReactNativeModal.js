@@ -156,24 +156,7 @@ export const ReactNativeModal1 = ({
   const [isDisable, setIsDisable] = useState(false);
   const [disableData, setDisableData] = useState({});
   const [content, setContent] = useState({ show: false });
-  // const isDataEntered = async () => {
-  //   const id = `${unitData.id}${
-  //     quarterType == "1"
-  //       ? "a"
-  //       : quarterType == "2"
-  //       ? "b"
-  //       : quarterType == "3"
-  //       ? "c"
-  //       : "d"
-  //   }`;
-  //   const result = await retrieveDataById("recordReminder", id);
-  //   console.log(result, "raj");
-  //   if (result.length > 0) {
-  //     setDisableData(result[0]);
-  //     return true;
-  //   }
-  //   return false;
-  // };
+  // ............................................................................................disable function
   const isDataEntered = async () => {
     const id = `${unitData.id}${
       quarterType == "1"
@@ -185,16 +168,34 @@ export const ReactNativeModal1 = ({
         : "d"
     }`;
     const result = await retrieveDataById("recordReminder", id);
-    console.log(result, "raj");
     if (result && result.length > 0) {
+      setQuaterAchieved(result[0].quarterAchieved);
+      SetQuaterExpenditure(result[0].quarterExpenditure);
+      setComments(result[0].quarterComment);
       setDisableData(result[0]);
       return true;
     } else {
-      setDisableData({});
+      if (quarterType == 1) {
+        setQuaterAchieved(filteredCumulativeData[0]?.q1 || "0");
+        SetQuaterExpenditure(filteredCumulativeData[0]?.e1 || "0");
+        setComments(filteredCumulativeData[0]?.c1 || " ");
+      } else if (quarterType == 2) {
+        setQuaterAchieved(filteredCumulativeData[0]?.q2 || "0");
+        SetQuaterExpenditure(filteredCumulativeData[0]?.e2 || "0");
+        setComments(filteredCumulativeData[0]?.c2 || " ");
+      } else if (quarterType == 3) {
+        setQuaterAchieved(filteredCumulativeData[0]?.q3 || "0");
+        SetQuaterExpenditure(filteredCumulativeData[0]?.e3 || "0");
+        setComments(filteredCumulativeData[0]?.c3 || " ");
+      } else if (quarterType == 4) {
+        setQuaterAchieved(filteredCumulativeData[0]?.q4 || "0");
+        SetQuaterExpenditure(filteredCumulativeData[0]?.e4 || "0");
+        setComments(filteredCumulativeData[0]?.c4 || " ");
+      }
       return false;
     }
   };
-  
+
   const [comment, setComments] = useState("");
   const [workplan, setWorkplan] = useState(0);
   const validation = () => {
@@ -202,16 +203,19 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Please enter the Performance in quater achieved",
+        vibration:true
       });
     } else if (quaterExpenditure <= 0 || isNaN(quaterExpenditure)) {
       return setContent({
         show: true,
         msg: "Please enter expenditure",
+        vibration:true
       });
     } else if (comment == "") {
       return setContent({
         show: true,
         msg: "Please add comment",
+        vibration:true
       });
     } else if (
       quarterType == 2 &&
@@ -222,6 +226,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
+        vibration:true
       });
     } else if (
       quarterType == 3 &&
@@ -232,6 +237,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
+        vibration:true
       });
     } else if (
       quarterType == 4 &&
@@ -242,6 +248,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
+        vibration:true
       });
     } else if (
       parseInt(quaterAchieved) >
@@ -257,6 +264,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Performance in quarter achieved should not be greater than Quarter Target",
+        vibration:true
       });
     } else if (
       parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)
@@ -265,14 +273,18 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Performance in quarter achieved should not be greater than approved annual workPlan target",
+        vibration:true
       });
     } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
       SetQuaterExpenditure("");
       return setContent({
         show: true,
         msg: "Expenditure quarter should not be greater than annual budget",
+        vibration:true
       });
     } else {
+      
+    valueSendToRedux();
       Dispatch({
         type: "modalUpdate",
         object: {
@@ -346,7 +358,6 @@ export const ReactNativeModal1 = ({
     setModalVisible(!isModalVisible);
   };
   const onSaveHandle = () => {
-    valueSendToRedux();
     validation();
   };
   useEffect(() => {
@@ -378,33 +389,10 @@ export const ReactNativeModal1 = ({
             setIsDisable(x);
           })
           .catch((err) => {
-            console.error(err);
+            console.log(err);
           });
-          console.log(isDisable)
-        if (isDisable) {
-          console.log(disableData.quarterAchieved,"hi")
-          setQuaterAchieved(disableData.quarterAchieved);
-          SetQuaterExpenditure(disableData.quarterExpenditure);
-          setComments(disableData.quarterComment);
-        } else {
-          if (quarterType == 1) {
-            setQuaterAchieved(filteredCumulativeData[0]?.q1 || "0");
-            SetQuaterExpenditure(filteredCumulativeData[0]?.e1 || "0");
-            setComments(filteredCumulativeData[0]?.c1 || " ");
-          } else if (quarterType == 2) {
-            setQuaterAchieved(filteredCumulativeData[0]?.q2 || "0");
-            SetQuaterExpenditure(filteredCumulativeData[0]?.e2 || "0");
-            setComments(filteredCumulativeData[0]?.c2 || " ");
-          } else if (quarterType == 3) {
-            setQuaterAchieved(filteredCumulativeData[0]?.q3 || "0");
-            SetQuaterExpenditure(filteredCumulativeData[0]?.e3 || "0");
-            setComments(filteredCumulativeData[0]?.c3 || " ");
-          } else if (quarterType == 4) {
-            setQuaterAchieved(filteredCumulativeData[0]?.q4 || "0");
-            SetQuaterExpenditure(filteredCumulativeData[0]?.e4 || "0");
-            setComments(filteredCumulativeData[0]?.c4 || " ");
-          }
-        }
+     
+      
       }}
     >
       <View
