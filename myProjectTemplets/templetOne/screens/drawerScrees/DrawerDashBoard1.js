@@ -10,22 +10,8 @@ import {
   React,
   StatusBar,
 } from "../../allProjectComponents/allPackages";
-import { CustomButton } from "../../allProjectComponents/AllButtons";
-import { CommonModal } from "../../allProjectComponents/masterModals";
-import {
-  CustomTextInput,
-  TextInputOne,
-  TextInputTwo,
-} from "../../allProjectComponents/masterTextInput";
 import { useFocusEffect } from "@react-navigation/native";
-import {
-  AnimatedLogoImage,
-  RotationAnimation,
-} from "../../allProjectComponents/AnimatedLogoImage";
-import VectorIcon from "../../allProjectComponents/VectorIcon";
 const DrawerDashBoard1 = () => {
-  const [show, setShow] = useState(false);
-  const [text, setText] = useState("");
 
   useFocusEffect(
     React.useCallback(() => {
@@ -77,30 +63,9 @@ const DrawerDashBoard1 = () => {
         backgroundColor={colors.statusbar.dashBoardColor}
         barStyle="dark-content"
       />
-      {/* <CustomDropDown /> */}
-      <CustomTextInput value={text} onChangeText={(t) => setText(t)} />
-      <CustomButton onPress={() => console.log(text)} />
-      <TextInputOne />
-      <TextInputTwo />
-      {/* <AnimatedLogoImage
-        imageLogoAnimate
-        source={
-          <VectorIcon
-            type="MaterialCommunityIcons"
-            name="sync"
-            size={24}
-            color="#fff"
-          />
-        }
-      /> */}
-      <AnimatedLogoImage
-        imageLogoAnimate
-        animation="wobble"
-        iterationCount={1}
-        duration={500}
-        source={<CustomButton onPress={() => console.log(text)} />}
-        imageLogostyle={{ justifyContent: "", alignItems: "" }}
-      />
+    
+
+
     </View>
   );
 };

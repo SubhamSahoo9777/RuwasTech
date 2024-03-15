@@ -29,7 +29,6 @@ import { GpsSet } from "../CustomComponents/GpsCordinates";
 import { useFocusEffect } from "@react-navigation/native";
 const ProgressReport = memo(({ navigation, route }) => {
   const alltableData = useSelector((state) => state.ModalActivityReducer);
-  console.log(alltableData,"sktiman")
   const userifomation = useSelector((state) => state.UserdetailsReducer);
   const allDetails = route.params.data.allDetails;
   const reportType = route.params.data.reportType;
@@ -353,7 +352,7 @@ const ProgressReport = memo(({ navigation, route }) => {
               marginTop: 10,
             }}
           >
-            {"Funds Received Cumulative"}
+            {"Funds Received Cumulative : 0"}
           </Text>
           {showTable ? (
             <View>

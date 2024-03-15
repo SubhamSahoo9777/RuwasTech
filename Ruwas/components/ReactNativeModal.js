@@ -457,6 +457,15 @@ export const ReactNativeModal1 = ({
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
+            {
+              isDisable?
+              <ShowValueTextInput
+              label={quaterAchieved}
+              title={"Performance in Quarter Achieved"}
+              sty={{ padding: 10 }}
+            />
+            :
+
             <ModifiedTextInput1
               //Performance in Quarter Achieved
               setInput={setQuaterAchieved}
@@ -465,6 +474,7 @@ export const ReactNativeModal1 = ({
               value={quaterAchieved}
               keyboardType="numeric"
             />
+            }
 
             <ModifiedTextInput2
               //"Cumulative to Date Achieved
@@ -502,6 +512,14 @@ export const ReactNativeModal1 = ({
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
+            {
+              isDisable?
+               <ShowValueTextInput
+               label={quaterExpenditure}
+               title={"Expenditure (Quarter)(Ugx)"}
+               sty={{ padding: 10 }}
+             />
+             :
 
             <ModifiedTextInput1
               //Expenditure (Quarter) (Ugx)
@@ -511,6 +529,7 @@ export const ReactNativeModal1 = ({
               setInput={SetQuaterExpenditure}
               keyboardType="numeric"
             />
+            }
             <ModifiedTextInput2
               //Cumulative Expenditure(Ugx)
               setInput={setText}
@@ -549,12 +568,21 @@ export const ReactNativeModal1 = ({
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             {/* //cmt */}
-            <ModifiedTextInput1
+            {
+              isDisable?
+              <ShowValueTextInput
+              label={comment}
               title={"Comments"}
-              header={"Comments"}
-              value={comment}
-              setInput={setComments}
+              sty={{ padding: 10 }}
             />
+              :
+              <ModifiedTextInput1
+                title={"Comments"}
+                header={"Comments"}
+                value={comment}
+                setInput={setComments}
+              />
+            }
           </ScrollView>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
