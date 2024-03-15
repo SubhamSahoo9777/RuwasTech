@@ -330,7 +330,7 @@ const ProgressReport = memo(({ navigation, route }) => {
               marginTop: 10,
             }}
           >
-            {"Funds Received (UGX) :"}
+            {"Funds Planned (UGX) :"}
             {"  "}
             {quarter == "1"
               ? allDetails.quarteronefunds
@@ -352,7 +352,17 @@ const ProgressReport = memo(({ navigation, route }) => {
               marginTop: 10,
             }}
           >
-            {"Funds Received Cumulative : 0"}
+            {"Funds Received Cumulative :"}
+            {"  "}
+            {quarter == "1"
+              ? parseFloat(allDetails.quarteronefunds)
+              : quarter == "2"
+              ? parseFloat(allDetails.quarteronefunds)+parseFloat(allDetails.quartertwofunds)
+              : quarter == "3"
+              ? parseFloat(allDetails.quartertwofunds)+parseFloat(allDetails.quarterthreefunds)
+              : quarter == "4"
+              ? parseFloat(allDetails.quarterthreefunds)+parseFloat(allDetails.quarterfourfunds)
+              : null}
           </Text>
           {showTable ? (
             <View>
