@@ -51,7 +51,7 @@ export const ReactNativeModal1 = ({
   const [quaterExpenditure, SetQuaterExpenditure] = useState(
     unitData["quarterOneExpenditure"]
   );
-
+ 
   const valueSendToRedux = () => {
     if (quarterType == 1) {
       Dispatch({
@@ -157,6 +157,26 @@ export const ReactNativeModal1 = ({
   const [disableData, setDisableData] = useState({});
   const [content, setContent] = useState({ show: false });
   // ............................................................................................disable function
+  const cheakDisableByMonth=()=>{
+    if(quarterType==1){
+       return ["07","08","09","10"].includes(getCurrentMonth())
+    }
+    if(quarterType==2){
+       return ["10","11","12","01"].includes(getCurrentMonth())
+    }
+    if(quarterType==3){
+       return ["01","02","03","04"].includes(getCurrentMonth())
+    }
+    if(quarterType==4){
+       return ["04","05","06","06"].includes(getCurrentMonth())
+    }
+  }
+  const getCurrentMonth = () => {
+    const d = new Date();
+    const options = { timeZone: 'Africa/Kampala' };
+    return d.toLocaleString('en-UG', options).split(" ")[0].slice(3,5);
+  };
+
   const isDataEntered = async () => {
     const id = `${unitData.id}${
       quarterType == "1"
@@ -593,9 +613,9 @@ export const ReactNativeModal1 = ({
               </View>
             )}
             <View style={{ width: isDisable ? "100%" : "80%" }}>
-              {isDisable ? (
+              {isDisable || !cheakDisableByMonth() ? (
                 <SubmitButton
-                  // onPress={onSaveHandle}
+                onPress={cheakDisableByMonth}
                   title={"Save"}
                   textStyle={{ fontSize: 15 }}
                   buttonStyle={{ backgroundColor: "hsl(245, 34%, 70%)" }}
