@@ -39,204 +39,270 @@ const SyncData = ({ navigation }) => {
   const [show, setShow] = useState(false);
   const [sync, setSync] = useState(false);
   const [switches, setSwitches] = useState([false, false, false]);
-  // isModalVisible={isModalVisible}
-  //     setModalVisible={setModalVisible}
-  //     item={item}
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [preView, setPreView] = useState(false);
   const [item, setItem] = useState(false);
+  
+  const toggleSwitch = (index,ids) => {
+    
 
-  const toggleSwitch = (index) => {
-    const newSwitches = [...switches];
-    newSwitches[index] = !newSwitches[index];
-    setSwitches(newSwitches);
+      const newSwitches = [...switches];
+      newSwitches[index] = !newSwitches[index];
+      setSwitches(newSwitches);
+    
   };
+  
+
+  // -----------------------------------------------------------------------fetch data from database
+  const fetchDataFromUserSavedData = async () => {
+    try {
+      setLoading(true);
+      const userdetails = await AsyncStorage.getItem("userdata");
+      const userid = await JSON.parse(userdetails);
+      const userId = userid.userid;
+      if (!userId) {
+        return;
+      }
+      const allUserDataFromDB = await retrieveData("UserSavedData");
+
+      const filteredUserData = allUserDataFromDB.filter(
+        (user) => user.USERID === userId
+      );
+      setUserData(filteredUserData);
+    } catch (error) {
+      setLoading(false);
+      alert("Error", "An error occurred while fetching data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      fetchDataFromUserSavedData();
+    }, [])
+  );
+  // -----------------------------------------------------------------------------------------render Item
+  const renderItem = React.useCallback(({ item, ind }) => {
+    return (
+      <View
+        style={{
+          backgroundColor: "#e1f9fa",
+          padding: 10,
+          elevation: 5,
+          borderRadius: 10,
+          marginTop:15
+        }}
+      >
+        {/* ------------------------------------header */}
+        {console.log(item && item.id)}
+        <View
+          style={{
+            borderRadius: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 5,
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ color: "#4d4791", fontWeight: "700" }}>
+            Workplan Id : 2.1
+          </Text>
+          <Text style={{ color: "#4d4791", fontWeight: "700" }}>
+            Type : Water
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: 10,
+            borderBottomWidth: 0.9,
+            paddingBottom: 5,
+            borderColor: "#4d4791",
+            backgroundColor: "#cce6ff",
+          }}
+        >
+          <Text
+            style={{
+              width: "15%",
+              textAlign: "center",
+              fontSize: 13,
+              fontWeight: "500",
+              color: "#4d4791",
+            }}
+          >
+            Select
+          </Text>
+          <Text
+            style={{
+              width: "15%",
+              textAlign: "center",
+              fontSize: 13,
+              fontWeight: "500",
+              color: "#4d4791",
+            }}
+          >
+            Modal No.
+          </Text>
+          <Text
+            style={{
+              width: "55%",
+              fontSize: 13,
+              fontWeight: "500",
+              marginLeft: 10,
+              textAlign: "center",
+              color: "#4d4791",
+            }}
+          >
+            Modal Activity
+          </Text>
+          <Text
+            style={{
+              width: "15%",
+              textAlign: "center",
+              fontSize: 13,
+              fontWeight: "500",
+              color: "#4d4791",
+            }}
+          >
+            Edit
+          </Text>
+        </View>
+        {/* ----------------------------------------------body */}
+        <View style={{}}>
+          {[1, 1, 1].map((items, index) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  marginTop: 10,
+                  alignItems: "center",
+                  width: "100%",
+                  borderBottomWidth: 0.3,
+                  paddingBottom: 5,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    width: "15%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onPress={() => {toggleSwitch(index,item.id)}}
+                >
+                  {switches[index] ? (
+                    <VectorIcon
+                      type="MaterialCommunityIcons"
+                      name="checkbox-marked-circle"
+                      size={24}
+                      color="green"
+                    />
+                  ) : (
+                    <VectorIcon
+                      type="MaterialCommunityIcons"
+                      name="checkbox-blank-circle-outline"
+                      size={24}
+                      color="#4d4791"
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text style={{ width: "15%", textAlign: "center" }}>2.3</Text>
+                <Text
+                  style={{
+                    width: "55%",
+                    marginLeft: 10,
+                    textAlign: "center",
+                  }}
+                >
+                  subham kumars sahoo gdfgo fsfdsofsjo foisjofjsoj sjjfosj fjsoj
+                </Text>
+                <VectorIcon
+                  type="FontAwesome5"
+                  name="edit"
+                  size={18}
+                  color="#0080ff"
+                  style={{
+                    width: "15%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+              </View>
+            );
+          })}
+        </View>
+        {/* ----------------------------------------------footer */}
+        <View
+          style={{
+            padding: 20,
+            borderRadius: 5,
+            flexDirection: "row-reverse",
+          }}
+        >
+          <Pressable
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              padding: 10,
+              backgroundColor: "#ffe6e6",
+              borderRadius: 100,
+              marginLeft: 10,
+              elevation: 5,
+            }}
+          >
+            <Text style={{ color: "red", marginRight: 5, fontWeight: "500" }}>
+              Delete
+            </Text>
+            <VectorIcon
+              type="MaterialCommunityIcons"
+              name="delete-sweep"
+              size={18}
+              color="red"
+            />
+          </Pressable>
+
+          <Pressable
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              padding: 10,
+              backgroundColor: "#cce1ff",
+              borderRadius: 100,
+              elevation: 5,
+            }}
+          >
+            <Text
+              style={{ color: "#006aff", marginRight: 5, fontWeight: "500" }}
+            >
+              Sync
+            </Text>
+            <VectorIcon
+              type="MaterialCommunityIcons"
+              name="database-sync"
+              size={15}
+              color="#006aff"
+            />
+          </Pressable>
+        </View>
+        <View></View>
+      </View>
+    );
+  });
   return (
     <ImageBackground
       source={require("../assets/blurUganda.jpeg")}
       style={{ flex: 1, padding: 16 }}
       resizeMode="cover"
     >
-      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        <View
-          style={{
-            backgroundColor: "#e1f9fa",
-            padding: 10,
-            elevation: 5,
-            borderRadius: 10,
-          }}
-        >
-          {/* ------------------------------------header */}
-          <View style={{}}>
-            <Text>Workplan Id : 2.1</Text>
-            <Text>Type : Water</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 10,
-              borderBottomWidth: 0.7,
-              paddingBottom: 5,
-            }}
-          >
-            <Text
-              style={{
-                width: "15%",
-                textAlign: "center",
-                fontSize: 13,
-                fontWeight: "500",
-              }}
-            >
-              Select
-            </Text>
-            <Text
-              style={{
-                width: "15%",
-                textAlign: "center",
-                fontSize: 13,
-                fontWeight: "500",
-              }}
-            >
-              Modal No.
-            </Text>
-            <Text
-              style={{
-                width: "55%",
-                fontSize: 13,
-                fontWeight: "500",
-                marginLeft: 10,
-                textAlign: "center",
-              }}
-            >
-              Modal Activity
-            </Text>
-            <Text
-              style={{
-                width: "15%",
-                textAlign: "center",
-                fontSize: 13,
-                fontWeight: "500",
-              }}
-            >
-              Edit
-            </Text>
-          </View>
-          {/* ----------------------------------------------body */}
-          <View style={{}}>
-            {[1, 1, 1].map((item, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: "row",
-                    marginTop: 10,
-                    alignItems: "center",
-                    width: "100%",
-                    borderBottomWidth: 0.3,
-                    paddingBottom: 5,
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      width: "15%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    onPress={() => toggleSwitch(index)}
-                  >
-                    {switches[index] ? (
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name="checkbox-marked-circle"
-                        size={24}
-                        color="green"
-                      />
-                    ) : (
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name="checkbox-blank-circle-outline"
-                        size={24}
-                        color="black"
-                      />
-                    )}
-                  </TouchableOpacity>
-                  <Text style={{ width: "15%", textAlign: "center" }}>2.3</Text>
-                  <Text
-                    style={{
-                      width: "55%",
-                      marginLeft: 10,
-                      textAlign: "center",
-                    }}
-                  >
-                    subham kumars sahoo gdfgo fsfdsofsjo foisjofjsoj sjjfosj
-                    fjsoj
-                  </Text>
-                  <VectorIcon
-                    type="FontAwesome5"
-                    name="edit"
-                    size={18}
-                    color="black"
-                    style={{
-                      width: "15%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  />
-                </View>
-              );
-            })}
-          </View>
-          {/* ----------------------------------------------footer */}
-          <View
-            style={{
-              padding: 20,
-              borderRadius: 5,
-              flexDirection: "row-reverse",
-            }}
-          >
-            <Pressable
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 10,
-                backgroundColor: "#ffe6e6",
-                borderRadius: 100,
-                marginLeft: 10,
-                elevation: 10,
-              }}
-            >
-              <Text style={{ color: "red" }}>Delete</Text>
-              <VectorIcon
-                type="MaterialCommunityIcons"
-                name="delete-sweep"
-                size={18}
-                color="red"
-              />
-            </Pressable>
-
-            <Pressable
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                padding: 10,
-                backgroundColor: "#cce1ff",
-                borderRadius: 100,
-                elevation: 10,
-              }}
-            >
-              <Text style={{ color: "#006aff" }}>Sync</Text>
-              <VectorIcon
-                type="MaterialCommunityIcons"
-                name="database-sync"
-                size={15}
-                color="#006aff"
-              />
-            </Pressable>
-          </View>
-          <View></View>
-        </View>
-      </ScrollView>
+      <FlatList
+        data={userData && userData}
+        renderItem={renderItem}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
     </ImageBackground>
   );
 };
