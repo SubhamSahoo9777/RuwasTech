@@ -22,9 +22,8 @@ export const EditModal = ({
   setModalVisible,
   item,
   databaseId,
-  func,
-  preView,
 }) => {
+  console.log(databaseId);
   const unitData = item || {};
   const Dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -32,7 +31,7 @@ export const EditModal = ({
   const [quaterExpenditure, setQuarterExpenditure] = useState("0");
   const [comment, setComments] = useState("");
   const [workPlan, setWorkplan] = useState("0");
-const [content,setContent]=useState({ show: false })
+  const [content, setContent] = useState({ show: false });
   useEffect(() => {
     setQuaterAchieved(unitData.quarterAchieved);
     setQuarterExpenditure(unitData.quarterExpenditure);
@@ -40,9 +39,12 @@ const [content,setContent]=useState({ show: false })
   }, [unitData]);
 
   useEffect(() => {
-    let x=(parseFloat(quaterAchieved)/parseFloat(unitData["approvedAnnualTarget"]))*100
-    setWorkplan(isNaN(x)?"0":x)
-  }, [quaterAchieved,unitData]);
+    let x =
+      (parseFloat(quaterAchieved) /
+        parseFloat(unitData["approvedAnnualTarget"])) *
+      100;
+    setWorkplan(isNaN(x) ? "0" : x);
+  }, [quaterAchieved, unitData]);
 
   const updateFunc = async () => {
     setLoading(true);
@@ -50,6 +52,7 @@ const [content,setContent]=useState({ show: false })
     allUserDataFromDB = allUserDataFromDB.filter(
       (item) => item.id == databaseId
     );
+    console.log(allUserDataFromDB, "hi");
     let modalDates = JSON.parse(
       allUserDataFromDB[0].USERSAVEDATA
     ).modalActivityData;
@@ -84,11 +87,15 @@ const [content,setContent]=useState({ show: false })
   };
   const validation = () => {
     // ---------------------------------------------validation for quaterAchieved
-    if (quaterAchieved==""||isNaN(quaterAchieved) || parseInt(quaterAchieved) < 0) {
+    if (
+      quaterAchieved == "" ||
+      isNaN(quaterAchieved) ||
+      parseInt(quaterAchieved) < 0
+    ) {
       return setContent({
         show: true,
         msg: "please enter a valid value for quaterAchieved",
-        vibration:true
+        vibration: true,
       });
     }
     if (
@@ -97,11 +104,12 @@ const [content,setContent]=useState({ show: false })
       return setContent({
         show: true,
         msg: "Cumulative to Date Achieved should not be greater than Approve Annual workplan target",
-        vibration:true
+        vibration: true,
       });
     }
     if (
-      parseFloat(quaterAchieved) > (unitData.id?.endsWith("a")
+      parseFloat(quaterAchieved) >
+      (unitData.id?.endsWith("a")
         ? `${unitData["quarterOne"]}`
         : unitData.id?.endsWith("b")
         ? `${unitData["quarterTwo"]}`
@@ -112,32 +120,35 @@ const [content,setContent]=useState({ show: false })
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Quarter Target(Ugx)",
-        vibration:true
+        vibration: true,
       });
     }
- // ---------------------------------------------validation for quaterExpenditure
- if (quaterExpenditure==""||isNaN(quaterExpenditure) || parseInt(quaterExpenditure) < 0) {
-  return setContent({
-    show: true,
-    msg: "please enter a valid value for quaterExpenditure",
-    vibration:true
-  });
-}
-if (parseInt(quaterExpenditure) > parseInt(unitData["funds"])) {
-  return setContent({
-    show: true,
-    msg: "Expenditure (Quarter)(Ugx) should not exceed Annual Budget(Ugx)",
-    vibration:true
-  });
-}
-// --------------------------------------------------final result after validation 
-updateFunc()
+    // ---------------------------------------------validation for quaterExpenditure
+    if (
+      quaterExpenditure == "" ||
+      isNaN(quaterExpenditure) ||
+      parseInt(quaterExpenditure) < 0
+    ) {
+      return setContent({
+        show: true,
+        msg: "please enter a valid value for quaterExpenditure",
+        vibration: true,
+      });
+    }
+    if (parseInt(quaterExpenditure) > parseInt(unitData["funds"])) {
+      return setContent({
+        show: true,
+        msg: "Expenditure (Quarter)(Ugx) should not exceed Annual Budget(Ugx)",
+        vibration: true,
+      });
+    }
+    // --------------------------------------------------final result after validation
+    updateFunc();
   };
-  
-  const handleUpdate=()=>{
-    validation()
 
-  }
+  const handleUpdate = () => {
+    validation();
+  };
   return (
     <Modal
       animationOut={"fadeOut"}
@@ -146,7 +157,6 @@ updateFunc()
       animationOutTiming={1}
       isVisible={isModalVisible}
       onBackdropPress={() => setModalVisible(false)}
-      onModalHide={preView}
     >
       {loading ? (
         <ActivityIndicator />
@@ -308,8 +318,8 @@ updateFunc()
               </Text>
             </View>
           </View>
-           {/* -------------------------------------------------------------modal */}
-           <AlertModal content={content} setContent={setContent} />
+          {/* -------------------------------------------------------------modal */}
+          <AlertModal content={content} setContent={setContent} />
         </View>
       )}
     </Modal>

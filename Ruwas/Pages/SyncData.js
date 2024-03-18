@@ -42,17 +42,14 @@ const SyncData = ({ navigation }) => {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [preView, setPreView] = useState(false);
-  const [item, setItem] = useState(false);
-  
-  const toggleSwitch = (index,ids) => {
-    
+  const [item, setItem] = useState({});
+  const [databaseId, setDatabaseId] = useState("");
 
-      const newSwitches = [...switches];
-      newSwitches[index] = !newSwitches[index];
-      setSwitches(newSwitches);
-    
+  const toggleSwitch = (index, ids) => {
+    const newSwitches = [...switches];
+    newSwitches[index] = !newSwitches[index];
+    setSwitches(newSwitches);
   };
-  
 
   // -----------------------------------------------------------------------fetch data from database
   const fetchDataFromUserSavedData = async () => {
@@ -93,11 +90,10 @@ const SyncData = ({ navigation }) => {
           padding: 10,
           elevation: 5,
           borderRadius: 10,
-          marginTop:15
+          marginTop: 15,
         }}
       >
         {/* ------------------------------------header */}
-        {console.log(item && item.id)}
         <View
           style={{
             borderRadius: 10,
@@ -108,10 +104,11 @@ const SyncData = ({ navigation }) => {
           }}
         >
           <Text style={{ color: "#4d4791", fontWeight: "700" }}>
-            Workplan Id : 2.1
+            Workplan Id :{" "}
+            {JSON.parse(item.USERSAVEDATA).modalActivityData[0].workplanid}
           </Text>
           <Text style={{ color: "#4d4791", fontWeight: "700" }}>
-            Type : Water
+            Type : {JSON.parse(item.USERSAVEDATA).BasicDetails.type}
           </Text>
         </View>
         <View
@@ -173,67 +170,78 @@ const SyncData = ({ navigation }) => {
         </View>
         {/* ----------------------------------------------body */}
         <View style={{}}>
-          {[1, 1, 1].map((items, index) => {
-            return (
-              <View
-                key={index}
-                style={{
-                  flexDirection: "row",
-                  marginTop: 10,
-                  alignItems: "center",
-                  width: "100%",
-                  borderBottomWidth: 0.3,
-                  paddingBottom: 5,
-                }}
-              >
-                <TouchableOpacity
+          {JSON.parse(item.USERSAVEDATA).modalActivityData.map(
+            (items, index) => {
+              return (
+                <View
+                  key={index}
                   style={{
-                    width: "15%",
-                    justifyContent: "center",
+                    flexDirection: "row",
+                    marginTop: 10,
                     alignItems: "center",
-                  }}
-                  onPress={() => {toggleSwitch(index,item.id)}}
-                >
-                  {switches[index] ? (
-                    <VectorIcon
-                      type="MaterialCommunityIcons"
-                      name="checkbox-marked-circle"
-                      size={24}
-                      color="green"
-                    />
-                  ) : (
-                    <VectorIcon
-                      type="MaterialCommunityIcons"
-                      name="checkbox-blank-circle-outline"
-                      size={24}
-                      color="#4d4791"
-                    />
-                  )}
-                </TouchableOpacity>
-                <Text style={{ width: "15%", textAlign: "center" }}>2.3</Text>
-                <Text
-                  style={{
-                    width: "55%",
-                    marginLeft: 10,
-                    textAlign: "center",
+                    width: "100%",
+                    borderBottomWidth: 0.3,
+                    paddingBottom: 5,
                   }}
                 >
-                  subham kumars sahoo gdfgo fsfdsofsjo foisjofjsoj sjjfosj fjsoj
-                </Text>
-                <VectorIcon
-                  type="FontAwesome5"
-                  name="edit"
-                  size={18}
-                  color="#0080ff"
-                  style={{
-                    width: "15%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                />
-              </View>
-            );
-          })}
+                  <TouchableOpacity
+                    style={{
+                      width: "15%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    onPress={() => {
+                      toggleSwitch(index, item.id);
+                    }}
+                  >
+                    {switches[index] ? (
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="checkbox-marked-circle"
+                        size={24}
+                        color="green"
+                      />
+                    ) : (
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="checkbox-blank-circle-outline"
+                        size={24}
+                        color="#4d4791"
+                      />
+                    )}
+                  </TouchableOpacity>
+                  <Text style={{ width: "15%", textAlign: "center" }}>
+                    {items.Sno}
+                  </Text>
+                  <Text
+                    style={{
+                      width: "55%",
+                      marginLeft: 10,
+                      textAlign: "center",
+                    }}
+                  >
+                    {items.modelActivity}
+                  </Text>
+                  <VectorIcon
+                    type="FontAwesome5"
+                    name="edit"
+                    size={18}
+                    color="#0080ff"
+                    onPress={() => {
+                      setDatabaseId(items.id);
+                      setItem(items);
+                      setModalVisible(true);
+                    }}
+                    style={{
+                      width: "15%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                </View>
+              );
+            }
+          )}
         </View>
         {/* ----------------------------------------------footer */}
         <View
@@ -302,6 +310,12 @@ const SyncData = ({ navigation }) => {
         data={userData && userData}
         renderItem={renderItem}
         contentContainerStyle={{ paddingBottom: 20 }}
+      />
+      <EditModal
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+        item={item}
+        databaseId={databaseId}
       />
     </ImageBackground>
   );
