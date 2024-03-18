@@ -57,9 +57,14 @@ const SyncData = ({ navigation }) => {
       style={{ flex: 1, padding: 16 }}
       resizeMode="cover"
     >
-      <ScrollView contentContainerStyle={{paddingBottom:20}}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <View
-          style={{ backgroundColor: "#e1f9fa", padding: 10,elevation:10 }}
+          style={{
+            backgroundColor: "#e1f9fa",
+            padding: 10,
+            elevation: 5,
+            borderRadius: 10,
+          }}
         >
           {/* ------------------------------------header */}
           <View style={{}}>
@@ -71,7 +76,8 @@ const SyncData = ({ navigation }) => {
               flexDirection: "row",
               alignItems: "center",
               marginTop: 10,
-              borderBottomWidth: 0.5,
+              borderBottomWidth: 0.7,
+              paddingBottom: 5,
             }}
           >
             <Text
@@ -127,7 +133,7 @@ const SyncData = ({ navigation }) => {
                     marginTop: 10,
                     alignItems: "center",
                     width: "100%",
-                    borderBottomWidth: 0.5,
+                    borderBottomWidth: 0.3,
                     paddingBottom: 5,
                   }}
                 >
@@ -139,14 +145,21 @@ const SyncData = ({ navigation }) => {
                     }}
                     onPress={() => toggleSwitch(index)}
                   >
-                    <View
-                      style={{
-                        height: 20,
-                        width: 20,
-                        borderWidth: 2,
-                        backgroundColor: switches[index] ? "green" : null,
-                      }}
-                    />
+                    {switches[index] ? (
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="checkbox-marked-circle"
+                        size={24}
+                        color="green"
+                      />
+                    ) : (
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="checkbox-blank-circle-outline"
+                        size={24}
+                        color="black"
+                      />
+                    )}
                   </TouchableOpacity>
                   <Text style={{ width: "15%", textAlign: "center" }}>2.3</Text>
                   <Text
@@ -182,19 +195,43 @@ const SyncData = ({ navigation }) => {
               flexDirection: "row-reverse",
             }}
           >
-            <Pressable style={{flexDirection:"row",alignItems:"center",padding:10,backgroundColor:"#ffe6e6",borderRadius:100,marginLeft:10,elevation:10}}>
-            <Text style={{color:"red"}}>Delete</Text>
-            <VectorIcon type="MaterialCommunityIcons" name="delete-sweep" size={18} color="red" />
+            <Pressable
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 10,
+                backgroundColor: "#ffe6e6",
+                borderRadius: 100,
+                marginLeft: 10,
+                elevation: 10,
+              }}
+            >
+              <Text style={{ color: "red" }}>Delete</Text>
+              <VectorIcon
+                type="MaterialCommunityIcons"
+                name="delete-sweep"
+                size={18}
+                color="red"
+              />
             </Pressable>
-            
-            <Pressable style={{flexDirection:"row",alignItems:"center",padding:10,backgroundColor:"#cce1ff",borderRadius:100,elevation:10}}>
-            <Text style={{color:"#006aff"}}>Sync</Text>
-            <VectorIcon
-              type="MaterialCommunityIcons"
-              name="database-sync"
-              size={15}
-              color="#006aff"
-            />
+
+            <Pressable
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 10,
+                backgroundColor: "#cce1ff",
+                borderRadius: 100,
+                elevation: 10,
+              }}
+            >
+              <Text style={{ color: "#006aff" }}>Sync</Text>
+              <VectorIcon
+                type="MaterialCommunityIcons"
+                name="database-sync"
+                size={15}
+                color="#006aff"
+              />
             </Pressable>
           </View>
           <View></View>
