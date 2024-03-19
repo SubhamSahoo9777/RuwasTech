@@ -21,6 +21,7 @@ import {
   deleteRowById,
   deleteRowById1,
   retrieveData,
+  updateRecord,
   updateSyncStatus,
 } from "../components/AllLocalDatabaseFunction";
 import RotatingImage from "../components/RotatingImage";
@@ -34,22 +35,24 @@ import { EditModal } from "../components/EditModal";
 const SyncData = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState([]);
   const [isPreviewModalVisible, setPreviewModalVisible] = useState(false);
   const [show, setShow] = useState(false);
   const [sync, setSync] = useState(false);
-  const [switches, setSwitches] = useState([false, false, false]);
-
   const [isModalVisible, setModalVisible] = useState(false);
-  const [preView, setPreView] = useState(false);
   const [item, setItem] = useState({});
   const [databaseId, setDatabaseId] = useState("");
 
-  const toggleSwitch = (index, ids) => {
-    const newSwitches = [...switches];
-    newSwitches[index] = !newSwitches[index];
-    setSwitches(newSwitches);
-  };
+  const [switches, setSwitches] = useState({});
+
+  // const toggleSwitch = (index, id) => {
+  //   const newSwitches = { ...switches };
+  //   if (!newSwitches[id]) {
+  //     newSwitches[id] = new Array(userData.length).fill(false);
+  //   }
+  //   newSwitches[id][index] = !newSwitches[id][index];
+  //   setSwitches(newSwitches);
+  // };
 
   // -----------------------------------------------------------------------fetch data from database
   const fetchDataFromUserSavedData = async () => {
@@ -74,7 +77,125 @@ const SyncData = ({ navigation }) => {
       setLoading(false);
     }
   };
+  // -------------------------------------------------------------------------------------------------------------------------handle sync
+  const handleItemSubmit = async (item, selectedData) => {
+    const userData = JSON.parse(item.USERSAVEDATA);
+    const basicDetails = userData.BasicDetails;
+    console.log(new Array({ ...selectedData, update: true }));
+    const requestBody = {
+      BasicDetails: {
+        districtid: basicDetails.districtid,
+        latitude: basicDetails.latitude,
+        longitude: basicDetails.longitude,
+        type: basicDetails.type,
+        userId: basicDetails.userId,
+        workplanid: basicDetails.workplanid,
+      },
+      modalActivityData:
+        (selectedData && new Array(selectedData)) || userData.modalActivityData, // Accessing modalActivityData from userData
+      filesAttached: userData.filesAttached, // Accessing filesAttached from userData
+    };
 
+    const formData = new FormData();
+    formData.append("BasicDetails", JSON.stringify(requestBody.BasicDetails));
+    formData.append(
+      "modalActivityData",
+      JSON.stringify(requestBody.modalActivityData)
+    );
+    formData.append("filesAttached", JSON.stringify(requestBody.filesAttached));
+
+    handlesubmit(formData, item, selectedData);
+  };
+  const handlesubmit = async (formData, item, selectedData) => {
+    const netInfo = await NetInfo.fetch();
+    const isConnected = netInfo.isConnected;
+    if (isConnected == false) {
+      Alert.alert(
+        "No Network Connection",
+        "Please connect to a network and try again.",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+    } else {
+      const apiUrl =
+        "http://182.18.181.115:8084/api/complaince/synchworkplanprogressdtls";
+      try {
+        setLoading(true);
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          setLoading(false);
+          throw new Error("Sorry, something went wrong");
+        }
+
+        const data = await response.json();
+        Alert.alert("Data", data);
+        updateSyncStatus(item.USERID, "true", item.id);
+        updateFunc(item.id, selectedData);
+        setSync(true);
+        fetchDataFromUserSavedData();
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+
+        console.log("Error in handle submit:", error);
+      }
+    }
+  };
+  const updateFunc = async (databaseId, selectedData) => {
+    setLoading(true);
+    let allUserDataFromDB = await retrieveData("UserSavedData");
+    allUserDataFromDB = allUserDataFromDB.filter(
+      (item) => item.id == databaseId
+    );
+    let modalDates = JSON.parse(
+      allUserDataFromDB[0].USERSAVEDATA
+    ).modalActivityData;
+    let restData = allUserDataFromDB.find(
+      (item) => item.id === databaseId
+    )?.USERSAVEDATA;
+    restData = JSON.parse(restData);
+
+    modalDates = modalDates.map((item) => {
+      if (item.id === selectedData.id) {
+        return {
+          ...selectedData,
+          update: true,
+        };
+      }
+      return item;
+    });
+    console.log(modalDates, "subham");
+    const requestBody = {
+      ...restData,
+      modalActivityData: modalDates,
+    };
+    updateRecord(databaseId, JSON.stringify(requestBody));
+    fetchDataFromUserSavedData();
+  };
+  // ------------------------------------------------------------------------------Delete functionality
+  const deleteItem = async (id) => {
+    console.log(id, "hi");
+    // let allIds = JSON.parse(item.USERSAVEDATA).modalActivityData.map(
+    //   (item) => item.id
+    // );
+    // allIds.forEach((ides) => {
+    //   deleteRowOfRecordReminder("mid", ides);
+    // });
+    // try {
+    //   await deleteRowById("UserSavedData", item?.id);
+    //   fetchDataFromUserSavedData();
+    // } catch (error) {
+    //   console.error("Error deleting item:", error);
+    // }
+  };
+  // ......................................................................................................................
   useFocusEffect(
     React.useCallback(() => {
       setLoading(true);
@@ -122,7 +243,7 @@ const SyncData = ({ navigation }) => {
             backgroundColor: "#cce6ff",
           }}
         >
-          <Text
+          {/* <Text
             style={{
               width: "15%",
               textAlign: "center",
@@ -132,10 +253,10 @@ const SyncData = ({ navigation }) => {
             }}
           >
             Select
-          </Text>
+          </Text> */}
           <Text
             style={{
-              width: "15%",
+              width: "14%",
               textAlign: "center",
               fontSize: 13,
               fontWeight: "500",
@@ -146,7 +267,7 @@ const SyncData = ({ navigation }) => {
           </Text>
           <Text
             style={{
-              width: "55%",
+              width: "50%",
               fontSize: 13,
               fontWeight: "500",
               marginLeft: 10,
@@ -158,14 +279,14 @@ const SyncData = ({ navigation }) => {
           </Text>
           <Text
             style={{
-              width: "15%",
+              width: "36%",
               textAlign: "center",
               fontSize: 13,
               fontWeight: "500",
               color: "#4d4791",
             }}
           >
-            Edit
+            Status
           </Text>
         </View>
         {/* ----------------------------------------------body */}
@@ -184,119 +305,109 @@ const SyncData = ({ navigation }) => {
                     paddingBottom: 5,
                   }}
                 >
-                  <TouchableOpacity
-                    style={{
-                      width: "15%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    onPress={() => {
-                      toggleSwitch(index, item.id);
-                    }}
-                  >
-                    {switches[index] ? (
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name="checkbox-marked-circle"
-                        size={24}
-                        color="green"
-                      />
-                    ) : (
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name="checkbox-blank-circle-outline"
-                        size={24}
-                        color="#4d4791"
-                      />
-                    )}
-                  </TouchableOpacity>
-                  <Text style={{ width: "15%", textAlign: "center" }}>
+                  <Text style={{ width: "14%", textAlign: "center" }}>
                     {items.Sno}
                   </Text>
                   <Text
                     style={{
-                      width: "55%",
+                      width: "50%",
                       marginLeft: 10,
                       textAlign: "center",
                     }}
                   >
                     {items.modelActivity}
                   </Text>
-                  <VectorIcon
-                    type="FontAwesome5"
-                    name="edit"
-                    size={18}
-                    color="#0080ff"
-                    onPress={() => {
-                      setDatabaseId(items.id);
-                      setItem(items);
-                      setModalVisible(true);
-                    }}
+                  <View
                     style={{
-                      width: "15%",
-                      justifyContent: "center",
+                      width: "36%",
+                      flexDirection: "row",
+                      justifyContent: "space-evenly",
                       alignItems: "center",
                     }}
-                  />
+                  >
+                    {
+                      items.update?
+                      <VectorIcon
+                      type="Ionicons" name="eye-sharp" size={24} color="#8c8c8c" />:
+                      <VectorIcon
+                        type="FontAwesome5"
+                        name="edit"
+                        size={18}
+                        color="#0080ff"
+                        onPress={() => {
+                          setDatabaseId(item?.id);
+                          setItem(items);
+                          setModalVisible(true);
+                        }}
+                      />
+
+
+                    }
+                    {items.update ? (
+                      //<MaterialCommunityIcons name="database-check-outline" size={24} color="black" />
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="database-check-outline"
+                        size={22}
+                        color="#009900"
+                      />
+                    ) : (
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name={"database-sync"}
+                        // name={JSON.parse(item.SYNC)?"check-decagram":"database-sync"}
+                        size={22}
+                        color="#006aff"
+                        onPress={() => handleItemSubmit(item, items)}
+                      />
+                    )}
+                    {
+                      items.update ?
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="delete-forever"
+                        size={22}
+                        color="#8c8c8c"
+                        onPress={() => deleteItem(items)}
+                      />:
+                      <VectorIcon
+                        type="MaterialCommunityIcons"
+                        name="delete-sweep"
+                        size={22}
+                        color="red"
+                        onPress={() => deleteItem(items)}
+                      />
+
+                    }
+                  </View>
                 </View>
               );
             }
           )}
         </View>
         {/* ----------------------------------------------footer */}
-        <View
-          style={{
-            padding: 20,
-            borderRadius: 5,
-            flexDirection: "row-reverse",
-          }}
-        >
-          <Pressable
+        <View>
+          <Text
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              padding: 10,
-              backgroundColor: "#ffe6e6",
-              borderRadius: 100,
-              marginLeft: 10,
-              elevation: 5,
+              fontWeight: "500",
+              marginTop: 10,
+              marginBottom: 5,
+              color: "#4d4791",
             }}
           >
-            <Text style={{ color: "red", marginRight: 5, fontWeight: "500" }}>
-              Delete
-            </Text>
-            <VectorIcon
-              type="MaterialCommunityIcons"
-              name="delete-sweep"
-              size={18}
-              color="red"
-            />
-          </Pressable>
-
-          <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              padding: 10,
-              backgroundColor: "#cce1ff",
-              borderRadius: 100,
-              elevation: 5,
-            }}
-          >
-            <Text
-              style={{ color: "#006aff", marginRight: 5, fontWeight: "500" }}
-            >
-              Sync
-            </Text>
-            <VectorIcon
-              type="MaterialCommunityIcons"
-              name="database-sync"
-              size={15}
-              color="#006aff"
-            />
-          </Pressable>
+            Attached Files
+          </Text>
+          {JSON.parse(item.USERSAVEDATA).filesAttached.map(
+            (file, fileIndex) => {
+              return (
+                <Text key={fileIndex}>
+                  {`File ${fileIndex + 1}: `}
+                  {file.file}
+                </Text>
+              );
+            }
+          )}
         </View>
-        <View></View>
       </View>
     );
   });
@@ -316,6 +427,7 @@ const SyncData = ({ navigation }) => {
         setModalVisible={setModalVisible}
         item={item}
         databaseId={databaseId}
+        func={fetchDataFromUserSavedData}
       />
     </ImageBackground>
   );

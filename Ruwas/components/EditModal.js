@@ -22,8 +22,8 @@ export const EditModal = ({
   setModalVisible,
   item,
   databaseId,
+  func,
 }) => {
-  console.log(databaseId);
   const unitData = item || {};
   const Dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -52,7 +52,6 @@ export const EditModal = ({
     allUserDataFromDB = allUserDataFromDB.filter(
       (item) => item.id == databaseId
     );
-    console.log(allUserDataFromDB, "hi");
     let modalDates = JSON.parse(
       allUserDataFromDB[0].USERSAVEDATA
     ).modalActivityData;

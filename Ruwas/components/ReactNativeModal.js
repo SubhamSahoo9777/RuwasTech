@@ -325,6 +325,7 @@ export const ReactNativeModal1 = ({
               ? "c"
               : "d"
           }`,
+          update:false,
         },
       });
       setIsModalEdited([...isModalEdited, item.id]);
