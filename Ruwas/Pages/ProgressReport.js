@@ -78,7 +78,10 @@ const ProgressReport = memo(({ navigation, route }) => {
             "workplanModalActivity"
           );
           let temp = workplanModalActivityDetails.filter(
-            (item) => item.workplanid === allDetails.workplanid && item.approvedAnnualTarget!=="0"
+            (item) =>
+              item.workplanid === allDetails.workplanid &&
+              item.approvedAnnualTarget !== "0" &&
+              item.quarterOne !== "0"
           );
           setTableDetails(temp);
         } else {
@@ -87,7 +90,10 @@ const ProgressReport = memo(({ navigation, route }) => {
           );
 
           let temp = sanitationWorkPlanModalActivity.filter(
-            (item) => item.sanitationId === allDetails.sanitationid && item.approvedAnnualTarget!=="0"
+            (item) =>
+              item.sanitationId === allDetails.sanitationid &&
+              item.approvedAnnualTarget !== "0" &&
+              item.quarterOne !== "0"
           );
 
           setTableDetails(temp);
@@ -135,9 +141,14 @@ const ProgressReport = memo(({ navigation, route }) => {
   const recordReminder = async () => {
     let spmTemp = {
       tableName: "recordReminder",
-      TEXT: ["mid","quarterComment","quarterAchieved","quarterExpenditure"],
+      TEXT: ["mid", "quarterComment", "quarterAchieved", "quarterExpenditure"],
     };
-    let tableIds=alltableData.map((item)=>({mid:item.id,quarterComment:item.quarterComment,quarterAchieved:item.quarterAchieved,quarterExpenditure:item.quarterExpenditure}))
+    let tableIds = alltableData.map((item) => ({
+      mid: item.id,
+      quarterComment: item.quarterComment,
+      quarterAchieved: item.quarterAchieved,
+      quarterExpenditure: item.quarterExpenditure,
+    }));
     let spmTemp2 = { ...spmTemp, table: tableIds };
     insertDataArray(spmTemp2);
   };
@@ -357,11 +368,14 @@ const ProgressReport = memo(({ navigation, route }) => {
             {quarter == "1"
               ? parseFloat(allDetails.quarteronefunds)
               : quarter == "2"
-              ? parseFloat(allDetails.quarteronefunds)+parseFloat(allDetails.quartertwofunds)
+              ? parseFloat(allDetails.quarteronefunds) +
+                parseFloat(allDetails.quartertwofunds)
               : quarter == "3"
-              ? parseFloat(allDetails.quartertwofunds)+parseFloat(allDetails.quarterthreefunds)
+              ? parseFloat(allDetails.quartertwofunds) +
+                parseFloat(allDetails.quarterthreefunds)
               : quarter == "4"
-              ? parseFloat(allDetails.quarterthreefunds)+parseFloat(allDetails.quarterfourfunds)
+              ? parseFloat(allDetails.quarterthreefunds) +
+                parseFloat(allDetails.quarterfourfunds)
               : null}
           </Text>
           {showTable ? (

@@ -23,6 +23,7 @@ export const EditModal = ({
   item,
   databaseId,
   func,
+  disable,
 }) => {
   const unitData = item || {};
   const Dispatch = useDispatch();
@@ -216,13 +217,22 @@ export const EditModal = ({
                 editable={false}
                 CustomStyle={{ backgroundColor: "#e8f1fc" }}
               />
-              <ModifiedTextInput3
-                setInput={setQuaterAchieved}
-                title={"Performance in Quarter Achieved"}
-                header={"Performance in Quarter Achieved"}
-                value={quaterAchieved}
-                keyboardType="numeric"
-              />
+
+              {disable ? (
+                <ShowValueTextInput
+                  label={quaterAchieved}
+                  title={"Performance in Quarter Achieved"}
+                  sty={{ padding: 10,paddingHorizontal: 0 }}
+                />
+              ) : (
+                <ModifiedTextInput3
+                  setInput={setQuaterAchieved}
+                  title={"Performance in Quarter Achieved"}
+                  header={"Performance in Quarter Achieved"}
+                  value={quaterAchieved}
+                  keyboardType="numeric"
+                />
+              )}
               <ModifiedTextInput2
                 header={"Cumulative to Date Achieved"}
                 value={isNaN(parseFloat(quaterAchieved)) ? "0" : quaterAchieved}
@@ -235,14 +245,21 @@ export const EditModal = ({
                 editable={false}
                 CustomStyle={{ backgroundColor: "#e8f1fc" }}
               />
-
-              <ModifiedTextInput3
-                title={"Expenditure (Quarter)(Ugx)"}
-                header={"Expenditure (Quarter)(Ugx)"}
-                value={quaterExpenditure}
-                setInput={setQuarterExpenditure}
-                keyboardType="numeric"
-              />
+              {disable ? (
+                <ShowValueTextInput
+                  label={quaterExpenditure}
+                  title={"Expenditure (Quarter)(Ugx)"}
+                  sty={{ padding:0, paddingHorizontal: 0}}
+                />
+              ) : (
+                <ModifiedTextInput3
+                  title={"Expenditure (Quarter)(Ugx)"}
+                  header={"Expenditure (Quarter)(Ugx)"}
+                  value={quaterExpenditure}
+                  setInput={setQuarterExpenditure}
+                  keyboardType="numeric"
+                />
+              )}
               <ModifiedTextInput2
                 header={`Cumulative Expenditure(Ugx)`}
                 value={
@@ -257,12 +274,21 @@ export const EditModal = ({
                 editable={false}
                 CustomStyle={{ backgroundColor: "#e8f1fc" }}
               />
+              {
+                disable?
+                <ShowValueTextInput
+                  label={comment}
+                  title={"Comments"}
+                  sty={{ padding:0, paddingHorizontal: 0}}
+                />:
+
               <ModifiedTextInput3
                 title={"Comments"}
                 value={comment}
                 setInput={setComments}
                 header="Comments"
               />
+              }
             </ScrollView>
             <SubmitButton
               onPress={handleUpdate}
@@ -272,6 +298,7 @@ export const EditModal = ({
                 bottom: 10,
                 alignSelf: "center",
                 width: "100%",
+                backgroundColor: (disable && "hsl(245, 34%, 70%)") || "#4d4791",
               }}
             />
             <View style={{ position: "absolute", top: -22, right: -20 }}>

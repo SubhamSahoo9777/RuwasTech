@@ -25,7 +25,7 @@ import {
   updateSyncStatus,
 } from "../components/AllLocalDatabaseFunction";
 import RotatingImage from "../components/RotatingImage";
-import { LoaderModal } from "../components/AllModals";
+import { AlertModal, DeleteModal, LoaderModal } from "../components/AllModals";
 import { GpsSet } from "../CustomComponents/GpsCordinates";
 import colors from "../components/colors";
 import VectorIcon from "../components/VectorIcon";
@@ -42,6 +42,9 @@ const SyncData = ({ navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [item, setItem] = useState({});
   const [databaseId, setDatabaseId] = useState("");
+  const [disable, setDisable] = useState(false);
+  const [content, setContent] = useState({ show: false });
+  const [content1, setContent1] = useState({ show: false });
 
   const [switches, setSwitches] = useState({});
 
@@ -136,6 +139,11 @@ const SyncData = ({ navigation }) => {
 
         const data = await response.json();
         Alert.alert("Data", data);
+        setContent1({
+          show: true,
+          msg: data=="Synched"?"Data successfully Synced" :"Sorry ! Something went wrong",
+          vibration: false,
+        })
         updateSyncStatus(item.USERID, "true", item.id);
         updateFunc(item.id, selectedData);
         setSync(true);
@@ -180,20 +188,27 @@ const SyncData = ({ navigation }) => {
     fetchDataFromUserSavedData();
   };
   // ------------------------------------------------------------------------------Delete functionality
-  const deleteItem = async (id) => {
-    console.log(id, "hi");
-    // let allIds = JSON.parse(item.USERSAVEDATA).modalActivityData.map(
-    //   (item) => item.id
-    // );
-    // allIds.forEach((ides) => {
-    //   deleteRowOfRecordReminder("mid", ides);
-    // });
-    // try {
-    //   await deleteRowById("UserSavedData", item?.id);
-    //   fetchDataFromUserSavedData();
-    // } catch (error) {
-    //   console.error("Error deleting item:", error);
-    // }
+  const deleteItem = async (item, mid) => {
+    let requirdedModal = JSON.parse(item.USERSAVEDATA).modalActivityData.filter(
+      (item) => item.id !== mid
+    );
+
+    let targateData = {
+      ...JSON.parse(item.USERSAVEDATA),
+      modalActivityData: requirdedModal,
+    };
+    updateRecord(item.id, JSON.stringify(targateData));
+
+    deleteRowOfRecordReminder("mid", mid);
+
+    console.log("data successfully upadated");
+    fetchDataFromUserSavedData();
+  };
+  const deleteRowOfRecordReminder = async (idName, id) => {
+    await deleteRowById1("recordReminder", idName, id);
+  };
+  const databaseTesting = async () => {
+    console.log(await retrieveData("recordReminder"));
   };
   // ......................................................................................................................
   useFocusEffect(
@@ -205,210 +220,245 @@ const SyncData = ({ navigation }) => {
   // -----------------------------------------------------------------------------------------render Item
   const renderItem = React.useCallback(({ item, ind }) => {
     return (
-      <View
-        style={{
-          backgroundColor: "#e1f9fa",
-          padding: 10,
-          elevation: 5,
-          borderRadius: 10,
-          marginTop: 15,
-        }}
-      >
-        {/* ------------------------------------header */}
-        <View
-          style={{
-            borderRadius: 10,
-            flexDirection: "row",
-            alignItems: "center",
-            padding: 5,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ color: "#4d4791", fontWeight: "700" }}>
-            Workplan Id :{" "}
-            {JSON.parse(item.USERSAVEDATA).modalActivityData[0].workplanid}
-          </Text>
-          <Text style={{ color: "#4d4791", fontWeight: "700" }}>
-            Type : {JSON.parse(item.USERSAVEDATA).BasicDetails.type}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 10,
-            borderBottomWidth: 0.9,
-            paddingBottom: 5,
-            borderColor: "#4d4791",
-            backgroundColor: "#cce6ff",
-          }}
-        >
-          {/* <Text
+      <>
+        {JSON.parse(item.USERSAVEDATA).modalActivityData.length > 0 ? (
+          <View
             style={{
-              width: "15%",
-              textAlign: "center",
-              fontSize: 13,
-              fontWeight: "500",
-              color: "#4d4791",
+              backgroundColor: "#e1f9fa",
+              padding: 10,
+              elevation: 5,
+              borderRadius: 10,
+              marginTop: 15,
             }}
           >
-            Select
-          </Text> */}
-          <Text
-            style={{
-              width: "14%",
-              textAlign: "center",
-              fontSize: 13,
-              fontWeight: "500",
-              color: "#4d4791",
-            }}
-          >
-            Modal No.
-          </Text>
-          <Text
-            style={{
-              width: "50%",
-              fontSize: 13,
-              fontWeight: "500",
-              marginLeft: 10,
-              textAlign: "center",
-              color: "#4d4791",
-            }}
-          >
-            Modal Activity
-          </Text>
-          <Text
-            style={{
-              width: "36%",
-              textAlign: "center",
-              fontSize: 13,
-              fontWeight: "500",
-              color: "#4d4791",
-            }}
-          >
-            Status
-          </Text>
-        </View>
-        {/* ----------------------------------------------body */}
-        <View style={{}}>
-          {JSON.parse(item.USERSAVEDATA).modalActivityData.map(
-            (items, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: "row",
-                    marginTop: 10,
-                    alignItems: "center",
-                    width: "100%",
-                    borderBottomWidth: 0.3,
-                    paddingBottom: 5,
-                  }}
-                >
-                  <Text style={{ width: "14%", textAlign: "center" }}>
-                    {items.Sno}
-                  </Text>
-                  <Text
-                    style={{
-                      width: "50%",
-                      marginLeft: 10,
-                      textAlign: "center",
-                    }}
-                  >
-                    {items.modelActivity}
-                  </Text>
-                  <View
-                    style={{
-                      width: "36%",
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      alignItems: "center",
-                    }}
-                  >
-                    {
-                      items.update?
-                      <VectorIcon
-                      type="Ionicons" name="eye-sharp" size={24} color="#8c8c8c" />:
-                      <VectorIcon
-                        type="FontAwesome5"
-                        name="edit"
-                        size={18}
-                        color="#0080ff"
-                        onPress={() => {
-                          setDatabaseId(item?.id);
-                          setItem(items);
-                          setModalVisible(true);
+            {/* ------------------------------------header */}
+            <View
+              style={{
+                borderRadius: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 5,
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ color: "#4d4791", fontWeight: "700" }}>
+                Workplan Id :{" "}
+                {JSON.parse(item.USERSAVEDATA).modalActivityData[0].workplanid}
+              </Text>
+              <Text style={{ color: "#4d4791", fontWeight: "700" }}>
+                Type : {JSON.parse(item.USERSAVEDATA).BasicDetails.type}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+                borderBottomWidth: 0.9,
+                paddingBottom: 5,
+                borderColor: "#4d4791",
+                backgroundColor: "#cce6ff",
+              }}
+            >
+              <Text
+                onPress={databaseTesting}
+                style={{
+                  width: "14%",
+                  textAlign: "center",
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: "#4d4791",
+                }}
+              >
+                Modal No.
+              </Text>
+              <Text
+                style={{
+                  width: "50%",
+                  fontSize: 13,
+                  fontWeight: "500",
+                  marginLeft: 10,
+                  textAlign: "center",
+                  color: "#4d4791",
+                }}
+              >
+                Modal Activity
+              </Text>
+              <Text
+                style={{
+                  width: "36%",
+                  textAlign: "center",
+                  fontSize: 13,
+                  fontWeight: "500",
+                  color: "#4d4791",
+                }}
+              >
+                Status
+              </Text>
+            </View>
+            {/* ----------------------------------------------body */}
+            <View style={{}}>
+              {JSON.parse(item.USERSAVEDATA).modalActivityData.map(
+                (items, index) => {
+                  return (
+                    <View
+                      key={index}
+                      style={{
+                        flexDirection: "row",
+                        marginTop: 10,
+                        alignItems: "center",
+                        width: "100%",
+                        borderBottomWidth: 0.3,
+                        paddingBottom: 5,
+                      }}
+                    >
+                      <Text style={{ width: "14%", textAlign: "center" }}>
+                        {items.Sno}
+                      </Text>
+                      <Text
+                        style={{
+                          width: "50%",
+                          marginLeft: 10,
+                          textAlign: "center",
                         }}
-                      />
-
-
-                    }
-                    {items.update ? (
-                      //<MaterialCommunityIcons name="database-check-outline" size={24} color="black" />
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name="database-check-outline"
-                        size={22}
-                        color="#009900"
-                      />
-                    ) : (
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name={"database-sync"}
-                        // name={JSON.parse(item.SYNC)?"check-decagram":"database-sync"}
-                        size={22}
-                        color="#006aff"
-                        onPress={() => handleItemSubmit(item, items)}
-                      />
-                    )}
-                    {
-                      items.update ?
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name="delete-forever"
-                        size={22}
-                        color="#8c8c8c"
-                        onPress={() => deleteItem(items)}
-                      />:
-                      <VectorIcon
-                        type="MaterialCommunityIcons"
-                        name="delete-sweep"
-                        size={22}
-                        color="red"
-                        onPress={() => deleteItem(items)}
-                      />
-
-                    }
-                  </View>
-                </View>
-              );
-            }
-          )}
-        </View>
-        {/* ----------------------------------------------footer */}
-        <View>
-          <Text
-            style={{
-              fontWeight: "500",
-              marginTop: 10,
-              marginBottom: 5,
-              color: "#4d4791",
-            }}
-          >
-            Attached Files
-          </Text>
-          {JSON.parse(item.USERSAVEDATA).filesAttached.map(
-            (file, fileIndex) => {
-              return (
-                <Text key={fileIndex}>
-                  {`File ${fileIndex + 1}: `}
-                  {file.file}
-                </Text>
-              );
-            }
-          )}
-        </View>
-      </View>
+                      >
+                        {items.modelActivity}
+                      </Text>
+                      <View
+                        style={{
+                          width: "36%",
+                          flexDirection: "row",
+                          justifyContent: "space-evenly",
+                          alignItems: "center",
+                        }}
+                      >
+                        {/* ----------------------------------------------------------------------------update  */}
+                        {items.update ? (
+                          <VectorIcon
+                            type="FontAwesome5"
+                            name="edit"
+                            size={18}
+                            color="#8c8c8c"
+                            onPress={() => {
+                              setDatabaseId(item?.id);
+                              setItem(items);
+                              setDisable(true);
+                              setModalVisible(true);
+                            }}
+                          />
+                        ) : (
+                          <VectorIcon
+                            type="FontAwesome5"
+                            name="edit"
+                            size={18}
+                            color="#0080ff"
+                            onPress={() => {
+                              setDatabaseId(item?.id);
+                              setItem(items);
+                              setDisable(false);
+                              setModalVisible(true);
+                            }}
+                          />
+                        )}
+                        {/* --------------------------------------------------------------------------- sync  */}
+                        {items.update ? (
+                          //<MaterialCommunityIcons name="database-check-outline" size={24} color="black" />
+                          <VectorIcon
+                            type="MaterialCommunityIcons"
+                            name="database-check-outline"
+                            size={22}
+                            color="#009900"
+                            onPress={() =>
+                              setContent1({
+                                show: true,
+                                msg: "Data already Synced !",
+                                vibration: false,
+                              })
+                            }
+                          />
+                        ) : (
+                          <VectorIcon
+                            type="MaterialCommunityIcons"
+                            name={"database-sync"}
+                            // name={JSON.parse(item.SYNC)?"check-decagram":"database-sync"}
+                            size={22}
+                            color="#006aff"
+                            // onPress={() => handleItemSubmit(item, items)}
+                            onPress={() =>setContent({
+                              show: true,
+                              msg: "Do you want to Sync ?",
+                              ok: () => handleItemSubmit(item, items),
+                              color1: "#8080ff",
+                              color2: "green",
+                              vibration: true,
+                            })}
+                          />
+                        )}
+                        {/* ---------------------------------------------------------------------------------delete  */}
+                        {items.update ? (
+                          <VectorIcon
+                            type="MaterialCommunityIcons"
+                            name="delete-forever"
+                            size={22}
+                            color="#8c8c8c"
+                            onPress={() =>
+                              setContent1({
+                                show: true,
+                                msg: "Already Synced ! This data Can't delete",
+                                vibration: true,
+                              })
+                            }
+                          />
+                        ) : (
+                          <VectorIcon
+                            type="MaterialCommunityIcons"
+                            name="delete-sweep"
+                            size={22}
+                            color="red"
+                            // onPress={() => deleteItem(item,items.id)}
+                            onPress={() =>
+                              setContent({
+                                show: true,
+                                msg: "Do you wants to delete ?",
+                                ok: () => deleteItem(item, items.id),
+                                color1: "#8080ff",
+                                vibration: true,
+                              })
+                            }
+                          />
+                        )}
+                      </View>
+                    </View>
+                  );
+                }
+              )}
+            </View>
+            {/* ----------------------------------------------footer */}
+            <View>
+              <Text
+                style={{
+                  fontWeight: "500",
+                  marginTop: 10,
+                  marginBottom: 5,
+                  color: "#4d4791",
+                }}
+              >
+                Attached Files
+              </Text>
+              {JSON.parse(item.USERSAVEDATA).filesAttached.map(
+                (file, fileIndex) => {
+                  return (
+                    <Text key={fileIndex}>
+                      {`File ${fileIndex + 1}: `}
+                      {file.file}
+                    </Text>
+                  );
+                }
+              )}
+            </View>
+          </View>
+        ) : null}
+      </>
     );
   });
   return (
@@ -428,7 +478,10 @@ const SyncData = ({ navigation }) => {
         item={item}
         databaseId={databaseId}
         func={fetchDataFromUserSavedData}
+        disable={disable}
       />
+      <DeleteModal content={content} setContent={setContent} />
+      <AlertModal content={content1} setContent={setContent1} />
     </ImageBackground>
   );
 };

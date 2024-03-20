@@ -82,6 +82,91 @@ export const AlertModal = ({ content, setContent }) => {
     </Modal>
   );
 };
+export const DeleteModal = ({ content, setContent }) => {
+  const { title, msg, show, ok,onCancle, color1, vibration,color2 } = content;
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={show}
+      onRequestClose={() => {
+        setContent({ ...content, show: false });
+      }}
+      onShow={() => {
+        if (vibration && vibration==true) {
+
+          Vibration.vibrate(500);
+        }
+      }}
+    >
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          padding: 50,
+          backgroundColor: "rgba(0,0,0,0.5)",
+        }}
+      >
+        <Animatable.View
+          animation={{
+            from: { rotateY: "0deg" },
+            to: { rotateY: "360deg" },
+          }}
+          easing="ease-out"
+          iterationCount={1}
+          duration={500}
+          style={{
+            minHeight: height * 0.15,
+            backgroundColor: "#fff",
+            width: "100%",
+            borderRadius: 10,
+            paddingTop: 10,
+          }}
+        >
+          <Text style={{ textAlign: "center" }}>{msg}</Text>
+          <View style={{flexDirection:"row",justifyContent:"space-around"}}>
+          <SubmitButton
+            title={"Cancle"}
+            onPress={() => {
+              if (typeof onCancle === "function") {
+                onCancle();
+              }
+              setContent({ ...content, show: false });
+            }}
+            textStyle={{}}
+            buttonStyle={{
+              minHeight: 30,
+              width: "40%",
+              alignSelf: "center",
+              backgroundColor: color1 || "#cc3300",
+              borderRadius: 5,
+            }}
+          />
+          <SubmitButton
+            title={"Ok"}
+            onPress={() => {
+              if (typeof ok === "function") {
+                ok();
+              }
+              setContent({ ...content, show: false });
+            }}
+            textStyle={{}}
+            buttonStyle={{
+              minHeight: 30,
+              width: "40%",
+              alignSelf: "center",
+              backgroundColor: color2 || "#cc3300",
+              borderRadius: 5,
+            }}
+          />
+          </View>
+        </Animatable.View>
+      </View>
+    </Modal>
+  );
+};
 
 export const SuccessModal = ({
   show = false,
