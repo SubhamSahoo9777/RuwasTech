@@ -223,6 +223,7 @@ const ProgressReport = memo(({ navigation, route }) => {
         },
         modalActivityData: alltableData,
         filesAttached: addedFiles.slice(1),
+        timeStamp:new Date().toLocaleString('en-UG', { timeZone: 'Africa/Kampala' })
       };
 
       try {

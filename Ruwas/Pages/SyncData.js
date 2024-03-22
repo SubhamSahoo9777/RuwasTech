@@ -1,24 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Alert,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Modal,
-  FlatList,
-  ActivityIndicator,
-  Pressable,
-  Image,
-  ImageBackground,
-} from "react-native";
+import { View, Text, Alert, FlatList, ImageBackground } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import {
-  deleteRowById,
   deleteRowById1,
   retrieveData,
   updateRecord,
@@ -48,15 +34,6 @@ const SyncData = ({ navigation }) => {
 
   const [switches, setSwitches] = useState({});
 
-  // const toggleSwitch = (index, id) => {
-  //   const newSwitches = { ...switches };
-  //   if (!newSwitches[id]) {
-  //     newSwitches[id] = new Array(userData.length).fill(false);
-  //   }
-  //   newSwitches[id][index] = !newSwitches[id][index];
-  //   setSwitches(newSwitches);
-  // };
-
   // -----------------------------------------------------------------------fetch data from database
   const fetchDataFromUserSavedData = async () => {
     try {
@@ -80,7 +57,7 @@ const SyncData = ({ navigation }) => {
       setLoading(false);
     }
   };
-  // -------------------------------------------------------------------------------------------------------------------------handle sync
+  // -------------------------------------------------------------------------handle sync
   const handleItemSubmit = async (item, selectedData) => {
     const userData = JSON.parse(item.USERSAVEDATA);
     const basicDetails = userData.BasicDetails;
@@ -138,12 +115,17 @@ const SyncData = ({ navigation }) => {
         }
 
         const data = await response.json();
-        Alert.alert("Data", data);
+        // Alert.alert("Data", data);
+        console.log(data);
         setContent1({
           show: true,
-          msg: data=="Synched"?"Data successfully Synced" :"Sorry ! Something went wrong",
+          msg:
+            data == '"Synched"'
+              ? "Data successfully Synced"
+              : "Sorry ! Something went wrong",
           vibration: false,
-        })
+          color: "green",
+        });
         updateSyncStatus(item.USERID, "true", item.id);
         updateFunc(item.id, selectedData);
         setSync(true);
@@ -179,7 +161,6 @@ const SyncData = ({ navigation }) => {
       }
       return item;
     });
-    console.log(modalDates, "subham");
     const requestBody = {
       ...restData,
       modalActivityData: modalDates,
@@ -217,6 +198,128 @@ const SyncData = ({ navigation }) => {
       fetchDataFromUserSavedData();
     }, [])
   );
+  // ------------------------------------------------------------------------sync data alert validation w.r.t month
+  const postDataDuration = (item) => {
+    let deleteTime = JSON.parse(item.USERSAVEDATA).timeStamp.slice(0, 10);
+
+    return (
+      <Text
+        style={{
+          position: "absolute",
+          top: -40,
+          left: "45%",
+          backgroundColor: "#bef2f4",
+          padding: 5,
+          borderRadius: 5,
+        }}
+      >
+        {deleteTime}
+      </Text>
+    );
+  };
+
+  const messageAllocation = (item) => {
+    const currentTime = new Date();
+    const currentYear = Number(
+      currentTime.toLocaleString("en-IN", {
+        timeZone: "Africa/Kampala",
+        year: "numeric",
+      })
+    );
+    const currentMonth = Number(
+      currentTime.toLocaleString("en-IN", {
+        timeZone: "Africa/Kampala",
+        month: "numeric",
+      })
+    );
+    const currentDay = Number(
+      currentTime.toLocaleString("en-IN", {
+        timeZone: "Africa/Kampala",
+        day: "2-digit",
+      })
+    );
+    const currentHour = Number(
+      currentTime.toLocaleString("en-IN", {
+        timeZone: "Africa/Kampala",
+        hour: "numeric",
+        hour12: false,
+      })
+    );
+    const currentMinute = Number(
+      currentTime.toLocaleString("en-IN", {
+        timeZone: "Africa/Kampala",
+        minute: "numeric",
+      })
+    );
+    const currentSecond = Number(
+      currentTime.toLocaleString("en-IN", {
+        timeZone: "Africa/Kampala",
+        second: "numeric",
+      })
+    );
+
+    console.log("Current Year:", currentYear);
+    console.log("Current Month:", currentMonth);
+    console.log("Current Day:", currentDay);
+    console.log(
+      "Current Time:",
+      currentHour + ":" + currentMinute + ":" + currentSecond
+    );
+
+    const messageAlertTimeForQ1Data = new Date(
+      currentYear,
+      9,
+      1,
+    );
+    const messageAlertTimeForQ2Data = new Date(
+      currentYear,
+      12,
+      1,
+    );
+    const messageAlertTimeForQ3Data = new Date(
+      currentYear,
+      3,
+      1,
+    );
+    const messageAlertTimeForQ4Data = new Date(
+      currentYear,
+      6,
+      1,
+    );
+    const messageDeleteTimeForQ1Data = new Date(
+      currentYear,
+      10,
+      1,
+    );
+    const messageDeleteTimeForQ2Data = new Date(
+      currentYear,
+      1,
+      1,
+    );
+    const messageDeleteTimeForQ3Data = new Date(
+      currentYear,
+      4,
+      1,
+    );
+    const messageDeleteTimeForQ4Data = new Date(
+      currentYear,
+      7,
+      1,
+    );
+    console.log(JSON.parse(item.USERSAVEDATA).timeStamp, "ho");
+
+    console.log(
+      JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("c"),
+      "ho"
+    );
+    return (
+      <Text style={{ color: "red" }}>
+        {
+         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("a") 
+        }
+      </Text>
+    );
+  };
   // -----------------------------------------------------------------------------------------render Item
   const renderItem = React.useCallback(({ item, ind }) => {
     return (
@@ -228,9 +331,12 @@ const SyncData = ({ navigation }) => {
               padding: 10,
               elevation: 5,
               borderRadius: 10,
-              marginTop: 15,
+              marginTop: 40,
+              marginBottom: 10,
             }}
           >
+            {postDataDuration(item)}
+            {messageAllocation(item)}
             {/* ------------------------------------header */}
             <View
               style={{
@@ -384,14 +490,16 @@ const SyncData = ({ navigation }) => {
                             size={22}
                             color="#006aff"
                             // onPress={() => handleItemSubmit(item, items)}
-                            onPress={() =>setContent({
-                              show: true,
-                              msg: "Do you want to Sync ?",
-                              ok: () => handleItemSubmit(item, items),
-                              color1: "#8080ff",
-                              color2: "green",
-                              vibration: true,
-                            })}
+                            onPress={() =>
+                              setContent({
+                                show: true,
+                                msg: "Do you want to Sync ?",
+                                ok: () => handleItemSubmit(item, items),
+                                color1: "#8080ff",
+                                color2: "green",
+                                vibration: true,
+                              })
+                            }
                           />
                         )}
                         {/* ---------------------------------------------------------------------------------delete  */}

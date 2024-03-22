@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
+import Timer from './components/Timer';
 
 const getCurrentMonth = () => {
   const d = new Date();
@@ -16,9 +17,7 @@ const App = () => {
   }, []);
 
   return (
-    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-      <Text>Current Month: {getCurrentMonth()}</Text>
-    </View>
+ <Timer/>
   );
 };
 
