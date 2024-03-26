@@ -201,7 +201,22 @@ const SyncData = ({ navigation }) => {
   // ------------------------------------------------------------------------sync data alert validation w.r.t month
   const postDataDuration = (item) => {
     let deleteTime = JSON.parse(item.USERSAVEDATA).timeStamp.slice(0, 10);
-
+    let todayDate=new Date().toLocaleString('en-UG', { timeZone: 'Africa/Kampala' }).slice(0, 10)
+    let yesterday = new Date(new Date());
+yesterday.setDate(new Date().getDate() - 1)
+yesterday=yesterday.toLocaleString('en-UG', { timeZone: 'Africa/Kampala' }).slice(0, 10)
+console.log(yesterday,"yesterday");
+console.log(deleteTime,"post date")
+console.log(todayDate,"todayDate")
+let dateTypeFunc=()=>{
+  if(deleteTime==todayDate){
+return "Today"
+  }else if(deleteTime==yesterday){
+    return "Yesterday"
+  }else{
+    return deleteTime
+  }
+}
     return (
       <Text
         style={{
@@ -213,7 +228,7 @@ const SyncData = ({ navigation }) => {
           borderRadius: 5,
         }}
       >
-        {deleteTime}
+        {dateTypeFunc()}
       </Text>
     );
   };
@@ -226,45 +241,7 @@ const SyncData = ({ navigation }) => {
         year: "numeric",
       })
     );
-    const currentMonth = Number(
-      currentTime.toLocaleString("en-IN", {
-        timeZone: "Africa/Kampala",
-        month: "numeric",
-      })
-    );
-    const currentDay = Number(
-      currentTime.toLocaleString("en-IN", {
-        timeZone: "Africa/Kampala",
-        day: "2-digit",
-      })
-    );
-    const currentHour = Number(
-      currentTime.toLocaleString("en-IN", {
-        timeZone: "Africa/Kampala",
-        hour: "numeric",
-        hour12: false,
-      })
-    );
-    const currentMinute = Number(
-      currentTime.toLocaleString("en-IN", {
-        timeZone: "Africa/Kampala",
-        minute: "numeric",
-      })
-    );
-    const currentSecond = Number(
-      currentTime.toLocaleString("en-IN", {
-        timeZone: "Africa/Kampala",
-        second: "numeric",
-      })
-    );
-
-    console.log("Current Year:", currentYear);
-    console.log("Current Month:", currentMonth);
-    console.log("Current Day:", currentDay);
-    console.log(
-      "Current Time:",
-      currentHour + ":" + currentMinute + ":" + currentSecond
-    );
+    
 
     const messageAlertTimeForQ1Data = new Date(
       currentYear,
@@ -306,18 +283,33 @@ const SyncData = ({ navigation }) => {
       7,
       1,
     );
-    console.log(JSON.parse(item.USERSAVEDATA).timeStamp, "ho");
-
-    console.log(
-      JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("c"),
-      "ho"
-    );
+    const q1Status=currentTime >= messageAlertTimeForQ1Data && currentTime <= messageDeleteTimeForQ1Data
+    const q2Status=currentTime >= messageAlertTimeForQ2Data && currentTime <= messageDeleteTimeForQ2Data
+    const q3Status=currentTime >= messageAlertTimeForQ3Data && currentTime <= messageDeleteTimeForQ3Data
+    const q4Status=currentTime >= messageAlertTimeForQ4Data && currentTime <= messageDeleteTimeForQ4Data
     return (
-      <Text style={{ color: "red" }}>
-        {
-         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("a") 
-        }
-      </Text>
+     
+        <>
+       {
+         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("a") &&q1Status?
+         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ1Data.toLocaleString("en-IN", {
+          timeZone: "Africa/Kampala",
+        }).split(",")[0]}</Text>:
+         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("b") &&q2Status?
+         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ2Data.toLocaleString("en-IN", {
+          timeZone: "Africa/Kampala",
+        }).split(",")[0]}</Text>:
+         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("c") &&q3Status?
+         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ3Data.toLocaleString("en-IN", {
+          timeZone: "Africa/Kampala",
+        }).split(",")[0]}</Text>:
+         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("d") &&q4Status?
+         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ4Data.toLocaleString("en-IN", {
+          timeZone: "Africa/Kampala",
+        }).split(",")[0]}</Text>:null
+       }
+        </>
+        
     );
   };
   // -----------------------------------------------------------------------------------------render Item
@@ -576,7 +568,7 @@ const SyncData = ({ navigation }) => {
       resizeMode="cover"
     >
       <FlatList
-        data={userData && userData}
+        data={userData && userData.sort((a,b)=>b.id-a.id)}
         renderItem={renderItem}
         contentContainerStyle={{ paddingBottom: 20 }}
       />

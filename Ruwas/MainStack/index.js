@@ -16,6 +16,7 @@ import PinGeneration from '../Autherization/PinGeneration';
 import { scale } from 'react-native-size-matters';
 import Report from '../Pages/Report';
 import SyncData from '../Pages/SyncData';
+import FinantialYearSelect from '../Pages/FinantialYearSelect';
 
 const MainStack = createStackNavigator();
 
@@ -148,6 +149,11 @@ const MainStackScreen = () => {
                     name="Sync Data"
                     component={SyncData}
                     options={Options}
+                />
+              <MainStack.Screen
+                    name="FinantialYearSelect"
+                    component={FinantialYearSelect}
+                    options={{headerShown:false }}
                 />
             </MainStack.Navigator>
         </View>

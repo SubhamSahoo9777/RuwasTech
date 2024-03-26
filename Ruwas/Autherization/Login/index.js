@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -22,12 +22,17 @@ import {
   retrieveData,
 } from "../../components/AllLocalDatabaseFunction";
 import NetInfo from "@react-native-community/netinfo";
-import { AlertModal } from "../../components/AllModals";
+import {
+  AlertModal,
+  FinatialYearPickerModal,
+} from "../../components/AllModals";
 const Login = ({ navigation }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [content, setContent] = React.useState({ show: false });
+  const [content1, setContent1] = React.useState(false);
+  const [fyyear, setFyyear] = React.useState("");
   useEffect(() => {
     const restoreUser = async () => {
       try {
@@ -48,9 +53,10 @@ const Login = ({ navigation }) => {
   React.useEffect(() => {
     TableCreations();
   }, []);
-const navigationFunc=()=>{
-  navigation.navigate("PinGeneration");
-}
+  const navigationFunc = () => {
+    // navigation.navigate("PinGeneration");
+    navigation.navigate("FinantialYearSelect");
+  };
   React.useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -60,11 +66,6 @@ const navigationFunc=()=>{
       }
     })();
   }, []);
-
-  // const checkItemExists = async () => {
-  //   const value = await AsyncStorage.getItem("LocationDetails");
-  //   return value;
-  // };
   const isValidEmail = (username) => {
     // Regular expression for basic email validation
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -102,7 +103,7 @@ const navigationFunc=()=>{
 
             let token2 = await AsyncStorage.getItem("token");
             if (token2 !== "") {
-              allApiCall();
+              await allApiCall();
               let temp1 = {
                 tableName: "userDetais",
                 TEXT: Object.keys(response[0]),
@@ -110,12 +111,14 @@ const navigationFunc=()=>{
               await createTable(temp1);
               let temp2 = { ...temp1, table: response };
               insertDataArray(temp2);
+
               setContent({
-                msg:"User Logged In Successfully",
-                show:true,
-                ok:navigationFunc,
-                color:"green"
-              })
+                msg: "User Logged In Successfully",
+                show: true,
+                ok: navigationFunc,
+                color: "green",
+              });
+              
             }
           } else {
             setLoading(false);
@@ -149,31 +152,6 @@ const navigationFunc=()=>{
       }
     }
   };
-  // const handleLogin = async () => {
-  //   console.log("Username:", username);
-  //   console.log("Password:", password);
-
-  //   const check = await checkItemExists();
-
-  //   if (check !== null) {
-  //     // User exists
-  //     const pinCheck = await AsyncStorage.getItem("Pin");
-  //     if (pinCheck !== null) {
-  //       navigation.navigate("PinAccess");
-  //     } else {
-  //       navigation.navigate("PinGeneration");
-  //     }
-  //   } else {
-  //     // New user
-  //     // Perform one-time actions here
-  //     await InsertLoc();
-  //     await allApiCall();
-
-  //     // Authenticate the user
-  //     const authData = await authFunction(username, password);
-  //     console.log(authData);
-  //   }
-  // };
 
   const allApiCall = async () => {
     setLoading(true);
@@ -183,58 +161,14 @@ const navigationFunc=()=>{
     const districtUri =
       "http://182.18.181.115:8084/api/masterdata/getRWSRCdistrictdtls";
     const waterWorkPlanuri =
-      "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113";
+      "http://182.18.181.115:8084/api/masterdata/getwaterworkplandtls?districtid=113&fyyear=60";
     const sanitationWorkPlanuri =
-      "http://182.18.181.115:8084/api/masterdata/getsanitationworkplandtls?districtid=113";
+      "http://182.18.181.115:8084/api/masterdata/getsanitationworkplandtls?districtid=113&fyyear=60";
     const workplanModalActivityuri =
-      "http://182.18.181.115:8084/api/masterdata/getworkplanmodelactivitydtls?districtid=113";
+      "http://182.18.181.115:8084/api/masterdata/getworkplanmodelactivitydtls?workplanid=1476";
     const sanitationWorkPlanModalActivityuri =
-      "http://182.18.181.115:8084/api/masterdata/getsanitizationworkplanmodelactivitydtls?districtid=113";
+      "http://182.18.181.115:8084/api/masterdata/getsanitizationworkplanmodelactivitydtls?workplanid=147";
     try {
-      //sanitationWorkPlanModalActivity
-      let sanitationWorkPlanModalActivity = JSON.parse(
-        await (await fetch(sanitationWorkPlanModalActivityuri)).json()
-      );
-      let spmTemp = {
-        tableName: "sanitationWorkPlanModalActivity",
-        TEXT: Object.keys(sanitationWorkPlanModalActivity[0]),
-      };
-      await createTable(spmTemp);
-      let spmTemp2 = { ...spmTemp, table: sanitationWorkPlanModalActivity };
-      insertDataArray(spmTemp2);
-      //workplanModalActivity
-      let workplanModalActivity = JSON.parse(
-        await (await fetch(workplanModalActivityuri)).json()
-      );
-      let wmTemp = {
-        tableName: "workplanModalActivity",
-        TEXT: Object.keys(workplanModalActivity[0]),
-      };
-      await createTable(wmTemp);
-      let wmTemp2 = { ...wmTemp, table: workplanModalActivity };
-      insertDataArray(wmTemp2);
-      //sanitationWorkPlan
-      let sanitationWorkPlan = JSON.parse(
-        await (await fetch(sanitationWorkPlanuri)).json()
-      );
-      let swTemp = {
-        tableName: "sanitationWorkPlan",
-        TEXT: Object.keys(sanitationWorkPlan[0]),
-      };
-      await createTable(swTemp);
-      let swTemp2 = { ...swTemp, table: sanitationWorkPlan };
-      insertDataArray(swTemp2);
-      //waterWorkPlan
-      let waterWorkPlan = JSON.parse(
-        await (await fetch(waterWorkPlanuri)).json()
-      );
-      let WorkTemp = {
-        tableName: "waterWorkPlan",
-        TEXT: Object.keys(waterWorkPlan[0]),
-      };
-      await createTable(WorkTemp);
-      let WorkTemp2 = { ...WorkTemp, table: waterWorkPlan };
-      insertDataArray(WorkTemp2);
       //year insert Data into loacal database
       let allmasterYear = JSON.parse(await (await fetch(yearUri1)).json());
 
@@ -255,6 +189,7 @@ const navigationFunc=()=>{
       await createTable(temp3);
       let temp4 = { ...temp3, table: masterRwsrc };
       insertDataArray(temp4);
+
       //   districts insert dataintolocal data base
       let masterDistricts = JSON.parse(await (await fetch(districtUri)).json());
       let temp5 = {
@@ -264,17 +199,76 @@ const navigationFunc=()=>{
       await createTable(temp5);
       let temp6 = { ...temp5, table: masterDistricts };
       insertDataArray(temp6);
+    } catch (error) {
+      alert("error fetching data");
+    }finally{
+         
+      //sanitationWorkPlan
+      // let sanitationWorkPlan = JSON.parse(
+      //   await (await fetch(sanitationWorkPlanuri)).json()
+      // );
+      // let swTemp = {
+      //   tableName: "sanitationWorkPlan",
+      //   TEXT: Object.keys(sanitationWorkPlan[0]),
+      // };
+      // await createTable(swTemp);
+      // let swTemp2 = { ...swTemp, table: sanitationWorkPlan };
+      // insertDataArray(swTemp2);
+
+      //waterWorkPlan
+      // let waterWorkPlan = JSON.parse(
+      //   await (await fetch(waterWorkPlanuri)).json()
+      // );
+      // let WorkTemp = {
+      //   tableName: "waterWorkPlan",
+      //   TEXT: Object.keys(waterWorkPlan[0]),
+      // };
+      // await createTable(WorkTemp);
+      // let WorkTemp2 = { ...WorkTemp, table: waterWorkPlan };
+      // insertDataArray(WorkTemp2);
+
+      //sanitationWorkPlanModalActivity
+
+      let sanitationWorkPlanModalActivity = JSON.parse(
+        await (await fetch(sanitationWorkPlanModalActivityuri)).json()
+      );
+      let spmTemp = {
+        tableName: "sanitationWorkPlanModalActivity",
+        TEXT: Object.keys(sanitationWorkPlanModalActivity[0]),
+      };
+      await createTable(spmTemp);
+      let spmTemp2 = { ...spmTemp, table: sanitationWorkPlanModalActivity };
+      insertDataArray(spmTemp2);
+
+      //workplanModalActivity
+
+      let workplanModalActivity = JSON.parse(
+        await (await fetch(workplanModalActivityuri)).json()
+      );
+      let wmTemp = {
+        tableName: "workplanModalActivity",
+        TEXT: Object.keys(workplanModalActivity[0]),
+      };
+      await createTable(wmTemp);
+      let wmTemp2 = { ...wmTemp, table: workplanModalActivity };
+      insertDataArray(wmTemp2);
 
       let spmT = {
         tableName: "recordReminder",
-        TEXT: ["mid","quarterComment","quarterAchieved","quarterExpenditure"],
+        TEXT: [
+          "mid",
+          "quarterComment",
+          "quarterAchieved",
+          "quarterExpenditure",
+        ],
       };
-      console.log(await createTable(spmT))
+      console.log(await createTable(spmT));
       setLoading(false);
-    } catch (error) {
-      alert("error fetching data");
     }
   };
+
+
+
   const createtablesaveddata = async () => {
     let temp = {
       tableName: "UserSavedData",
@@ -400,7 +394,7 @@ const navigationFunc=()=>{
           />
         )}
         <AlertModal content={content} setContent={setContent} />
-         
+        <FinatialYearPickerModal content={content1} setContent={setContent1} />
       </LinearGradient>
     </ImageBackground>
   );

@@ -104,6 +104,88 @@ export const CustomDropDown = ({
     </View>
   );
 };
+export const CustomDropDown1 = ({
+  dropData,
+  setSelect,
+  title,
+  isWrong,
+  icon,
+  fieldName,
+  valueFieldName,
+}) => {
+  const [value, setValue] = React.useState(null);
+  const [isFocus, setIsFocus] = React.useState(false);
+  const data1 = [{ label: "--No Result--", value: "1" }];
+  const renderLabel = () => {
+    if (value || isFocus) {
+      return (
+        <Text
+          style={[
+            styles.label,
+            isFocus && { color: colors.dropFocusLabelTextColor },
+          ]}
+        >
+          {title || "choose title"} <Text style={{ color: "red" }}>*</Text>
+        </Text>
+      );
+    }
+    return null;
+  };
+  return (
+    <View style={styles.container}>
+      {renderLabel()}
+      <Dropdown
+        style={[
+          {
+            height: 50,
+            borderColor: isWrong ? "red" : colors.dropBorderColor,
+            borderWidth: 1.5,
+            borderRadius: 8,
+            paddingHorizontal: 8,
+            backgroundColor: colors.dropBackColor,
+          },
+          isFocus && { borderColor: colors.dropFocusedBorderColor },
+        ]}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        iconColor={colors.dropArrowColor}
+        data={dropData ? dropData : data1}
+        search
+        maxHeight={300}
+        labelField={fieldName || "label"}
+        valueField={fieldName || "label"}
+        placeholder={!isFocus ? `Select ${title}` : "..."}
+        searchPlaceholder="Search..."
+        value={value}
+        itemContainerStyle={{ backgroundColor: colors.dropItemContainerStyle }}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+        onChange={(item) => {
+          setValue(item[fieldName] || item.label);
+          setSelect(item[valueFieldName] || item[fieldName] || item.label);
+          setIsFocus(false);
+        }}
+        renderLeftIcon={() =>
+          (icon && icon) || (
+            <VectorIcon
+              type="AntDesign"
+              style={styles.icon}
+              color={
+                isFocus
+                  ? colors.dropFocusedIconColor
+                  : colors.dropIconColor
+              }
+              name="Safety"
+              size={18}
+            />
+          )
+        }
+      />
+    </View>
+  );
+};
 export const AttachFile = (props) => {
   const [selectedDocument, setSelectedDocument] = useState({});
   const [show, setShow] = useState(false);

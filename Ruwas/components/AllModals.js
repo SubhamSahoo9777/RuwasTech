@@ -390,6 +390,61 @@ export const SuccessModal = ({
     </Modal>
   );
 };
+export const FinatialYearPickerModal = ({ content, setContent }) => {
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={content}
+    >
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          flex: 1,
+          padding: 50,
+          backgroundColor: "rgba(0,0,0,0.5)",
+        }}
+      >
+        <Animatable.View
+          animation={{
+            from: { rotateY: "0deg" },
+            to: { rotateY: "360deg" },
+          }}
+          easing="ease-out"
+          iterationCount={1}
+          duration={500}
+          style={{
+            minHeight: height * 0.15,
+            backgroundColor: "#fff",
+            width: "100%",
+            borderRadius: 10,
+            padding: 10,
+          }}
+        >
+         
+          <SubmitButton
+            title={"Ok"}
+            onPress={() => {
+              
+              setContent(false);
+            }}
+            textStyle={{}}
+            buttonStyle={{
+              minHeight: 30,
+              width: "40%",
+              alignSelf: "center",
+              backgroundColor: "#cc3300",
+              borderRadius: 5,
+            }}
+          />
+        </Animatable.View>
+      </View>
+    </Modal>
+  );
+};
+
 export const LoaderModal = ({ show, setShow, icon, title }) => {
   return (
     <Modal

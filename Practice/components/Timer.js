@@ -1,44 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 
 const Timer = () => {
-  const deleteTime = new Date(2024, 2, 22, 16, 11, 0); // Set the deletion time (Year, Month, Day, Hour, Minute, Second)
-  const [postVisible, setPostVisible] = useState(true);
+  // Define your start and end dates
+  const startDate = new Date('2024-04-01'); // example start date
+  const endDate = new Date('2024-04-15');   // example end date
 
-  useEffect(() => {
-    const currentTime = new Date();
-    const timeUntilDelete = deleteTime - currentTime;
-    const timeUntilAlert = timeUntilDelete - 5 * 60 * 1000; // 5 minutes before deletion
+  // Get the current date
+  const currentDate = new Date();
 
-    if (timeUntilDelete <= 0) {
-      // If the deletion time is already past, hide the post
-      setPostVisible(false);
-    } else {
-      // Set a timer to hide the post when the deletion time is reached
-      const timer = setTimeout(() => {
-        setPostVisible(false);
-      }, timeUntilDelete);
-
-      // Set a timer to show alert 5 minutes before deletion
-      if (timeUntilAlert > 0) {
-        setTimeout(() => {
-          Alert.alert('Post Deletion Alert', 'Your post will be deleted in 5 minutes.');
-        }, timeUntilAlert);
-      }
-
-      // Clean up the timers when the component unmounts or post gets deleted manually
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, []);
+  // Check if the current date is within the specified range
+  const shouldShowMessage = currentDate >= startDate && currentDate <= endDate;
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      {postVisible && <Text>post :1</Text>}
-      <Text>sagar</Text>
+    <View>
+      {shouldShowMessage && (
+        <View style={styles.messageContainer}>
+          <Text style={styles.messageText}>Your message here</Text>
+        </View>
+      )}
     </View>
   );
 };
+
+const styles = {
+  messageContainer: {
+    padding: 10,
+    backgroundColor: 'yellow',
+    borderRadius: 5,
+    margin: 10,
+  },
+  messageText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+};
+
+
 
 export default Timer;
