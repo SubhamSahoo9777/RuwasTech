@@ -121,8 +121,8 @@ export const CustomDropDown1 = ({
       return (
         <Text
           style={[
-            styles.label,
-            isFocus && { color: colors.dropFocusLabelTextColor },
+            styles.label1,
+            isFocus && { color: colors.drop1.dropFocusLabelTextColor },
           ]}
         >
           {title || "choose title"} <Text style={{ color: "red" }}>*</Text>
@@ -138,19 +138,19 @@ export const CustomDropDown1 = ({
         style={[
           {
             height: 50,
-            borderColor: isWrong ? "red" : colors.dropBorderColor,
+            borderColor: colors.drop1.dropBorderColor,
             borderWidth: 1.5,
             borderRadius: 8,
             paddingHorizontal: 8,
-            backgroundColor: colors.dropBackColor,
+            backgroundColor: colors.drop1.dropBackColor,
           },
-          isFocus && { borderColor: colors.dropFocusedBorderColor },
+          isFocus && { borderColor: colors.drop1.dropFocusedBorderColor },
         ]}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
+        placeholderStyle={styles.placeholderStyle1}
+        selectedTextStyle={styles.selectedTextStyle1}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        iconColor={colors.dropArrowColor}
+        iconColor={"#fff"}
         data={dropData ? dropData : data1}
         search
         maxHeight={300}
@@ -159,7 +159,9 @@ export const CustomDropDown1 = ({
         placeholder={!isFocus ? `Select ${title}` : "..."}
         searchPlaceholder="Search..."
         value={value}
-        itemContainerStyle={{ backgroundColor: colors.dropItemContainerStyle }}
+        itemContainerStyle={{
+          backgroundColor: colors.drop1.dropItemContainerStyle,
+        }}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={(item) => {
@@ -174,11 +176,11 @@ export const CustomDropDown1 = ({
               style={styles.icon}
               color={
                 isFocus
-                  ? colors.dropFocusedIconColor
-                  : colors.dropIconColor
+                  ? colors.drop1.dropFocusedIconColor
+                  : colors.drop1.dropIconColor
               }
               name="Safety"
-              size={18}
+              size={20}
             />
           )
         }
@@ -232,15 +234,17 @@ export const AttachFile = (props) => {
         height: 50,
         alignItems: "center",
         paddingLeft: 5,
-        borderColor: props.isWrong ? "red" : colors.commonTextBorderColor,
+        borderColor: props.isWrong ? "red" : colors.drop1.commonTextBorderColor,
       }}
     >
-      <Text style={{ width: "80%", color: colors.documentBodyTextColor }}>
+      <Text style={{ width: "80%", color: colors.drop1.documentBodyTextColor }}>
         {(props.file && props.file?.name) || ""}
       </Text>
       <TouchableOpacity
         style={{
-          backgroundColor: props.isWrong ? "#ff6666" : colors.tableHeaderColor,
+          backgroundColor: props.isWrong
+            ? "#ff6666"
+            : colors.drop1.tableHeaderColor,
           height: 50,
           width: "20%",
           borderTopRightRadius: 10,
@@ -290,7 +294,7 @@ export const ModifiedTextInput1 = (props) => {
         placeholder={show ? "" : title}
         cursorColor={"#000"}
         onBlur={() => setShow(false)}
-        placeholderTextColor={colors.commonTextPlaceHolderColor}
+        placeholderTextColor={colors.drop1.commonTextPlaceHolderColor}
         keyboardType={keyboardType || "default"}
         onChangeText={(text) => {
           setInput(text);
@@ -298,7 +302,7 @@ export const ModifiedTextInput1 = (props) => {
         }}
         style={{
           minHeight: 50,
-          color: colors.commonTextPlaceHolderColor,
+          color: colors.drop1.commonTextPlaceHolderColor,
           fontSize: 12,
           opacity: 0.8,
         }}
@@ -308,12 +312,12 @@ export const ModifiedTextInput1 = (props) => {
           style={{
             position: "absolute",
             top: -15,
-            backgroundColor: colors.commonTextLabelBackColor,
+            backgroundColor: colors.drop1.commonTextLabelBackColor,
             paddingHorizontal: 10,
             borderRadius: 20,
             left: 15,
             fontWeight: "500",
-            color: colors.commonTextLabelTextColor,
+            color: colors.drop1.commonTextLabelTextColor,
             fontSize: 13,
           }}
         >
@@ -323,7 +327,7 @@ export const ModifiedTextInput1 = (props) => {
             type="Entypo"
             name="edit"
             size={10}
-            color={colors.tableHeaderColor}
+            color={colors.drop1.tableHeaderColor}
           />
         </Text>
       ) : null}
@@ -503,13 +507,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     fontSize: 13,
   },
+  label1: {
+    borderRadius: 10,
+    position: "absolute",
+    backgroundColor: colors.dropLabelBackColor,
+    fontWeight: "700",
+    color: colors.dropLabelTextColor,
+    left: 22,
+    top: 3,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 13,
+  },
   placeholderStyle: {
     fontSize: 12,
     color: colors.dropPlaceHolderTextColor,
   },
+  placeholderStyle1: {
+    fontSize: 15,
+    color: colors.drop1.dropPlaceHolderTextColor,
+  },
   selectedTextStyle: {
     fontSize: 12,
     color: colors.dropBodySelectedTextColor,
+  },
+  selectedTextStyle1: {
+    fontSize: 15,
+    color: colors.drop1.dropBodySelectedTextColor,
   },
   iconStyle: {
     width: 20,
