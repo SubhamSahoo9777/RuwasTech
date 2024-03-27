@@ -165,7 +165,7 @@ const Login = ({ navigation }) => {
     const sanitationWorkPlanuri =
       "http://182.18.181.115:8084/api/masterdata/getsanitationworkplandtls?districtid=113&fyyear=60";
     const workplanModalActivityuri =
-      "http://182.18.181.115:8084/api/masterdata/getworkplanmodelactivitydtls?workplanid=1476";
+      "http://182.18.181.115:8084/api/masterdata/getworkplanmodelactivitydtls?workplanid=1380";
     const sanitationWorkPlanModalActivityuri =
       "http://182.18.181.115:8084/api/masterdata/getsanitizationworkplanmodelactivitydtls?workplanid=147";
     try {
@@ -229,29 +229,29 @@ const Login = ({ navigation }) => {
 
       //sanitationWorkPlanModalActivity
 
-      let sanitationWorkPlanModalActivity = JSON.parse(
-        await (await fetch(sanitationWorkPlanModalActivityuri)).json()
-      );
-      let spmTemp = {
-        tableName: "sanitationWorkPlanModalActivity",
-        TEXT: Object.keys(sanitationWorkPlanModalActivity[0]),
-      };
-      await createTable(spmTemp);
-      let spmTemp2 = { ...spmTemp, table: sanitationWorkPlanModalActivity };
-      insertDataArray(spmTemp2);
+      // let sanitationWorkPlanModalActivity = JSON.parse(
+      //   await (await fetch(sanitationWorkPlanModalActivityuri)).json()
+      // );
+      // let spmTemp = {
+      //   tableName: "sanitationWorkPlanModalActivity",
+      //   TEXT: Object.keys(sanitationWorkPlanModalActivity[0]),
+      // };
+      // await createTable(spmTemp);
+      // let spmTemp2 = { ...spmTemp, table: sanitationWorkPlanModalActivity };
+      // insertDataArray(spmTemp2);
 
-      //workplanModalActivity
+      // //workplanModalActivitywater
 
-      let workplanModalActivity = JSON.parse(
-        await (await fetch(workplanModalActivityuri)).json()
-      );
-      let wmTemp = {
-        tableName: "workplanModalActivity",
-        TEXT: Object.keys(workplanModalActivity[0]),
-      };
-      await createTable(wmTemp);
-      let wmTemp2 = { ...wmTemp, table: workplanModalActivity };
-      insertDataArray(wmTemp2);
+      // let workplanModalActivity = JSON.parse(
+      //   await (await fetch(workplanModalActivityuri)).json()
+      // );
+      // let wmTemp = {
+      //   tableName: "workplanModalActivity",
+      //   TEXT: Object.keys(workplanModalActivity[0]),
+      // };
+      // await createTable(wmTemp);
+      // let wmTemp2 = { ...wmTemp, table: workplanModalActivity };
+      // insertDataArray(wmTemp2);
 
       let spmT = {
         tableName: "recordReminder",

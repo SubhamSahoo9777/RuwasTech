@@ -234,17 +234,15 @@ export const AttachFile = (props) => {
         height: 50,
         alignItems: "center",
         paddingLeft: 5,
-        borderColor: props.isWrong ? "red" : colors.drop1.commonTextBorderColor,
+        borderColor: props.isWrong ? "red" : colors.commonTextBorderColor,
       }}
     >
-      <Text style={{ width: "80%", color: colors.drop1.documentBodyTextColor }}>
+      <Text style={{ width: "80%", color: colors.documentBodyTextColor }}>
         {(props.file && props.file?.name) || ""}
       </Text>
       <TouchableOpacity
         style={{
-          backgroundColor: props.isWrong
-            ? "#ff6666"
-            : colors.drop1.tableHeaderColor,
+          backgroundColor: props.isWrong ? "#ff6666" : colors.tableHeaderColor,
           height: 50,
           width: "20%",
           borderTopRightRadius: 10,
@@ -294,7 +292,7 @@ export const ModifiedTextInput1 = (props) => {
         placeholder={show ? "" : title}
         cursorColor={"#000"}
         onBlur={() => setShow(false)}
-        placeholderTextColor={colors.drop1.commonTextPlaceHolderColor}
+        placeholderTextColor={colors.commonTextPlaceHolderColor}
         keyboardType={keyboardType || "default"}
         onChangeText={(text) => {
           setInput(text);
@@ -302,7 +300,7 @@ export const ModifiedTextInput1 = (props) => {
         }}
         style={{
           minHeight: 50,
-          color: colors.drop1.commonTextPlaceHolderColor,
+          color: colors.commonTextPlaceHolderColor,
           fontSize: 12,
           opacity: 0.8,
         }}
@@ -312,12 +310,12 @@ export const ModifiedTextInput1 = (props) => {
           style={{
             position: "absolute",
             top: -15,
-            backgroundColor: colors.drop1.commonTextLabelBackColor,
+            backgroundColor: colors.commonTextLabelBackColor,
             paddingHorizontal: 10,
             borderRadius: 20,
             left: 15,
             fontWeight: "500",
-            color: colors.drop1.commonTextLabelTextColor,
+            color: colors.commonTextLabelTextColor,
             fontSize: 13,
           }}
         >
@@ -327,7 +325,7 @@ export const ModifiedTextInput1 = (props) => {
             type="Entypo"
             name="edit"
             size={10}
-            color={colors.drop1.tableHeaderColor}
+            color={colors.tableHeaderColor}
           />
         </Text>
       ) : null}

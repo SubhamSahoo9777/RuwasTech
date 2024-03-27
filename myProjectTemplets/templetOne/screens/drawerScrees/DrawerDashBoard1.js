@@ -9,8 +9,10 @@ import {
   useEffect,
   React,
   StatusBar,
+  Text,
 } from "../../allProjectComponents/allPackages";
 import { useFocusEffect } from "@react-navigation/native";
+import CustomFooterButtomTab from "../stackScreens/CustomFooterButtomTab";
 const DrawerDashBoard1 = () => {
 
   useFocusEffect(
@@ -57,15 +59,22 @@ const DrawerDashBoard1 = () => {
   // console.log(colors);
   return (
     <View
-      style={{ flex: 1, padding: 16, backgroundColor: colors.screen.global }}
+      style={{ flex: 1, backgroundColor: colors.screen.global }}
     >
       <StatusBar
         backgroundColor={colors.statusbar.dashBoardColor}
         barStyle="dark-content"
       />
-    
+      <View style={{flex:1,justifyContent:"space-between"}}>
+        {/* ---------------------------------------------------------------------------------------------body  */}
+<View>
 
-
+</View>
+{/* ----------------------------------------------------------------------------------------------footer  */}
+<View>
+<CustomFooterButtomTab screenName="Home" />
+</View>
+      </View>
     </View>
   );
 };

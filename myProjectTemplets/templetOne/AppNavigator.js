@@ -15,7 +15,9 @@ import { useTheme } from "react-native-paper";
 import PinGeneration from "./screens/stackScreens/PinGeneration";
 import ConformPin from "./screens/stackScreens/ConformPin";
 import PinAccess from "./screens/stackScreens/PinAccess";
-
+import CustomFooterButtomTab from "./screens/stackScreens/CustomFooterButtomTab";
+import Notification from "./screens/stackScreens/Notification";
+import Sync from "./screens/stackScreens/Sync";
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
@@ -81,6 +83,22 @@ export default function AppNavigator() {
           component={Settings}
           options={{ headerShown: true }}
         />
+        <Stack.Screen
+          name="CustomFooterButtomTab"
+          component={CustomFooterButtomTab}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Notification"
+          component={Notification}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Sync"
+          component={Sync}
+          options={{ headerShown: true }}
+        />
+     
       </Stack.Navigator>
     </NavigationContainer>
   );

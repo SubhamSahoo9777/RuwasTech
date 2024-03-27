@@ -61,7 +61,6 @@ const SyncData = ({ navigation }) => {
   const handleItemSubmit = async (item, selectedData) => {
     const userData = JSON.parse(item.USERSAVEDATA);
     const basicDetails = userData.BasicDetails;
-    console.log(new Array({ ...selectedData, update: true }));
     const requestBody = {
       BasicDetails: {
         districtid: basicDetails.districtid,
@@ -116,7 +115,6 @@ const SyncData = ({ navigation }) => {
 
         const data = await response.json();
         // Alert.alert("Data", data);
-        console.log(data);
         setContent1({
           show: true,
           msg:
@@ -201,22 +199,23 @@ const SyncData = ({ navigation }) => {
   // ------------------------------------------------------------------------sync data alert validation w.r.t month
   const postDataDuration = (item) => {
     let deleteTime = JSON.parse(item.USERSAVEDATA).timeStamp.slice(0, 10);
-    let todayDate=new Date().toLocaleString('en-UG', { timeZone: 'Africa/Kampala' }).slice(0, 10)
+    let todayDate = new Date()
+      .toLocaleString("en-UG", { timeZone: "Africa/Kampala" })
+      .slice(0, 10);
     let yesterday = new Date(new Date());
-yesterday.setDate(new Date().getDate() - 1)
-yesterday=yesterday.toLocaleString('en-UG', { timeZone: 'Africa/Kampala' }).slice(0, 10)
-console.log(yesterday,"yesterday");
-console.log(deleteTime,"post date")
-console.log(todayDate,"todayDate")
-let dateTypeFunc=()=>{
-  if(deleteTime==todayDate){
-return "Today"
-  }else if(deleteTime==yesterday){
-    return "Yesterday"
-  }else{
-    return deleteTime
-  }
-}
+    yesterday.setDate(new Date().getDate() - 1);
+    yesterday = yesterday
+      .toLocaleString("en-UG", { timeZone: "Africa/Kampala" })
+      .slice(0, 10);
+    let dateTypeFunc = () => {
+      if (deleteTime == todayDate) {
+        return "Today";
+      } else if (deleteTime == yesterday) {
+        return "Yesterday";
+      } else {
+        return deleteTime;
+      }
+    };
     return (
       <Text
         style={{
@@ -241,75 +240,97 @@ return "Today"
         year: "numeric",
       })
     );
-    
 
-    const messageAlertTimeForQ1Data = new Date(
-      currentYear,
-      9,
-      1,
-    );
-    const messageAlertTimeForQ2Data = new Date(
-      currentYear,
-      12,
-      1,
-    );
-    const messageAlertTimeForQ3Data = new Date(
-      currentYear,
-      3,
-      1,
-    );
-    const messageAlertTimeForQ4Data = new Date(
-      currentYear,
-      6,
-      1,
-    );
-    const messageDeleteTimeForQ1Data = new Date(
-      currentYear,
-      10,
-      1,
-    );
-    const messageDeleteTimeForQ2Data = new Date(
-      currentYear,
-      1,
-      1,
-    );
-    const messageDeleteTimeForQ3Data = new Date(
-      currentYear,
-      4,
-      1,
-    );
-    const messageDeleteTimeForQ4Data = new Date(
-      currentYear,
-      7,
-      1,
-    );
-    const q1Status=currentTime >= messageAlertTimeForQ1Data && currentTime <= messageDeleteTimeForQ1Data
-    const q2Status=currentTime >= messageAlertTimeForQ2Data && currentTime <= messageDeleteTimeForQ2Data
-    const q3Status=currentTime >= messageAlertTimeForQ3Data && currentTime <= messageDeleteTimeForQ3Data
-    const q4Status=currentTime >= messageAlertTimeForQ4Data && currentTime <= messageDeleteTimeForQ4Data
+    const messageAlertTimeForQ1Data = new Date(currentYear, 9, 1);
+    const messageAlertTimeForQ2Data = new Date(currentYear, 12, 1);
+    const messageAlertTimeForQ3Data = new Date(currentYear, 3, 1);
+    const messageAlertTimeForQ4Data = new Date(currentYear, 6, 1);
+    const messageDeleteTimeForQ1Data = new Date(currentYear, 10, 1);
+    const messageDeleteTimeForQ2Data = new Date(currentYear, 1, 1);
+    const messageDeleteTimeForQ3Data = new Date(currentYear, 4, 1);
+    const messageDeleteTimeForQ4Data = new Date(currentYear, 7, 1);
+    const q1Status =
+      currentTime >= messageAlertTimeForQ1Data &&
+      currentTime <= messageDeleteTimeForQ1Data;
+    const q2Status =
+      currentTime >= messageAlertTimeForQ2Data &&
+      currentTime <= messageDeleteTimeForQ2Data;
+    const q3Status =
+      currentTime >= messageAlertTimeForQ3Data &&
+      currentTime <= messageDeleteTimeForQ3Data;
+    const q4Status =
+      currentTime >= messageAlertTimeForQ4Data &&
+      currentTime <= messageDeleteTimeForQ4Data;
     return (
-     
-        <>
-       {
-         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("a") &&q1Status?
-         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ1Data.toLocaleString("en-IN", {
-          timeZone: "Africa/Kampala",
-        }).split(",")[0]}</Text>:
-         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("b") &&q2Status?
-         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ2Data.toLocaleString("en-IN", {
-          timeZone: "Africa/Kampala",
-        }).split(",")[0]}</Text>:
-         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("c") &&q3Status?
-         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ3Data.toLocaleString("en-IN", {
-          timeZone: "Africa/Kampala",
-        }).split(",")[0]}</Text>:
-         JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("d") &&q4Status?
-         <Text style={{ color: "red" }}>{"You have to sync this Data before"} {messageDeleteTimeForQ4Data.toLocaleString("en-IN", {
-          timeZone: "Africa/Kampala",
-        }).split(",")[0]}</Text>:null
-       }
-        </>
-        
+      <>
+        {JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith("a") &&
+        q1Status &&
+        JSON.parse(item.USERSAVEDATA).modalActivityData.every(
+          (item) => item.update
+        ) ? (
+          <Text style={{ color: "red" }}>
+            {"You have to sync this Data before"}{" "}
+            {
+              messageDeleteTimeForQ1Data
+                .toLocaleString("en-UG", {
+                  timeZone: "Africa/Kampala",
+                })
+                .split(",")[0]
+            }
+          </Text>
+        ) : JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith(
+            "b"
+          ) &&
+          q2Status &&
+          JSON.parse(item.USERSAVEDATA).modalActivityData.every(
+            (item) => item.update
+          ) ? (
+          <Text style={{ color: "red" }}>
+            {"You have to sync this Data before"}{" "}
+            {
+              messageDeleteTimeForQ2Data
+                .toLocaleString("en-UG", {
+                  timeZone: "Africa/Kampala",
+                })
+                .split(",")[0]
+            }
+          </Text>
+        ) : JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith(
+            "c"
+          ) &&
+          q3Status &&
+          JSON.parse(item.USERSAVEDATA).modalActivityData.every(
+            (item) => item.update
+          ) ? (
+          <Text style={{ color: "red" }}>
+            {"You have to sync this Data before"}{" "}
+            {
+              messageDeleteTimeForQ3Data
+                .toLocaleString("en-UG", {
+                  timeZone: "Africa/Kampala",
+                })
+                .split(",")[0]
+            }
+          </Text>
+        ) : JSON.parse(item.USERSAVEDATA).modalActivityData[0].id.endsWith(
+            "d"
+          ) &&
+          q4Status &&
+          JSON.parse(item.USERSAVEDATA).modalActivityData.every(
+            (item) => item.update
+          ) ? (
+          <Text style={{ color: "red" }}>
+            {"You have to sync this Data before"}{" "}
+            {
+              messageDeleteTimeForQ4Data
+                .toLocaleString("en-UG", {
+                  timeZone: "Africa/Kampala",
+                })
+                .split(",")[0]
+            }
+          </Text>
+        ) : null}
+      </>
     );
   };
   // -----------------------------------------------------------------------------------------render Item
@@ -568,7 +589,7 @@ return "Today"
       resizeMode="cover"
     >
       <FlatList
-        data={userData && userData.sort((a,b)=>b.id-a.id)}
+        data={userData && userData.sort((a, b) => b.id - a.id)}
         renderItem={renderItem}
         contentContainerStyle={{ paddingBottom: 20 }}
       />

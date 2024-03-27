@@ -9,6 +9,7 @@ import {
 import { VectorIcon, colors, height } from "../../components/AllPackages";
 import { retrieveData } from "../../components/AllLocalDatabaseFunction";
 import { useDispatch } from "react-redux";
+import { ImageBackground } from "react-native";
 
 const Dashboard = ({ navigation }) => {
   const [tap, setTap] = useState(true);
@@ -69,190 +70,196 @@ const Dashboard = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          marginTop: 10,
-          width: "90%",
-          alignSelf: "center",
-        }}
-      >
-        <Pressable
-          onPress={toggleTap}
-          onDoublePress={changeBackgroundColor}
-          style={{
-            width: "50%",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: tap ? colors.tableHeaderColor : "#e6f2ff",
-            paddingVertical: 10,
-            borderBottomLeftRadius: 5,
-            borderTopLeftRadius: 5,
-          }}
-        >
-          <Text style={{ color: (tap && "white") || "black", fontSize: 25 }}>
-            Water
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={toggleTap}
-          onDoublePress={changeBackgroundColor}
-          style={{
-            width: "50%",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: !tap ? colors.tableHeaderColor : "#e6f2ff",
-            paddingVertical: 10,
-            borderBottomRightRadius: 5,
-            borderTopRightRadius: 5,
-          }}
-        >
-          <Text style={{ color: (!tap && "white") || "black", fontSize: 25 }}>
-            Sanitation
-          </Text>
-        </Pressable>
-      </View>
-      {loading ? (
+    <ImageBackground
+      source={require("../../assets/blurUganda.jpeg")}
+      style={{ flex: 1}}
+      resizeMode="cover"
+    >
+      <View style={{ flex: 1 }}>
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{
+            flexDirection: "row",
+            marginTop: 10,
+            width: "90%",
+            alignSelf: "center",
+          }}
         >
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      ) : tap ? (
-        <View style={{ flex: 1, padding: 16 }}>
-          <View
+          <Pressable
+            onPress={toggleTap}
+            onDoublePress={changeBackgroundColor}
             style={{
-              flexDirection: "row",
+              width: "50%",
+              justifyContent: "center",
               alignItems: "center",
-              marginLeft: 10,
+              backgroundColor: tap ? colors.tableHeaderColor : "#e6f2ff",
+              paddingVertical: 10,
+              borderBottomLeftRadius: 5,
+              borderTopLeftRadius: 5,
             }}
           >
-            <VectorIcon
-              type="FontAwesome5"
-              name="arrow-circle-right"
-              size={24}
-              color="green"
-            />
-            <Text style={{ marginLeft: 10, fontSize: 16, color: "green" }}>
-              DWSCG
+            <Text style={{ color: (tap && "white") || "black", fontSize: 25 }}>
+              Water
             </Text>
+          </Pressable>
+          <Pressable
+            onPress={toggleTap}
+            onDoublePress={changeBackgroundColor}
+            style={{
+              width: "50%",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: !tap ? colors.tableHeaderColor : "#e6f2ff",
+              paddingVertical: 10,
+              borderBottomRightRadius: 5,
+              borderTopRightRadius: 5,
+            }}
+          >
+            <Text style={{ color: (!tap && "white") || "black", fontSize: 25 }}>
+              Sanitation
+            </Text>
+          </Pressable>
+        </View>
+        {loading ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <ActivityIndicator size="large" color="#0000ff" />
           </View>
-          <FlatList
-            data={filteredata}
-            renderItem={({ item, index }) => (
-              <Pressable
-                onPress={() =>
-                  navigation.navigate("Report", {
-                    data: { item, type: "water" },
-                  })
-                }
-                key={index}
-                style={{
-                  backgroundColor: "#5b54ab",
-                  marginTop: 10,
-                  height: "auto",
-                  alignItems: "center",
-                  borderRadius: 10,
-                  paddingVertical: 10,
-                  elevation: 10,
-                  flexDirection: "row",
-                  paddingHorizontal: 10,
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ flexDirection: "row" }}>
+        ) : tap ? (
+          <View style={{ flex: 1, padding: 16 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: 10,
+              }}
+            >
+              <VectorIcon
+                type="FontAwesome5"
+                name="arrow-circle-right"
+                size={24}
+                color="green"
+              />
+              <Text style={{ marginLeft: 10, fontSize: 16, color: "green" }}>
+                DWSCG
+              </Text>
+            </View>
+            <FlatList
+              data={filteredata}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("Report", {
+                      data: { item, type: "water" },
+                    })
+                  }
+                  key={index}
+                  style={{
+                    backgroundColor: "#5b54ab",
+                    marginTop: 10,
+                    height: "auto",
+                    alignItems: "center",
+                    borderRadius: 10,
+                    paddingVertical: 10,
+                    elevation: 10,
+                    flexDirection: "row",
+                    paddingHorizontal: 10,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <VectorIcon
+                      type="FontAwesome5"
+                      name="hand-point-right"
+                      size={24}
+                      color="#fff"
+                    />
+                    <Text style={{ color: "#fff", marginLeft: 10 }}>
+                      {"Work Plan Id"}: {item["workplanid"]}
+                    </Text>
+                  </View>
+
                   <VectorIcon
-                    type="FontAwesome5"
-                    name="hand-point-right"
+                    type="AntDesign"
+                    name="rightcircle"
                     size={24}
                     color="#fff"
                   />
-                  <Text style={{ color: "#fff", marginLeft: 10 }}>
-                    {"Work Plan Id"}: {item["workplanid"]}
-                  </Text>
-                </View>
-
-                <VectorIcon
-                  type="AntDesign"
-                  name="rightcircle"
-                  size={24}
-                  color="#fff"
-                />
-              </Pressable>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      ) : (
-        <View style={{ flex: 1, padding: 16 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: 10,
-            }}
-          >
-            <VectorIcon
-              type="FontAwesome5"
-              name="arrow-circle-right"
-              size={24}
-              color="green"
+                </Pressable>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
             />
-            <Text style={{ marginLeft: 10, fontSize: 16, color: "green" }}>
-              DSHCG
-            </Text>
           </View>
-          <FlatList
-            data={filteredSanitation}
-            renderItem={({ item, index }) => (
-              <Pressable
-                onPress={() =>
-                  navigation.navigate("Report", {
-                    data: { item, type: "sanitation" },
-                  })
-                }
-                key={index}
-                style={{
-                  backgroundColor: "#5b54ab",
-                  marginTop: 10,
-                  height: "auto",
-                  alignItems: "center",
-                  borderRadius: 10,
-                  paddingVertical: 10,
-                  elevation: 10,
-                  flexDirection: "row",
-                  paddingHorizontal: 10,
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ flexDirection: "row" }}>
+        ) : (
+          <View style={{ flex: 1, padding: 16 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: 10,
+              }}
+            >
+              <VectorIcon
+                type="FontAwesome5"
+                name="arrow-circle-right"
+                size={24}
+                color="green"
+              />
+              <Text style={{ marginLeft: 10, fontSize: 16, color: "green" }}>
+                DSHCG
+              </Text>
+            </View>
+            <FlatList
+              data={filteredSanitation}
+              renderItem={({ item, index }) => (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("Report", {
+                      data: { item, type: "sanitation" },
+                    })
+                  }
+                  key={index}
+                  style={{
+                    backgroundColor: "#5b54ab",
+                    marginTop: 10,
+                    height: "auto",
+                    alignItems: "center",
+                    borderRadius: 10,
+                    paddingVertical: 10,
+                    elevation: 10,
+                    flexDirection: "row",
+                    paddingHorizontal: 10,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row" }}>
+                    <VectorIcon
+                      type="FontAwesome5"
+                      name="hand-point-right"
+                      size={24}
+                      color="#fff"
+                    />
+                    <Text style={{ color: "#fff", marginLeft: 10 }}>
+                      {"Work Plan Id"}: {item["sanitationid"]}
+                    </Text>
+                  </View>
+
                   <VectorIcon
-                    type="FontAwesome5"
-                    name="hand-point-right"
+                    type="AntDesign"
+                    name="rightcircle"
                     size={24}
                     color="#fff"
                   />
-                  <Text style={{ color: "#fff", marginLeft: 10 }}>
-                    {"Work Plan Id"}: {item["sanitationid"]}
-                  </Text>
-                </View>
-
-                <VectorIcon
-                  type="AntDesign"
-                  name="rightcircle"
-                  size={24}
-                  color="#fff"
-                />
-              </Pressable>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      )}
-    </View>
+                </Pressable>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        )}
+      </View>
+    </ImageBackground>
   );
 };
 

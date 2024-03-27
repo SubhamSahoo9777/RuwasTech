@@ -77,9 +77,11 @@ const ProgressReport = memo(({ navigation, route }) => {
           workplanModalActivityDetails = await retrieveData(
             "workplanModalActivity"
           );
+          
           let temp = workplanModalActivityDetails.filter(
             (item) =>
-              item.workplanid === allDetails.workplanid &&
+              item.workplanid === allDetails.workplanid 
+              &&
               item.approvedAnnualTarget !== "0" &&
               item.quarterOne !== "0"
           );
@@ -529,7 +531,7 @@ const ProgressReport = memo(({ navigation, route }) => {
           setShow={setShow}
           type="info"
           title="Can't fetch data from your local dataBase"
-          content="Need to reStart the app"
+          content="Need to restart the app"
         />
         <SuccessModal
           show={addErrorModal}

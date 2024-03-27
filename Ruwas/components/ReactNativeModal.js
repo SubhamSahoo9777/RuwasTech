@@ -51,7 +51,7 @@ export const ReactNativeModal1 = ({
   const [quaterExpenditure, SetQuaterExpenditure] = useState(
     unitData["quarterOneExpenditure"]
   );
- 
+
   const valueSendToRedux = () => {
     if (quarterType == 1) {
       Dispatch({
@@ -157,24 +157,24 @@ export const ReactNativeModal1 = ({
   const [disableData, setDisableData] = useState({});
   const [content, setContent] = useState({ show: false });
   // ............................................................................................disable function
-  const cheakDisableByMonth=()=>{
-    if(quarterType==1){
-       return ["07","08","09","10"].includes(getCurrentMonth())
+  const cheakDisableByMonth = () => {
+    if (quarterType == 1) {
+      return ["07", "08", "09", "10"].includes(getCurrentMonth());
     }
-    if(quarterType==2){
-       return ["10","11","12","01"].includes(getCurrentMonth())
+    if (quarterType == 2) {
+      return ["10", "11", "12", "01"].includes(getCurrentMonth());
     }
-    if(quarterType==3){
-       return ["01","02","03","04"].includes(getCurrentMonth())
+    if (quarterType == 3) {
+      return ["01", "02", "03", "04"].includes(getCurrentMonth());
     }
-    if(quarterType==4){
-       return ["04","05","06","06"].includes(getCurrentMonth())
+    if (quarterType == 4) {
+      return ["04", "05", "06", "06"].includes(getCurrentMonth());
     }
-  }
+  };
   const getCurrentMonth = () => {
     const d = new Date();
-    const options = { timeZone: 'Africa/Kampala' };
-    return d.toLocaleString('en-UG', options).split(" ")[0].slice(3,5);
+    const options = { timeZone: "Africa/Kampala" };
+    return d.toLocaleString("en-UG", options).split(" ")[0].slice(3, 5);
   };
 
   const isDataEntered = async () => {
@@ -223,19 +223,19 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Please enter the Performance in quater achieved",
-        vibration:true
+        vibration: true,
       });
     } else if (quaterExpenditure <= 0 || isNaN(quaterExpenditure)) {
       return setContent({
         show: true,
         msg: "Please enter expenditure",
-        vibration:true
+        vibration: true,
       });
     } else if (comment == "") {
       return setContent({
         show: true,
         msg: "Please add comment",
-        vibration:true
+        vibration: true,
       });
     } else if (
       quarterType == 2 &&
@@ -246,7 +246,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
-        vibration:true
+        vibration: true,
       });
     } else if (
       quarterType == 3 &&
@@ -257,7 +257,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
-        vibration:true
+        vibration: true,
       });
     } else if (
       quarterType == 4 &&
@@ -268,7 +268,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Cumulative Expenditure(Ugx) should not exceed Annual Budget(Ugx)",
-        vibration:true
+        vibration: true,
       });
     } else if (
       parseInt(quaterAchieved) >
@@ -284,7 +284,7 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Performance in quarter achieved should not be greater than Quarter Target",
-        vibration:true
+        vibration: true,
       });
     } else if (
       parseInt(quaterAchieved) > parseInt(unitData.approvedAnnualTarget)
@@ -293,18 +293,17 @@ export const ReactNativeModal1 = ({
       return setContent({
         show: true,
         msg: "Performance in quarter achieved should not be greater than approved annual workPlan target",
-        vibration:true
+        vibration: true,
       });
     } else if (parseInt(quaterExpenditure) > parseInt(unitData.funds)) {
       SetQuaterExpenditure("");
       return setContent({
         show: true,
         msg: "Expenditure quarter should not be greater than annual budget",
-        vibration:true
+        vibration: true,
       });
     } else {
-      
-    valueSendToRedux();
+      valueSendToRedux();
       Dispatch({
         type: "modalUpdate",
         object: {
@@ -325,7 +324,7 @@ export const ReactNativeModal1 = ({
               ? "c"
               : "d"
           }`,
-          update:false,
+          update: false,
         },
       });
       setIsModalEdited([...isModalEdited, item.id]);
@@ -412,8 +411,6 @@ export const ReactNativeModal1 = ({
           .catch((err) => {
             console.log(err);
           });
-     
-      
       }}
     >
       <View
@@ -478,24 +475,22 @@ export const ReactNativeModal1 = ({
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-            {
-              isDisable?
+            {isDisable ? (
               <ShowValueTextInput
-              label={quaterAchieved}
-              title={"Performance in Quarter Achieved"}
-              sty={{ padding: 10 }}
-            />
-            :
-
-            <ModifiedTextInput1
-              //Performance in Quarter Achieved
-              setInput={setQuaterAchieved}
-              title={"Performance in Quarter Achieved"}
-              header={"Performance in Quarter Achieved"}
-              value={quaterAchieved}
-              keyboardType="numeric"
-            />
-            }
+                label={quaterAchieved}
+                title={"Performance in Quarter Achieved"}
+                sty={{ padding: 10 }}
+              />
+            ) : (
+              <ModifiedTextInput1
+                //Performance in Quarter Achieved
+                setInput={setQuaterAchieved}
+                title={"Performance in Quarter Achieved"}
+                header={"Performance in Quarter Achieved"}
+                value={quaterAchieved}
+                keyboardType="numeric"
+              />
+            )}
 
             <ModifiedTextInput2
               //"Cumulative to Date Achieved
@@ -533,24 +528,22 @@ export const ReactNativeModal1 = ({
               editable={false}
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
-            {
-              isDisable?
-               <ShowValueTextInput
-               label={quaterExpenditure}
-               title={"Expenditure (Quarter)(Ugx)"}
-               sty={{ padding: 10 }}
-             />
-             :
-
-            <ModifiedTextInput1
-              //Expenditure (Quarter) (Ugx)
-              title={"Expenditure (Quarter)(Ugx)"}
-              header={"Expenditure (Quarter)(Ugx)"}
-              value={quaterExpenditure}
-              setInput={SetQuaterExpenditure}
-              keyboardType="numeric"
-            />
-            }
+            {isDisable ? (
+              <ShowValueTextInput
+                label={quaterExpenditure}
+                title={"Expenditure (Quarter)(Ugx)"}
+                sty={{ padding: 10 }}
+              />
+            ) : (
+              <ModifiedTextInput1
+                //Expenditure (Quarter) (Ugx)
+                title={"Expenditure (Quarter)(Ugx)"}
+                header={"Expenditure (Quarter)(Ugx)"}
+                value={quaterExpenditure}
+                setInput={SetQuaterExpenditure}
+                keyboardType="numeric"
+              />
+            )}
             <ModifiedTextInput2
               //Cumulative Expenditure(Ugx)
               setInput={setText}
@@ -589,21 +582,20 @@ export const ReactNativeModal1 = ({
               CustomStyle={{ backgroundColor: "#e8f1fc" }}
             />
             {/* //cmt */}
-            {
-              isDisable?
+            {isDisable ? (
               <ShowValueTextInput
-              label={comment}
-              title={"Comments"}
-              sty={{ padding: 10 }}
-            />
-              :
+                label={comment}
+                title={"Comments"}
+                sty={{ padding: 10 }}
+              />
+            ) : (
               <ModifiedTextInput1
                 title={"Comments"}
                 header={"Comments"}
                 value={comment}
                 setInput={setComments}
               />
-            }
+            )}
           </ScrollView>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -616,7 +608,15 @@ export const ReactNativeModal1 = ({
             <View style={{ width: isDisable ? "100%" : "80%" }}>
               {isDisable || !cheakDisableByMonth() ? (
                 <SubmitButton
-                onPress={cheakDisableByMonth}
+                  onPress={() => {
+                    setContent({
+                      show: true,
+                      msg: !cheakDisableByMonth()
+                        ? "Data can't be saved ! Please select a valid quarter !"
+                        : "Can't Change ! Data already saved.",
+                      vibration: true,
+                    });
+                  }}
                   title={"Save"}
                   textStyle={{ fontSize: 15 }}
                   buttonStyle={{ backgroundColor: "hsl(245, 34%, 70%)" }}
