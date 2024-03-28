@@ -46,7 +46,7 @@ export const EditModal = ({
       100;
     setWorkplan(isNaN(x) ? "0" : x);
   }, [quaterAchieved, unitData]);
-
+  // ---------------------------------------------------------------update func
   const updateFunc = async () => {
     setLoading(true);
     let allUserDataFromDB = await retrieveData("UserSavedData");
@@ -77,15 +77,14 @@ export const EditModal = ({
       modalActivityData: modalDates,
     };
     updateRecord(databaseId, JSON.stringify(requestBody));
-    func();
-    setLoading(false);
-    setModalVisible(false);
+    // ---------------------------------------------------------------------------success message
+    return true;
   };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const validation = () => {
+  const validation = async () => {
     // ---------------------------------------------validation for quaterAchieved
     if (
       quaterAchieved == "" ||
@@ -143,7 +142,20 @@ export const EditModal = ({
       });
     }
     // --------------------------------------------------final result after validation
-    updateFunc();
+    if (await updateFunc()) {
+      setLoading(false);
+      return setContent({
+        show: true,
+        msg: "Data updated successfully",
+        vibration: true,
+        ok: () => {
+          func();
+
+          setModalVisible(false);
+        },
+        color: "green",
+      });
+    }
   };
 
   const handleUpdate = () => {
@@ -222,7 +234,7 @@ export const EditModal = ({
                 <ShowValueTextInput
                   label={quaterAchieved}
                   title={"Performance in Quarter Achieved"}
-                  sty={{ padding: 10,paddingHorizontal: 0 }}
+                  sty={{ padding: 10, paddingHorizontal: 0 }}
                 />
               ) : (
                 <ModifiedTextInput3
@@ -249,7 +261,7 @@ export const EditModal = ({
                 <ShowValueTextInput
                   label={quaterExpenditure}
                   title={"Expenditure (Quarter)(Ugx)"}
-                  sty={{ padding:0, paddingHorizontal: 0}}
+                  sty={{ padding: 0, paddingHorizontal: 0 }}
                 />
               ) : (
                 <ModifiedTextInput3
@@ -274,21 +286,20 @@ export const EditModal = ({
                 editable={false}
                 CustomStyle={{ backgroundColor: "#e8f1fc" }}
               />
-              {
-                disable?
+              {disable ? (
                 <ShowValueTextInput
                   label={comment}
                   title={"Comments"}
-                  sty={{ padding:0, paddingHorizontal: 0}}
-                />:
-
-              <ModifiedTextInput3
-                title={"Comments"}
-                value={comment}
-                setInput={setComments}
-                header="Comments"
-              />
-              }
+                  sty={{ padding: 0, paddingHorizontal: 0 }}
+                />
+              ) : (
+                <ModifiedTextInput3
+                  title={"Comments"}
+                  value={comment}
+                  setInput={setComments}
+                  header="Comments"
+                />
+              )}
             </ScrollView>
             <SubmitButton
               onPress={handleUpdate}

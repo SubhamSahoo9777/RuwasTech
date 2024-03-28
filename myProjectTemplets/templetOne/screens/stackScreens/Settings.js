@@ -13,7 +13,66 @@ const Settings = () => {
       />
       <View style={{ flex: 1, justifyContent: "space-between" }}>
         {/* ---------------------------------------------------------------------------------------------body  */}
-        <View></View>
+        <View style={{ flex: 1, padding: 16 }}>
+          {/* ----------------Themes settings------------------------ */}
+          <View>
+            <Text
+              style={{ textAlign: "center", fontWeight: "500", fontSize: 18 }}
+            >
+              Themes
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  width: "30%",
+                  textAlign: "center",
+                  backgroundColor: "black",
+                  color: "#fff",
+                  padding: 10,
+                  borderRadius: 10,
+                }}
+              >
+                Dark Mode
+              </Text>
+              <Text
+                style={{
+                  width: "30%",
+                  textAlign: "center",
+                  backgroundColor: "#e6fff2",
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+              >
+                Light Mode
+              </Text>
+              <Text
+                style={{
+                  width: "30%",
+                  textAlign: "center",
+                  backgroundColor: "#e6fff2",
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+              >
+                Auto
+              </Text>
+            </View>
+          </View>
+          {/* ----------------Top Tab screen settings------------------------ */}
+          {/* ----------------Bottom Tab screen settings------------------------ */}
+          {/* ----------------Drawer screen settings------------------------ */}
+          {/* ----------------Login Screen Types------------------------ */}
+          {/* ----------------SignUp Screen Types------------------------ */}
+          {/* ----------------SignUp Screen Types------------------------ */}
+          {/* ----------------welcome Screen Types------------------------ */}
+          {/* ----------------Setting screen------------------------ */}
+        </View>
         {/* ----------------------------------------------------------------------------------------------footer  */}
         <View>
           <CustomFooterButtomTab screenName="Settings" />

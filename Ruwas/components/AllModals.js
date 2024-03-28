@@ -28,8 +28,7 @@ export const AlertModal = ({ content, setContent }) => {
         setContent({ ...content, show: false });
       }}
       onShow={() => {
-        if (vibration && vibration==true) {
-
+        if (vibration && vibration == true) {
           Vibration.vibrate(500);
         }
       }}
@@ -83,7 +82,7 @@ export const AlertModal = ({ content, setContent }) => {
   );
 };
 export const DeleteModal = ({ content, setContent }) => {
-  const { title, msg, show, ok,onCancle, color1, vibration,color2 } = content;
+  const { title, msg, show, ok, onCancle, color1, vibration, color2 } = content;
 
   return (
     <Modal
@@ -94,8 +93,7 @@ export const DeleteModal = ({ content, setContent }) => {
         setContent({ ...content, show: false });
       }}
       onShow={() => {
-        if (vibration && vibration==true) {
-
+        if (vibration && vibration == true) {
           Vibration.vibrate(500);
         }
       }}
@@ -126,41 +124,43 @@ export const DeleteModal = ({ content, setContent }) => {
           }}
         >
           <Text style={{ textAlign: "center" }}>{msg}</Text>
-          <View style={{flexDirection:"row",justifyContent:"space-around"}}>
-          <SubmitButton
-            title={"Cancle"}
-            onPress={() => {
-              if (typeof onCancle === "function") {
-                onCancle();
-              }
-              setContent({ ...content, show: false });
-            }}
-            textStyle={{}}
-            buttonStyle={{
-              minHeight: 30,
-              width: "40%",
-              alignSelf: "center",
-              backgroundColor: color1 || "#cc3300",
-              borderRadius: 5,
-            }}
-          />
-          <SubmitButton
-            title={"Ok"}
-            onPress={() => {
-              if (typeof ok === "function") {
-                ok();
-              }
-              setContent({ ...content, show: false });
-            }}
-            textStyle={{}}
-            buttonStyle={{
-              minHeight: 30,
-              width: "40%",
-              alignSelf: "center",
-              backgroundColor: color2 || "#cc3300",
-              borderRadius: 5,
-            }}
-          />
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <SubmitButton
+              title={"Cancle"}
+              onPress={() => {
+                if (typeof onCancle === "function") {
+                  onCancle();
+                }
+                setContent({ ...content, show: false });
+              }}
+              textStyle={{}}
+              buttonStyle={{
+                minHeight: 30,
+                width: "40%",
+                alignSelf: "center",
+                backgroundColor: color1 || "#cc3300",
+                borderRadius: 5,
+              }}
+            />
+            <SubmitButton
+              title={"Ok"}
+              onPress={() => {
+                if (typeof ok === "function") {
+                  ok();
+                }
+                setContent({ ...content, show: false });
+              }}
+              textStyle={{}}
+              buttonStyle={{
+                minHeight: 30,
+                width: "40%",
+                alignSelf: "center",
+                backgroundColor: color2 || "#cc3300",
+                borderRadius: 5,
+              }}
+            />
           </View>
         </Animatable.View>
       </View>
@@ -391,13 +391,8 @@ export const SuccessModal = ({
   );
 };
 export const FinatialYearPickerModal = ({ content, setContent }) => {
-
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={content}
-    >
+    <Modal animationType="slide" transparent={true} visible={content}>
       <View
         style={{
           justifyContent: "center",
@@ -423,11 +418,9 @@ export const FinatialYearPickerModal = ({ content, setContent }) => {
             padding: 10,
           }}
         >
-         
           <SubmitButton
             title={"Ok"}
             onPress={() => {
-              
               setContent(false);
             }}
             textStyle={{}}

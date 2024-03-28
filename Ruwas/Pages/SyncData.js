@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert, FlatList, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  Alert,
+  FlatList,
+  ImageBackground,
+  Pressable,
+} from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import {
+  deleteRowById,
   deleteRowById1,
   retrieveData,
   updateRecord,
@@ -89,12 +97,11 @@ const SyncData = ({ navigation }) => {
     const netInfo = await NetInfo.fetch();
     const isConnected = netInfo.isConnected;
     if (isConnected == false) {
-      Alert.alert(
-        "No Network Connection",
-        "Please connect to a network and try again.",
-        [{ text: "OK" }],
-        { cancelable: false }
-      );
+      setContent1({
+        show: true,
+        msg: "No Network Connection !! Please connect to a network and try again.",
+        vibration: true,
+      });
     } else {
       const apiUrl =
         "http://182.18.181.115:8084/api/complaince/synchworkplanprogressdtls";
@@ -181,6 +188,9 @@ const SyncData = ({ navigation }) => {
     deleteRowOfRecordReminder("mid", mid);
 
     console.log("data successfully upadated");
+    if (JSON.parse(item.USERSAVEDATA).modalActivityData.length == 1) {
+      await deleteRowById("UserSavedData", item.id);
+    }
     fetchDataFromUserSavedData();
   };
   const deleteRowOfRecordReminder = async (idName, id) => {
@@ -588,11 +598,59 @@ const SyncData = ({ navigation }) => {
       style={{ flex: 1, padding: 16 }}
       resizeMode="cover"
     >
-      <FlatList
-        data={userData && userData.sort((a, b) => b.id - a.id)}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      />
+      {!userData || userData.length === 0 ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Animatable.View
+            animation="jello"
+            easing="ease-out"
+            iterationCount={3}
+          >
+            <VectorIcon
+              type="Entypo"
+              name="emoji-sad"
+              size={30}
+              color="#004d4d"
+            />
+          </Animatable.View>
+          <Animatable.Text
+            animation="bounceInLeft"
+            easing="ease-out"
+            iterationCount={1}
+            style={{ marginTop: 10, fontSize: 16 }}
+          >
+            No Data Found !
+          </Animatable.Text>
+          <Pressable
+            style={{ width: "100%" }}
+            onPress={() => navigation.navigate("Dashboard")}
+          >
+            <Text
+              style={{
+                marginTop: 20,
+                backgroundColor: "#0066ff",
+                width: "50%",
+                textAlign: "center",
+                padding: 8,
+                borderRadius: 10,
+                color: "#fff",
+                fontSize: 18,
+                alignSelf: "center",
+              }}
+            >
+              Add Data
+            </Text>
+          </Pressable>
+        </View>
+      ) : (
+        <FlatList
+          data={userData && userData.sort((a, b) => b.id - a.id)}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      )}
+
       <EditModal
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
